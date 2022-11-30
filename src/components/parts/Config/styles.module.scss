@@ -1,0 +1,88 @@
+.cameraConfig {
+	.configBody {
+		@apply grid grid-cols-2 gap-x-14;
+	}
+}
+
+.zoneConfig {
+	.zoneBlock {
+		@apply mb-4;
+	}
+	.zoneHeader {
+		@apply text-dark text-lg font-bold pb-4 border-b border-dashed border-light mb-4;
+	}
+	.zoneBody {
+		@apply mb-6;
+
+		button {
+			@apply inline-flex justify-center items-center w-10 h-10 mr-4 text-lg border border-accent rounded-full text-accent bg-white mb-4 cursor-pointer disabled:cursor-not-allowed disabled:border-light disabled:text-light;
+		}
+
+		.inputGroup {
+			@apply mb-4 gap-4 grid grid-cols-2;
+
+			.selected {
+				@apply last:border-accent;
+			}
+
+			label {
+				@apply text-sm font-bold;
+			}
+
+			input {
+				@apply bg-white border border-light rounded-md py-3 px-4 outline-none;
+			}
+		}
+		.zoneDots {
+			span {
+				@apply block font-bold text-xl mb-3;
+			}
+			.dotsGroup {
+				@apply grid grid-cols-2 gap-x-4;
+			}
+			.numGroup {
+				@apply flex flex-col mb-4;
+
+				label {
+					@apply text-sm font-bold mb-1;
+				}
+				input {
+					@apply bg-white border border-light rounded-md py-2 px-4 outline-none;
+				}
+			}
+		}
+	}
+}
+
+.configActions {
+	@apply flex justify-start items-center gap-x-5 mt-4;
+
+	button {
+		@apply outline-none cursor-pointer rounded-full bg-accent text-white py-3 px-16 disabled:bg-light disabled:text-dark
+		disabled:cursor-not-allowed;
+	}
+}
+
+.config {
+	.checkboxGroup {
+		@apply mb-10 flex justify-between items-center;
+
+		label {
+			@apply text-dark text-xs leading-4 font-bold;
+		}
+	}
+
+	.inputGroup,
+	.numGroup {
+		@apply inline-flex flex-col mb-4;
+
+		label {
+			@apply text-dark text-xs leading-4 font-bold mb-2;
+		}
+
+		input,
+		select {
+			@apply bg-white border border-light rounded-md py-3 px-4 outline-none;
+		}
+	}
+}

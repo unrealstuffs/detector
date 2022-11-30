@@ -1,0 +1,49 @@
+.detector {
+	@apply grid grid-cols-5 px-4 gap-x-5 justify-between h-full;
+
+	> div:first-child {
+		@apply col-span-3;
+	}
+	> div:last-child {
+		@apply col-span-2;
+	}
+}
+
+.tabs {
+	@apply h-[85vh] shadow-md;
+}
+
+.tabList {
+	@apply border-light flex gap-x-5 border-b;
+
+	.tab {
+		@apply cursor-pointer px-4 py-2;
+		&.active {
+			@apply border-b-2 border-accent;
+		}
+	}
+}
+
+.tabBody {
+	@apply h-[75vh] hidden overflow-y-scroll;
+
+	&::-webkit-scrollbar {
+		@apply w-1.5;
+	}
+
+	&::-webkit-scrollbar-track {
+		@apply rounded-full bg-light;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		@apply bg-accent bg-opacity-70 rounded-full;
+	}
+
+	&::-webkit-scrollbar-thumb:hover {
+		@apply bg-accent;
+	}
+
+	&.show {
+		@apply block;
+	}
+}
