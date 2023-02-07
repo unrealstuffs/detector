@@ -7,33 +7,63 @@ import CameraConfig from '../Config/CameraConfig'
 import DatabaseConfig from '../Config/DatabaseConfig'
 import DetectorConfig from '../Config/DetectorConfig'
 import ZoneConfig from '../Config/ZoneConfig'
+import Data from '../Data/Data'
 
 const Detector = () => {
-	const [isShot, setIsShot] = useState(false)
+	const [tab, setTab] = useState<'data' | 'settings' | 'shot'>('data')
 
 	return (
 		<div className={styles.detector}>
-			<Shot isShot={isShot} />
+			<Shot isShot={tab === 'shot'} />
 			<div className={styles.tabs}>
 				<div className={styles.tabList}>
 					<div
-						className={`${styles.tab} ${!isShot && styles.active}`}
+						className={`${styles.tab} ${
+							tab === 'data' && styles.active
+						}`}
 						onClick={() => {
-							setIsShot(false)
+							setTab('data')
+						}}
+					>
+						Данные
+					</div>
+					<div
+						className={`${styles.tab} ${
+							tab === 'settings' && styles.active
+						}`}
+						onClick={() => {
+							setTab('settings')
 						}}
 					>
 						Настройки
 					</div>
 					<div
-						className={`${styles.tab} ${isShot && styles.active}`}
+						className={`${styles.tab} ${
+							tab === 'shot' && styles.active
+						}`}
 						onClick={() => {
-							setIsShot(true)
+							setTab('shot')
 						}}
 					>
 						Стоп-кадр
 					</div>
 				</div>
-				<div className={`${styles.tabBody} ${!isShot && styles.show}`}>
+				<div
+					className={`${styles.tabBody} ${
+						tab === 'data' && styles.show
+					}`}
+				>
+					<Settings>
+						<SettingsBlock header='Данные'>
+							<Data />
+						</SettingsBlock>
+					</Settings>
+				</div>
+				<div
+					className={`${styles.tabBody} ${
+						tab === 'settings' && styles.show
+					}`}
+				>
 					<Settings>
 						<SettingsBlock header='Настройки камеры'>
 							<CameraConfig />
@@ -46,7 +76,11 @@ const Detector = () => {
 						</SettingsBlock>
 					</Settings>
 				</div>
-				<div className={`${styles.tabBody} ${isShot && styles.show}`}>
+				<div
+					className={`${styles.tabBody} ${
+						tab === 'shot' && styles.show
+					}`}
+				>
 					<Settings>
 						<SettingsBlock header='Настройки зон детектирования'>
 							<ZoneConfig />
