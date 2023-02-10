@@ -93,6 +93,7 @@ const ZoneConfig = () => {
 						{Object.keys(configuration).map((item, index) => {
 							return (
 								<input
+									key={index}
 									type='text'
 									disabled
 									value={`z-${index + 1}`}

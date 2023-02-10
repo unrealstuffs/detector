@@ -1,92 +1,133 @@
-import { AiOutlineFilter } from 'react-icons/ai'
+import dayjs from 'dayjs'
+import { useTypedSelector } from '../../../hooks/useTypedSelector'
+import Table from '../Table/Table'
 import styles from './Data.module.scss'
 
 const Data = () => {
+	const {
+		data: { composition, delay, intensity, plates, speed, types },
+	} = useTypedSelector(state => state.data)
+
 	return (
 		<div className={styles.data}>
 			<div className={styles.dataBlock}>
 				<div className={styles.dataHeader}>Распознанные ГРЗ</div>
-				<div className={styles.inputGroup}>
-					<input type='text' placeholder='Поиск...' />
-					<AiOutlineFilter size={30} className={styles.icon} />
-				</div>
-				<div className={styles.dataBody}>
-					<span>Знак 1</span>
-					<span>Знак 2</span>
-					<span>Знак 3</span>
-					<span>Знак 4</span>
-				</div>
+				<Table
+					columns={[
+						{
+							Header: 'Время',
+							id: 'timestamp',
+							accessor: (d: any) => {
+								return dayjs(d.timestamp).format(
+									'DD/MM/YY hh:mm:ss'
+								)
+							},
+						},
+						{ Header: 'ГРЗ', accessor: 'licensePlate' },
+					]}
+					data={plates}
+				/>
 			</div>
 			<div className={styles.dataBlock}>
 				<div className={styles.dataHeader}>Классифицированные ТС</div>
-				<div className={styles.inputGroup}>
-					<input type='text' placeholder='Поиск...' />
-					<AiOutlineFilter size={30} className={styles.icon} />
-				</div>
-				<div className={styles.dataBody}>
-					<span>ТС 1</span>
-					<span>ТС 2</span>
-					<span>ТС 3</span>
-					<span>ТС 4</span>
-				</div>
+				<Table
+					columns={[
+						{
+							Header: 'Время',
+							id: 'timestamp',
+							accessor: (d: any) => {
+								return dayjs(d.timestamp).format(
+									'DD/MM/YY hh:mm:ss'
+								)
+							},
+						},
+						{ Header: 'ТС', accessor: 'type' },
+					]}
+					data={types}
+				/>
 			</div>
 			<div className={styles.dataBlock}>
 				<div className={styles.dataHeader}>
 					Интенсивность дорожного движения
 				</div>
-				<div className={styles.inputGroup}>
-					<input type='text' placeholder='Поиск...' />
-					<AiOutlineFilter size={30} className={styles.icon} />
-				</div>
-				<div className={styles.dataBody}>
-					<span>ТС 1</span>
-					<span>ТС 2</span>
-					<span>ТС 3</span>
-					<span>ТС 4</span>
-				</div>
+				<Table
+					columns={[
+						{
+							Header: 'Время',
+							id: 'timestamp',
+							accessor: (d: any) => {
+								return dayjs(d.timestamp).format(
+									'DD/MM/YY hh:mm:ss'
+								)
+							},
+						},
+						{ Header: 'Направление', accessor: 'direct' },
+						{ Header: 'Интенсивность', accessor: 'intensity' },
+					]}
+					data={intensity}
+				/>
 			</div>
 			<div className={styles.dataBlock}>
 				<div className={styles.dataHeader}>
 					Состав транспортных средств
 				</div>
-				<div className={styles.inputGroup}>
-					<input type='text' placeholder='Поиск...' />
-					<AiOutlineFilter size={30} className={styles.icon} />
-				</div>
-				<div className={styles.dataBody}>
-					<span>ТС 1</span>
-					<span>ТС 2</span>
-					<span>ТС 3</span>
-					<span>ТС 4</span>
-				</div>
+				<Table
+					columns={[
+						{
+							id: 'timestamp',
+							Header: 'Время',
+							accessor: (d: any) => {
+								return dayjs(d.timestamp).format(
+									'DD/MM/YY hh:mm:ss'
+								)
+							},
+						},
+						{ Header: 'Направление', accessor: 'direction' },
+						{ Header: 'Тип ТС', accessor: 'vehicleType' },
+						{ Header: 'Количество', accessor: 'quantity' },
+					]}
+					data={composition}
+				/>
 			</div>
 			<div className={styles.dataBlock}>
 				<div className={styles.dataHeader}>
 					Средняя скорость движения ТС
 				</div>
-				<div className={styles.inputGroup}>
-					<input type='text' placeholder='Поиск...' />
-					<AiOutlineFilter size={30} className={styles.icon} />
-				</div>
-				<div className={styles.dataBody}>
-					<span>ТС 1</span>
-					<span>ТС 2</span>
-					<span>ТС 3</span>
-					<span>ТС 4</span>
-				</div>
+				<Table
+					columns={[
+						{
+							Header: 'Время',
+							id: 'timestamp',
+							accessor: (d: any) => {
+								return dayjs(d.timestamp).format(
+									'DD/MM/YY hh:mm:ss'
+								)
+							},
+						},
+						{ Header: 'Направление', accessor: 'direction' },
+						{ Header: 'Средняя скорость', accessor: 'avgSpeed' },
+					]}
+					data={speed}
+				/>
 			</div>
 			<div className={styles.dataBlock}>
 				<div className={styles.dataHeader}>Плотность движения</div>
-				<div className={styles.inputGroup}>
-					<input type='text' placeholder='Поиск...' />
-					<AiOutlineFilter size={30} className={styles.icon} />
-				</div>
-				<div className={styles.dataBody}>
-					<span>ТС 1</span>
-					<span>ТС 2</span>
-					<span>ТС 3</span>
-					<span>ТС 4</span>
-				</div>
+				<Table
+					columns={[
+						{
+							Header: 'Время',
+							id: 'timestamp',
+							accessor: (d: any) => {
+								return dayjs(d.timestamp).format(
+									'DD/MM/YY hh:mm:ss'
+								)
+							},
+						},
+						{ Header: 'Направление', accessor: 'direction' },
+						{ Header: 'Средняя плотность', accessor: 'avgDelay' },
+					]}
+					data={delay}
+				/>
 			</div>
 		</div>
 	)

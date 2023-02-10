@@ -1,0 +1,15 @@
+.table {
+	@apply mb-6 table-fixed w-full text-sm;
+
+	th {
+		@apply border-b border-light font-bold px-4 pt-0 pb-2 text-dark text-left select-none;
+
+		span {
+			@apply inline-block ml-1;
+		}
+	}
+
+	td {
+		@apply border-b border-light px-4 py-2 text-dark;
+	}
+}

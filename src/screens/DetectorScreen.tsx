@@ -7,8 +7,65 @@ import { useTypedSelector } from '../hooks/useTypedSelector'
 
 const DetectorScreen = () => {
 	const { accessToken } = useTypedSelector(state => state.user)
-	const { setConfiguration, setCameraConfig, setDetectorConfig } =
+	const { setConfiguration, setCameraConfig, setDetectorConfig, setData } =
 		useActions()
+
+	const fetchData = useCallback(async () => {
+		const [types, plates, intensity, composition, speed, delay] =
+			await Promise.all([
+				fetch(`${process.env.REACT_APP_VEHICLE_TYPES}`, {
+					method: 'GET',
+					headers: {
+						Authorization: `${accessToken}`,
+					},
+				}),
+				fetch(`${process.env.REACT_APP_REC_PLATES}`, {
+					method: 'GET',
+					headers: {
+						Authorization: `${accessToken}`,
+					},
+				}),
+				fetch(`${process.env.REACT_APP_TRAFFIC_INTENSITY}`, {
+					method: 'GET',
+					headers: {
+						Authorization: `${accessToken}`,
+					},
+				}),
+				fetch(`${process.env.REACT_APP_VEH_COMPOSITION}`, {
+					method: 'GET',
+					headers: {
+						Authorization: `${accessToken}`,
+					},
+				}),
+				fetch(`${process.env.REACT_APP_AVERAGE_SPEED}`, {
+					method: 'GET',
+					headers: {
+						Authorization: `${accessToken}`,
+					},
+				}),
+				fetch(`${process.env.REACT_APP_AVERAGE_DELAY}`, {
+					method: 'GET',
+					headers: {
+						Authorization: `${accessToken}`,
+					},
+				}),
+			])
+		const dataTypes = await types.json()
+		const dataPlates = await plates.json()
+		const dataIntensity = await intensity.json()
+		const dataComposition = await composition.json()
+		const dataSpeed = await speed.json()
+		const dataDelay = await delay.json()
+
+		setData({
+			types: dataTypes.data,
+			plates: dataPlates.data,
+			intensity: dataIntensity.data,
+			composition: dataComposition.data,
+			speed: dataSpeed.data,
+			delay: dataDelay.data,
+		})
+	}, [accessToken, setData])
 
 	const fetchZoneConfig = useCallback(async () => {
 		try {
@@ -118,7 +175,14 @@ const DetectorScreen = () => {
 		fetchZoneConfig()
 		fetchCameraConfig()
 		fetchDetectorConfig()
-	}, [fetchZoneConfig, fetchCameraConfig, fetchDetectorConfig])
+
+		fetchData()
+		const fetchTimer = setInterval(fetchData, 1000 * 10)
+
+		return () => {
+			clearInterval(fetchTimer)
+		}
+	}, [fetchZoneConfig, fetchCameraConfig, fetchDetectorConfig, fetchData])
 
 	return (
 		<>

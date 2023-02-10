@@ -98,7 +98,9 @@ const DetectorConfig = () => {
 								}}
 							>
 								{zones.map((zone: any, index: number) => (
-									<option value={zone}>{zone}</option>
+									<option key={index} value={zone}>
+										{zone}
+									</option>
 								))}
 							</select>
 						</div>
