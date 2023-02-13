@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { AiOutlineEdit, AiOutlinePlus } from 'react-icons/ai'
 import { useActions } from '../../../hooks/useActions'
 import { useTypedSelector } from '../../../hooks/useTypedSelector'
@@ -106,12 +106,15 @@ const ZoneConfig = () => {
 					</div>
 					<div className={styles.zoneDots}>
 						{zones.map((zone: any, index: number) => (
-							<>
+							<Fragment key={index}>
 								<span>z-{index + 1}</span>
 								<div className={styles.dotsGroup}>
 									{zone.map(
 										(item: any, index_nested: number) => (
-											<div className={styles.numGroup}>
+											<div
+												key={index_nested}
+												className={styles.numGroup}
+											>
 												<label>
 													От точки {index_nested + 1}{' '}
 													до точки{' '}
@@ -134,7 +137,7 @@ const ZoneConfig = () => {
 										)
 									)}
 								</div>
-							</>
+							</Fragment>
 						))}
 					</div>
 				</div>
@@ -174,6 +177,7 @@ const ZoneConfig = () => {
 							).map((item, lineIndex) => {
 								return (
 									<input
+										key={lineIndex}
 										type='text'
 										disabled
 										value={`z-${index + 1} l-${

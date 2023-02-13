@@ -5,13 +5,15 @@ import styles from './Data.module.scss'
 
 const Data = () => {
 	const {
-		data: { composition, delay, intensity, plates, speed, types },
+		data: { composition, delay, intensity, speed, types },
 	} = useTypedSelector(state => state.data)
 
 	return (
 		<div className={styles.data}>
 			<div className={styles.dataBlock}>
-				<div className={styles.dataHeader}>Распознанные ГРЗ</div>
+				<div className={styles.dataHeader}>
+					Распознанные ГРЗ и классифицированные ТС
+				</div>
 				<Table
 					columns={[
 						{
@@ -24,23 +26,6 @@ const Data = () => {
 							},
 						},
 						{ Header: 'ГРЗ', accessor: 'licensePlate' },
-					]}
-					data={plates}
-				/>
-			</div>
-			<div className={styles.dataBlock}>
-				<div className={styles.dataHeader}>Классифицированные ТС</div>
-				<Table
-					columns={[
-						{
-							Header: 'Время',
-							id: 'timestamp',
-							accessor: (d: any) => {
-								return dayjs(d.timestamp).format(
-									'DD/MM/YY hh:mm:ss'
-								)
-							},
-						},
 						{ Header: 'ТС', accessor: 'type' },
 					]}
 					data={types}
@@ -62,6 +47,7 @@ const Data = () => {
 							},
 						},
 						{ Header: 'Направление', accessor: 'direct' },
+						{ Header: 'Полоса', accessor: 'line' },
 						{ Header: 'Интенсивность', accessor: 'intensity' },
 					]}
 					data={intensity}
@@ -83,6 +69,7 @@ const Data = () => {
 							},
 						},
 						{ Header: 'Направление', accessor: 'direction' },
+						{ Header: 'Полоса', accessor: 'line' },
 						{ Header: 'Тип ТС', accessor: 'vehicleType' },
 						{ Header: 'Количество', accessor: 'quantity' },
 					]}
@@ -105,6 +92,7 @@ const Data = () => {
 							},
 						},
 						{ Header: 'Направление', accessor: 'direction' },
+						{ Header: 'Полоса', accessor: 'line' },
 						{ Header: 'Средняя скорость', accessor: 'avgSpeed' },
 					]}
 					data={speed}
@@ -124,6 +112,7 @@ const Data = () => {
 							},
 						},
 						{ Header: 'Направление', accessor: 'direction' },
+						{ Header: 'Полоса', accessor: 'line' },
 						{ Header: 'Средняя плотность', accessor: 'avgDelay' },
 					]}
 					data={delay}

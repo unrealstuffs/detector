@@ -1,5 +1,5 @@
 .table {
-	@apply mb-6 table-fixed w-full text-sm;
+	@apply mb-6 table-auto w-full text-sm;
 
 	th {
 		@apply border-b border-light font-bold px-4 pt-0 pb-2 text-dark text-left select-none;
@@ -11,5 +11,13 @@
 
 	td {
 		@apply border-b border-light px-4 py-2 text-dark;
+	}
+}
+
+.datePicker {
+	@apply flex items-center justify-between gap-x-2 mb-2;
+
+	.dateInput {
+		@apply w-full bg-white border border-light rounded-md p-2 outline-none;
 	}
 }
