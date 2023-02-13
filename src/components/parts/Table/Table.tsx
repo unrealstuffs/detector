@@ -2,26 +2,13 @@ import styles from './Table.module.scss'
 import { FC } from 'react'
 import { useTable, useSortBy, Column } from 'react-table'
 import { AiOutlineCaretDown, AiOutlineCaretUp } from 'react-icons/ai'
-import Flatpickr from 'react-flatpickr'
 import 'flatpickr/dist/themes/material_blue.css'
 import { Russian } from 'flatpickr/dist/l10n/ru.js'
-import rangePlugin from 'flatpickr/dist/plugins/rangePlugin'
 import DatePicker from './DatePicker'
 
 interface Props {
 	columns: Array<Column<object>>
 	data: Array<object>
-}
-
-const CustomInput = ({ value, defaultValue, inputRef, ...props }: any) => {
-	return (
-		<input
-			{...props}
-			defaultValue={defaultValue}
-			ref={inputRef}
-			className={styles.dateInput}
-		/>
-	)
 }
 
 const Table: FC<Props> = ({ columns, data }) => {
@@ -34,7 +21,7 @@ const Table: FC<Props> = ({ columns, data }) => {
 			useSortBy
 		)
 
-	const pageRows = rows.slice(0, 20)
+	const pageRows = rows.slice(0, 30)
 
 	return (
 		<>
@@ -51,7 +38,6 @@ const Table: FC<Props> = ({ columns, data }) => {
 					selectValue={[]}
 					placeholder='От'
 				/>
-				&nbsp;&nbsp;&nbsp;&nbsp;
 				<input
 					id='DashboardEndDatePickera'
 					placeholder='До'
@@ -98,8 +84,17 @@ const Table: FC<Props> = ({ columns, data }) => {
 							<tr {...row.getRowProps()}>
 								{row.cells.map(cell => {
 									return (
-										<td {...cell.getCellProps()}>
-											{cell.render('Cell')}
+										<td
+											{...cell.getCellProps()}
+											className={
+												cell.value
+													? 'text-dark'
+													: 'text-light'
+											}
+										>
+											{cell.value
+												? cell.render('Cell')
+												: 'Не опознано'}
 										</td>
 									)
 								})}

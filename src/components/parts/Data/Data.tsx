@@ -21,7 +21,7 @@ const Data = () => {
 							id: 'timestamp',
 							accessor: (d: any) => {
 								return dayjs(d.timestamp).format(
-									'DD/MM/YY hh:mm:ss'
+									'DD/MM/YY HH:mm'
 								)
 							},
 						},
@@ -42,11 +42,11 @@ const Data = () => {
 							id: 'timestamp',
 							accessor: (d: any) => {
 								return dayjs(d.timestamp).format(
-									'DD/MM/YY hh:mm:ss'
+									'DD/MM/YY HH:mm'
 								)
 							},
 						},
-						{ Header: 'Направление', accessor: 'direct' },
+						{ Header: 'Направление', accessor: 'direction' },
 						{ Header: 'Полоса', accessor: 'line' },
 						{ Header: 'Интенсивность', accessor: 'intensity' },
 					]}
@@ -64,7 +64,7 @@ const Data = () => {
 							Header: 'Время',
 							accessor: (d: any) => {
 								return dayjs(d.timestamp).format(
-									'DD/MM/YY hh:mm:ss'
+									'DD/MM/YY HH:mm'
 								)
 							},
 						},
@@ -87,7 +87,7 @@ const Data = () => {
 							id: 'timestamp',
 							accessor: (d: any) => {
 								return dayjs(d.timestamp).format(
-									'DD/MM/YY hh:mm:ss'
+									'DD/MM/YY HH:mm'
 								)
 							},
 						},
@@ -107,7 +107,7 @@ const Data = () => {
 							id: 'timestamp',
 							accessor: (d: any) => {
 								return dayjs(d.timestamp).format(
-									'DD/MM/YY hh:mm:ss'
+									'DD/MM/YY HH:mm'
 								)
 							},
 						},

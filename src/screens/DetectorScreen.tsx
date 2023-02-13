@@ -10,50 +10,65 @@ const DetectorScreen = () => {
 	const { setConfiguration, setCameraConfig, setDetectorConfig, setData } =
 		useActions()
 
-	const fetchData = useCallback(async () => {
-		const [types, intensity, composition, speed, delay] = await Promise.all(
-			[
-				fetch(`${process.env.REACT_APP_VEHICLE_TYPES_AND_PLATES}`, {
-					method: 'GET',
-					headers: {
-						Authorization: `${accessToken}`,
-					},
-				}),
-				fetch(`${process.env.REACT_APP_TRAFFIC_INTENSITY}`, {
-					method: 'GET',
-					headers: {
-						Authorization: `${accessToken}`,
-					},
-				}),
-				fetch(`${process.env.REACT_APP_VEH_COMPOSITION}`, {
-					method: 'GET',
-					headers: {
-						Authorization: `${accessToken}`,
-					},
-				}),
-				fetch(`${process.env.REACT_APP_AVERAGE_SPEED}`, {
-					method: 'GET',
-					headers: {
-						Authorization: `${accessToken}`,
-					},
-				}),
-				fetch(`${process.env.REACT_APP_AVERAGE_DELAY}`, {
-					method: 'GET',
-					headers: {
-						Authorization: `${accessToken}`,
-					},
-				}),
-			]
+	const fetchTypes = useCallback(async () => {
+		const types = await fetch(
+			`${process.env.REACT_APP_VEHICLE_TYPES_AND_PLATES}`,
+			{
+				method: 'GET',
+				headers: {
+					Authorization: `${accessToken}`,
+				},
+			}
 		)
+
 		const dataTypes = await types.json()
+
+		if (dataTypes) {
+			setData({
+				types: JSON.parse(dataTypes.data),
+				intensity: [],
+				composition: [],
+				speed: [],
+				delay: [],
+			})
+		}
+	}, [accessToken, setData])
+
+	const fetchData = useCallback(async () => {
+		const [intensity, composition, speed, delay] = await Promise.all([
+			fetch(`${process.env.REACT_APP_TRAFFIC_INTENSITY}`, {
+				method: 'GET',
+				headers: {
+					Authorization: `${accessToken}`,
+				},
+			}),
+			fetch(`${process.env.REACT_APP_VEH_COMPOSITION}`, {
+				method: 'GET',
+				headers: {
+					Authorization: `${accessToken}`,
+				},
+			}),
+			fetch(`${process.env.REACT_APP_AVERAGE_SPEED}`, {
+				method: 'GET',
+				headers: {
+					Authorization: `${accessToken}`,
+				},
+			}),
+			fetch(`${process.env.REACT_APP_AVERAGE_DELAY}`, {
+				method: 'GET',
+				headers: {
+					Authorization: `${accessToken}`,
+				},
+			}),
+		])
 		const dataIntensity = await intensity.json()
 		const dataComposition = await composition.json()
 		const dataSpeed = await speed.json()
 		const dataDelay = await delay.json()
 
-		if (dataTypes) {
+		if (dataIntensity) {
 			setData({
-				types: JSON.parse(dataTypes.data),
+				types: [],
 				intensity: JSON.parse(dataIntensity.data),
 				composition: JSON.parse(dataComposition.data),
 				speed: JSON.parse(dataSpeed.data),
@@ -171,13 +186,22 @@ const DetectorScreen = () => {
 		fetchCameraConfig()
 		fetchDetectorConfig()
 
+		fetchTypes()
 		fetchData()
-		const fetchTimer = setInterval(fetchData, 1000 * 10)
+		const fetchTimer = setInterval(fetchData, 1000 * 60)
+		const fetchTypesTimer = setInterval(fetchTypes, 1000 * 10)
 
 		return () => {
 			clearInterval(fetchTimer)
+			clearInterval(fetchTypesTimer)
 		}
-	}, [fetchZoneConfig, fetchCameraConfig, fetchDetectorConfig, fetchData])
+	}, [
+		fetchZoneConfig,
+		fetchCameraConfig,
+		fetchDetectorConfig,
+		fetchData,
+		fetchTypes,
+	])
 
 	return (
 		<>
