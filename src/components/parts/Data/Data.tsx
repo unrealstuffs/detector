@@ -97,7 +97,18 @@ const Data = () => {
 								}
 							},
 						},
-						{ Header: 'Полоса', accessor: 'line' },
+						{
+							Header: 'Полоса',
+							accessor: (d: any) => {
+								if (d.line) {
+									let lineArray = d.line.split('_')
+									let lineName = `l-${++lineArray[1]}`
+									return lineName
+								} else {
+									return d.line
+								}
+							},
+						},
 						{ Header: 'Интенсивность', accessor: 'intensity' },
 					]}
 					data={intensity}
@@ -130,7 +141,18 @@ const Data = () => {
 								}
 							},
 						},
-						{ Header: 'Полоса', accessor: 'line' },
+						{
+							Header: 'Полоса',
+							accessor: (d: any) => {
+								if (d.line) {
+									let lineArray = d.line.split('_')
+									let lineName = `l-${++lineArray[1]}`
+									return lineName
+								} else {
+									return d.line
+								}
+							},
+						},
 						{
 							Header: 'Тип ТС',
 							accessor: 'vehicleType',
@@ -167,7 +189,18 @@ const Data = () => {
 								}
 							},
 						},
-						{ Header: 'Полоса', accessor: 'line' },
+						{
+							Header: 'Полоса',
+							accessor: (d: any) => {
+								if (d.line) {
+									let lineArray = d.line.split('_')
+									let lineName = `l-${++lineArray[1]}`
+									return lineName
+								} else {
+									return d.line
+								}
+							},
+						},
 						{ Header: 'Средняя скорость', accessor: 'avgSpeed' },
 					]}
 					data={speed}
@@ -198,7 +231,18 @@ const Data = () => {
 								}
 							},
 						},
-						{ Header: 'Полоса', accessor: 'line' },
+						{
+							Header: 'Полоса',
+							accessor: (d: any) => {
+								if (d.line) {
+									let lineArray = d.line.split('_')
+									let lineName = `l-${++lineArray[1]}`
+									return lineName
+								} else {
+									return d.line
+								}
+							},
+						},
 						{ Header: 'Средняя задержка', accessor: 'avgDelay' },
 					]}
 					data={delay}
