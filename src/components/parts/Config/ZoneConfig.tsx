@@ -65,6 +65,20 @@ const ZoneConfig = () => {
 		}
 	}
 
+	const setDirection = (
+		e: React.ChangeEvent<HTMLInputElement>,
+		index: number
+	) => {
+		console.log(index)
+		setConfiguration({
+			...configuration,
+			[`d_${index}`]: {
+				...configuration[`d_${index}`],
+				reverseDirection: e.target.checked,
+			},
+		})
+	}
+
 	useEffect(() => {
 		const tempArr = []
 		for (let key in configuration) {
@@ -92,15 +106,30 @@ const ZoneConfig = () => {
 					<div className={styles.inputGroup}>
 						{Object.keys(configuration).map((item, index) => {
 							return (
-								<input
-									key={index}
-									type='text'
-									disabled
-									value={`z-${index + 1}`}
-									className={
-										mode === 'zone' ? 'selected' : ''
-									}
-								/>
+								<div key={index} className={styles.zoneGroup}>
+									<input
+										type='text'
+										disabled
+										value={`z-${index + 1}`}
+										className={
+											mode === 'zone' ? 'selected' : ''
+										}
+									/>
+
+									<label className={styles.zoneCheck}>
+										<input
+											type='checkbox'
+											checked={
+												configuration[`d_${index}`]
+													.reverseDirection
+											}
+											onChange={e =>
+												setDirection(e, index)
+											}
+										/>
+										Обратное движение
+									</label>
+								</div>
 							)
 						})}
 					</div>

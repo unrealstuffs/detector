@@ -5,8 +5,9 @@ import styles from './Data.module.scss'
 
 const Data = () => {
 	const {
-		data: { composition, delay, intensity, speed, types },
+		data: { composition, delay, intensity, speed, types, density },
 	} = useTypedSelector(state => state.data)
+	const { configuration } = useTypedSelector(state => state.detector)
 
 	return (
 		<div className={styles.data}>
@@ -25,8 +26,51 @@ const Data = () => {
 								)
 							},
 						},
-						{ Header: 'ГРЗ', accessor: 'licensePlate' },
-						{ Header: 'ТС', accessor: 'type' },
+						{
+							Header: 'ГРЗ',
+							accessor: (d: any) => {
+								if (d.licencePlate) {
+									return (
+										d.linencePlate.replace(/!/g, ' ') || ''
+									)
+								} else {
+									return d.linencePlate
+								}
+							},
+						},
+						{
+							Header: 'ТС',
+							accessor: (d: any) => {
+								switch (d.type) {
+									case 'sedan':
+										return 'Седан'
+									case 'largevehicle':
+										return 'Грузовик'
+									case 'van':
+										return 'Фургон'
+									case 'coupe':
+										return 'Купе'
+									default:
+										return d.type
+								}
+							},
+						},
+						{
+							Header: 'Направление',
+							accessor: (d: any) => {
+								if (
+									configuration[d.direction].reverseDirection
+								) {
+									return 'Обратное'
+								} else {
+									return 'Прямое'
+								}
+							},
+						},
+						{
+							Header: 'Полоса',
+							accessor: 'line',
+						},
 					]}
 					data={types}
 				/>
@@ -46,7 +90,18 @@ const Data = () => {
 								)
 							},
 						},
-						{ Header: 'Направление', accessor: 'direction' },
+						{
+							Header: 'Направление',
+							accessor: (d: any) => {
+								if (
+									configuration[d.direction].reverseDirection
+								) {
+									return 'Обратное'
+								} else {
+									return 'Прямое'
+								}
+							},
+						},
 						{ Header: 'Полоса', accessor: 'line' },
 						{ Header: 'Интенсивность', accessor: 'intensity' },
 					]}
@@ -68,9 +123,36 @@ const Data = () => {
 								)
 							},
 						},
-						{ Header: 'Направление', accessor: 'direction' },
+						{
+							Header: 'Направление',
+							accessor: (d: any) => {
+								if (
+									configuration[d.direction].reverseDirection
+								) {
+									return 'Обратное'
+								} else {
+									return 'Прямое'
+								}
+							},
+						},
 						{ Header: 'Полоса', accessor: 'line' },
-						{ Header: 'Тип ТС', accessor: 'vehicleType' },
+						{
+							Header: 'Тип ТС',
+							accessor: (d: any) => {
+								switch (d.vehicleType) {
+									case 'sedan':
+										return 'Седан'
+									case 'largevehicle':
+										return 'Грузовик'
+									case 'van':
+										return 'Фургон'
+									case 'coupe':
+										return 'Купе'
+									default:
+										return d.vehicleType
+								}
+							},
+						},
 						{ Header: 'Количество', accessor: 'quantity' },
 					]}
 					data={composition}
@@ -91,7 +173,18 @@ const Data = () => {
 								)
 							},
 						},
-						{ Header: 'Направление', accessor: 'direction' },
+						{
+							Header: 'Направление',
+							accessor: (d: any) => {
+								if (
+									configuration[d.direction].reverseDirection
+								) {
+									return 'Обратное'
+								} else {
+									return 'Прямое'
+								}
+							},
+						},
 						{ Header: 'Полоса', accessor: 'line' },
 						{ Header: 'Средняя скорость', accessor: 'avgSpeed' },
 					]}
@@ -99,7 +192,7 @@ const Data = () => {
 				/>
 			</div>
 			<div className={styles.dataBlock}>
-				<div className={styles.dataHeader}>Плотность движения</div>
+				<div className={styles.dataHeader}>Средние задержки</div>
 				<Table
 					columns={[
 						{
@@ -111,11 +204,40 @@ const Data = () => {
 								)
 							},
 						},
-						{ Header: 'Направление', accessor: 'direction' },
+						{
+							Header: 'Направление',
+							accessor: (d: any) => {
+								if (
+									configuration[d.direction].reverseDirection
+								) {
+									return 'Обратное'
+								} else {
+									return 'Прямое'
+								}
+							},
+						},
 						{ Header: 'Полоса', accessor: 'line' },
-						{ Header: 'Средняя плотность', accessor: 'avgDelay' },
+						{ Header: 'Средняя задержка', accessor: 'avgDelay' },
 					]}
 					data={delay}
+				/>
+			</div>
+			<div className={styles.dataBlock}>
+				<div className={styles.dataHeader}>Средняя плотность</div>
+				<Table
+					columns={[
+						{
+							Header: 'Время',
+							id: 'timestamp',
+							accessor: (d: any) => {
+								return dayjs(d.timestamp).format(
+									'DD/MM/YY HH:mm'
+								)
+							},
+						},
+						{ Header: 'Средняя плотность', accessor: 'density' },
+					]}
+					data={density}
 				/>
 			</div>
 		</div>

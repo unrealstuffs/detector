@@ -30,41 +30,50 @@ const DetectorScreen = () => {
 				composition: [],
 				speed: [],
 				delay: [],
+				density: [],
 			})
 		}
 	}, [accessToken, setData])
 
 	const fetchData = useCallback(async () => {
-		const [intensity, composition, speed, delay] = await Promise.all([
-			fetch(`${process.env.REACT_APP_TRAFFIC_INTENSITY}`, {
-				method: 'GET',
-				headers: {
-					Authorization: `${accessToken}`,
-				},
-			}),
-			fetch(`${process.env.REACT_APP_VEH_COMPOSITION}`, {
-				method: 'GET',
-				headers: {
-					Authorization: `${accessToken}`,
-				},
-			}),
-			fetch(`${process.env.REACT_APP_AVERAGE_SPEED}`, {
-				method: 'GET',
-				headers: {
-					Authorization: `${accessToken}`,
-				},
-			}),
-			fetch(`${process.env.REACT_APP_AVERAGE_DELAY}`, {
-				method: 'GET',
-				headers: {
-					Authorization: `${accessToken}`,
-				},
-			}),
-		])
+		const [intensity, composition, speed, delay, density] =
+			await Promise.all([
+				fetch(`${process.env.REACT_APP_TRAFFIC_INTENSITY}`, {
+					method: 'GET',
+					headers: {
+						Authorization: `${accessToken}`,
+					},
+				}),
+				fetch(`${process.env.REACT_APP_VEH_COMPOSITION}`, {
+					method: 'GET',
+					headers: {
+						Authorization: `${accessToken}`,
+					},
+				}),
+				fetch(`${process.env.REACT_APP_AVERAGE_SPEED}`, {
+					method: 'GET',
+					headers: {
+						Authorization: `${accessToken}`,
+					},
+				}),
+				fetch(`${process.env.REACT_APP_AVERAGE_DELAY}`, {
+					method: 'GET',
+					headers: {
+						Authorization: `${accessToken}`,
+					},
+				}),
+				fetch(`${process.env.REACT_APP_TRAFFIC_DENSITY}`, {
+					method: 'GET',
+					headers: {
+						Authorization: `${accessToken}`,
+					},
+				}),
+			])
 		const dataIntensity = await intensity.json()
 		const dataComposition = await composition.json()
 		const dataSpeed = await speed.json()
 		const dataDelay = await delay.json()
+		const dataDensity = await density.json()
 
 		if (dataIntensity) {
 			setData({
@@ -73,6 +82,7 @@ const DetectorScreen = () => {
 				composition: JSON.parse(dataComposition.data),
 				speed: JSON.parse(dataSpeed.data),
 				delay: JSON.parse(dataDelay.data),
+				density: JSON.parse(dataDensity),
 			})
 		}
 	}, [accessToken, setData])

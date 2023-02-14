@@ -153,6 +153,7 @@ export const setPoint = (
 			setDots({
 				...dots,
 				[`d_${zoneObj - 1}`]: {
+					reverseDirection: false,
 					...dots[`d_${zoneObj - 1}`],
 					pl: [
 						...dots[`d_${zoneObj - 1}`].pl,
@@ -176,6 +177,7 @@ export const setPoint = (
 					...dots,
 					[`d_${zoneObj - 1}`]: {
 						...dots[`d_${zoneObj - 1}`],
+
 						s: {
 							...dots[`d_${zoneObj - 1}`]['s'],
 							[`l_${lineObj - 1}`]: {

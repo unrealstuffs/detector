@@ -32,6 +32,13 @@
 			input {
 				@apply bg-white border border-light rounded-md py-3 px-4 outline-none;
 			}
+			.zoneCheck {
+				@apply flex items-center mt-2 font-normal cursor-pointer;
+
+				input {
+					@apply mr-2;
+				}
+			}
 		}
 		.zoneDots {
 			span {

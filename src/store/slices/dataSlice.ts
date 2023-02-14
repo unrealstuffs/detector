@@ -4,11 +4,13 @@ interface Type {
 	timestamp: string
 	licensePlate: string
 	type: string
+	direction: string
+	line: string
 }
 
 interface Intensity {
 	timestamp: string
-	direct: string
+	direction: string
 	intensity: number
 }
 
@@ -31,6 +33,11 @@ interface Delay {
 	avgDelay: number
 }
 
+interface Density {
+	timestamp: string
+	density: string
+}
+
 interface State {
 	data: {
 		types: Type[]
@@ -38,6 +45,7 @@ interface State {
 		composition: Composition[]
 		speed: Speed[]
 		delay: Delay[]
+		density: Density[]
 	}
 }
 
@@ -48,6 +56,7 @@ const initialState: State = {
 		composition: [],
 		speed: [],
 		delay: [],
+		density: [],
 	},
 }
 
@@ -61,6 +70,7 @@ const dataSlice = createSlice({
 			state.data.composition.unshift(...action.payload.composition)
 			state.data.speed.unshift(...action.payload.speed)
 			state.data.delay.unshift(...action.payload.delay)
+			state.data.density.unshift(...action.payload.density)
 		},
 		removeData(state) {
 			state.data = initialState.data
