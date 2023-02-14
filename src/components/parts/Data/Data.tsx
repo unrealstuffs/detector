@@ -30,9 +30,9 @@ const Data = () => {
 							Header: 'ГРЗ',
 							accessor: (d: any) => {
 								if (d.licencePlate) {
-									return (
-										d.linencePlate.replace(/!/g, ' ') || ''
-									)
+									return d.linencePlate
+										.replace(/!/g, ' ')
+										.slice(0, -2)
 								} else {
 									return d.linencePlate
 								}
@@ -40,20 +40,7 @@ const Data = () => {
 						},
 						{
 							Header: 'ТС',
-							accessor: (d: any) => {
-								switch (d.type) {
-									case 'sedan':
-										return 'Седан'
-									case 'largevehicle':
-										return 'Грузовик'
-									case 'van':
-										return 'Фургон'
-									case 'coupe':
-										return 'Купе'
-									default:
-										return d.type
-								}
-							},
+							accessor: 'type',
 						},
 						{
 							Header: 'Направление',
@@ -69,7 +56,15 @@ const Data = () => {
 						},
 						{
 							Header: 'Полоса',
-							accessor: 'line',
+							accessor: (d: any) => {
+								if (d.line) {
+									let lineArray = d.line.split('_')
+									let lineName = `l-${++lineArray[1]}`
+									return lineName
+								} else {
+									return d.line
+								}
+							},
 						},
 					]}
 					data={types}
@@ -138,20 +133,7 @@ const Data = () => {
 						{ Header: 'Полоса', accessor: 'line' },
 						{
 							Header: 'Тип ТС',
-							accessor: (d: any) => {
-								switch (d.vehicleType) {
-									case 'sedan':
-										return 'Седан'
-									case 'largevehicle':
-										return 'Грузовик'
-									case 'van':
-										return 'Фургон'
-									case 'coupe':
-										return 'Купе'
-									default:
-										return d.vehicleType
-								}
-							},
+							accessor: 'vehicleType',
 						},
 						{ Header: 'Количество', accessor: 'quantity' },
 					]}

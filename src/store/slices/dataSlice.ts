@@ -65,12 +65,18 @@ const dataSlice = createSlice({
 	initialState,
 	reducers: {
 		setData(state, action) {
-			state.data.types.unshift(...action.payload.types)
-			state.data.intensity.unshift(...action.payload.intensity)
-			state.data.composition.unshift(...action.payload.composition)
-			state.data.speed.unshift(...action.payload.speed)
-			state.data.delay.unshift(...action.payload.delay)
-			state.data.density.unshift(...action.payload.density)
+			if (action.payload.types.length)
+				state.data.types.unshift(...action.payload.types)
+			if (action.payload.intensity.length)
+				state.data.intensity.unshift(...action.payload.intensity)
+			if (action.payload.composition.length)
+				state.data.composition.unshift(...action.payload.composition)
+			if (action.payload.speed.length)
+				state.data.speed.unshift(...action.payload.speed)
+			if (action.payload.delay.length)
+				state.data.delay.unshift(...action.payload.delay)
+			if (action.payload.density.length)
+				state.data.density.unshift(...action.payload.density)
 		},
 		removeData(state) {
 			state.data = initialState.data

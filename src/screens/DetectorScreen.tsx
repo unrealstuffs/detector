@@ -75,16 +75,14 @@ const DetectorScreen = () => {
 		const dataDelay = await delay.json()
 		const dataDensity = await density.json()
 
-		if (dataIntensity) {
-			setData({
-				types: [],
-				intensity: JSON.parse(dataIntensity.data),
-				composition: JSON.parse(dataComposition.data),
-				speed: JSON.parse(dataSpeed.data),
-				delay: JSON.parse(dataDelay.data),
-				density: JSON.parse(dataDensity),
-			})
-		}
+		setData({
+			types: [],
+			intensity: JSON.parse(dataIntensity.data || []),
+			composition: JSON.parse(dataComposition.data || []),
+			speed: JSON.parse(dataSpeed.data || []),
+			delay: JSON.parse(dataDelay.data || []),
+			density: JSON.parse(dataDensity.data || []),
+		})
 	}, [accessToken, setData])
 
 	const fetchZoneConfig = useCallback(async () => {
