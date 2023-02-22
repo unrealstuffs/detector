@@ -2,9 +2,10 @@ import { bindActionCreators } from '@reduxjs/toolkit'
 import { useDispatch } from 'react-redux'
 import { cameraActions } from '../store/slices/cameraSlice'
 import { databaseActions } from '../store/slices/databaseSlice'
-import { dataActions } from '../store/slices/dataSlice'
+import { searchActions } from '../store/slices/searchSlice'
 import { detectorActions } from '../store/slices/detectorSlice'
 import { modalActions } from '../store/slices/modalSlice'
+import { tabsActions } from '../store/slices/tabsSlice'
 import { userActions } from '../store/slices/userSlice'
 
 const allActions = {
@@ -13,7 +14,8 @@ const allActions = {
 	...modalActions,
 	...cameraActions,
 	...databaseActions,
-	...dataActions,
+	...searchActions,
+	...tabsActions,
 }
 
 export const useActions = () => {

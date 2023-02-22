@@ -12,9 +12,10 @@ import {
 import storage from 'redux-persist/lib/storage'
 import { cameraReducer } from './slices/cameraSlice'
 import { databaseReducer } from './slices/databaseSlice'
-import { dataReducer } from './slices/dataSlice'
+import { searchReducer } from './slices/searchSlice'
 import { detectorReducer } from './slices/detectorSlice'
 import { modalReducer } from './slices/modalSlice'
+import { tabsReducer } from './slices/tabsSlice'
 import { userReducer } from './slices/userSlice'
 
 const rootReducer = combineReducers({
@@ -23,13 +24,14 @@ const rootReducer = combineReducers({
 	modal: modalReducer,
 	camera: cameraReducer,
 	database: databaseReducer,
-	data: dataReducer,
+	search: searchReducer,
+	tabs: tabsReducer,
 })
 
 const persistConfig = {
 	key: 'root',
 	storage,
-	blacklist: ['detector', 'modal', 'camera', 'database', 'data'],
+	blacklist: ['detector', 'modal', 'camera', 'database', 'data', 'tabs'],
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

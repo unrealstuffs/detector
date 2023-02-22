@@ -13,11 +13,3 @@
 		@apply border-b border-light px-4 py-2;
 	}
 }
-
-.datePicker {
-	@apply flex items-center justify-between gap-x-2 mb-2;
-
-	.dateInput {
-		@apply w-full bg-white border border-light rounded-md p-2 outline-none;
-	}
-}

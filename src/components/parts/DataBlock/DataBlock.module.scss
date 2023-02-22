@@ -3,7 +3,11 @@
 }
 
 .dataHeader {
-	@apply text-dark text-lg font-bold pb-4 border-b border-dashed border-light mb-4;
+	@apply text-dark text-lg font-bold pb-4 border-b border-dashed border-light mb-4 flex items-center gap-x-2;
+
+	.icon {
+		@apply text-light cursor-pointer;
+	}
 }
 
 .inputGroup {

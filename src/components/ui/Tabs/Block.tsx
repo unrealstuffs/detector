@@ -1,8 +1,8 @@
 import { FC, ReactNode } from 'react'
 
-import styles from './SettingsBody.module.scss'
+import styles from './Block.module.scss'
 
-const SettingsBlock: FC<{
+const Block: FC<{
 	children: ReactNode
 	className?: string
 	header: string
@@ -17,4 +17,4 @@ const SettingsBlock: FC<{
 	)
 }
 
-export default SettingsBlock
+export default Block

@@ -69,12 +69,30 @@ const ZoneConfig = () => {
 		e: React.ChangeEvent<HTMLInputElement>,
 		index: number
 	) => {
-		console.log(index)
 		setConfiguration({
 			...configuration,
 			[`d_${index}`]: {
 				...configuration[`d_${index}`],
 				reverseDirection: e.target.checked,
+			},
+		})
+	}
+
+	const setLineLength = (
+		e: React.ChangeEvent<HTMLInputElement>,
+		index: number,
+		lineIndex: number
+	) => {
+		setConfiguration({
+			...configuration,
+			['d_' + index]: {
+				...configuration[`d_${index}`],
+				s: {
+					['l_' + lineIndex]: {
+						...configuration[`d_${index}`]['s']['l_' + lineIndex],
+						length: e.target.value,
+					},
+				},
 			},
 		})
 	}
@@ -205,19 +223,38 @@ const ZoneConfig = () => {
 								configuration['d_' + index]['s']
 							).map((item, lineIndex) => {
 								return (
-									<input
+									<div
 										key={lineIndex}
-										type='text'
-										disabled
-										value={`z-${index + 1} l-${
-											lineIndex + 1
-										}`}
-										className={
-											mode === styles.line
-												? styles.selected
-												: ''
-										}
-									/>
+										className={styles.lineGroup}
+									>
+										<input
+											type='text'
+											disabled
+											value={`z-${index + 1} l-${
+												lineIndex + 1
+											}`}
+											className={
+												mode === styles.line
+													? styles.selected
+													: ''
+											}
+										/>
+										<input
+											type='number'
+											value={
+												configuration[`d_${index}`][
+													's'
+												][`l_${lineIndex}`]['length']
+											}
+											onChange={e =>
+												setLineLength(
+													e,
+													index,
+													lineIndex
+												)
+											}
+										/>
+									</div>
 								)
 							})
 						})}

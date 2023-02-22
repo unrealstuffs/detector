@@ -39,6 +39,17 @@
 					@apply mr-2;
 				}
 			}
+			.lineGroup {
+				@apply flex items-center gap-x-2;
+
+				input[type='text'] {
+					@apply basis-3/4 w-full;
+				}
+
+				input[type='number'] {
+					@apply bg-white border w-full border-light rounded-md outline-none font-normal basis-1/4;
+				}
+			}
 		}
 		.zoneDots {
 			span {
