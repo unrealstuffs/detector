@@ -88,6 +88,7 @@ const ZoneConfig = () => {
 			['d_' + index]: {
 				...configuration[`d_${index}`],
 				s: {
+					...configuration[`d_${index}`]['s'],
 					['l_' + lineIndex]: {
 						...configuration[`d_${index}`]['s']['l_' + lineIndex],
 						length: e.target.value,
@@ -244,7 +245,8 @@ const ZoneConfig = () => {
 											value={
 												configuration[`d_${index}`][
 													's'
-												][`l_${lineIndex}`]['length']
+												][`l_${lineIndex}`]['length'] ||
+												0
 											}
 											onChange={e =>
 												setLineLength(

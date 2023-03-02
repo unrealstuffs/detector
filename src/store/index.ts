@@ -31,7 +31,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
 	key: 'root',
 	storage,
-	blacklist: ['detector', 'modal', 'camera', 'database', 'data', 'tabs'],
+	blacklist: ['detector', 'modal', 'camera', 'database', 'search', 'tabs'],
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

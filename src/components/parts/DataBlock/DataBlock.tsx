@@ -3,6 +3,7 @@ import { Tooltip } from 'react-tooltip'
 import { Russian } from 'flatpickr/dist/l10n/ru.js'
 import 'flatpickr/dist/themes/dark.css'
 import 'react-tooltip/dist/react-tooltip.css'
+import rangePlugin from 'flatpickr/dist/plugins/rangePlugin'
 
 import styles from './DataBlock.module.scss'
 import { AiOutlineCloseCircle, AiOutlineQuestionCircle } from 'react-icons/ai'
@@ -30,13 +31,15 @@ const DataBlock: FC<DataBlockProps> = ({
 	setData,
 }) => {
 	const searchRef = useRef<Flatpickr>(null)
+	const secondSearchRef = useRef<HTMLInputElement>(null)
 	const { accessToken } = useTypedSelector(state => state.user)
-	const { setSearchFor } = useActions()
+	const { setSearchFor, resetSearchFor } = useActions()
 
 	const resetSearch = () => {
 		if (!searchRef?.current?.flatpickr) return
 		searchRef.current!.flatpickr.clear()
-		setSearchFor('')
+		secondSearchRef.current!.value = ''
+		resetSearchFor(tableName)
 
 		//@ts-ignore
 		setData(prev => ({
@@ -106,36 +109,51 @@ const DataBlock: FC<DataBlockProps> = ({
 				<AiOutlineQuestionCircle
 					className={styles.icon}
 					size={23}
-					id={tableName}
+					id={`tooltip-${tableName}`}
 				/>
 			</div>
 			<Tooltip
-				anchorSelect={`#${tableName}`}
+				anchorSelect={`#tooltip-${tableName}`}
 				place='bottom'
 				content={tooltipText}
+				style={{ maxWidth: 300 }}
 			/>
-			<div className={styles.datePicker}>
-				<Flatpickr
-					ref={searchRef}
-					options={{
-						dateFormat: 'd-m-Y H:i',
-						defaultDate: '',
-						disableMobile: true,
-						enableTime: true,
-						locale: Russian,
-						mode: 'range',
-						maxDate: 'today',
-						minuteIncrement: 1,
-					}}
-					placeholder='Временной промежуток'
-					className={styles.dateInput}
-					onClose={selectedDates =>
-						sendSearchDates(selectedDates, tableName)
-					}
-				/>
+			<div className={styles.dateRow}>
+				<div className={styles.datePicker}>
+					<Flatpickr
+						ref={searchRef}
+						options={{
+							dateFormat: 'd-m-Y H:i',
+							defaultDate: '',
+							disableMobile: true,
+							enableTime: true,
+							locale: Russian,
+							mode: 'range',
+							maxDate: 'today',
+							minuteIncrement: 1,
+							plugins: [
+								new (rangePlugin as any)({
+									input: `#input-${tableName}`,
+								}),
+							],
+						}}
+						placeholder='От'
+						className={styles.dateInput}
+						onClose={selectedDates =>
+							sendSearchDates(selectedDates, tableName)
+						}
+					/>
+					<input
+						ref={secondSearchRef}
+						className={styles.dateInput}
+						type='text'
+						id={'input-' + tableName}
+						placeholder='До'
+					/>
+				</div>
 				<AiOutlineCloseCircle
 					size={30}
-					className={styles.searchIcon}
+					className={styles.deleteIcon}
 					onClick={() => resetSearch()}
 				/>
 			</div>

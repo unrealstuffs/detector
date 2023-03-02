@@ -14,7 +14,7 @@
 	@apply mb-4 flex justify-between items-center gap-x-2;
 
 	.icon {
-		@apply text-dark cursor-pointer;
+		@apply text-dark cursor-pointer border-0;
 	}
 
 	label {
@@ -26,14 +26,18 @@
 	}
 }
 
-.datePicker {
+.dateRow {
 	@apply flex items-center justify-between gap-x-2 mb-4;
+
+	.deleteIcon {
+		@apply text-light cursor-pointer;
+	}
+}
+
+.datePicker {
+	@apply w-full flex items-center justify-between gap-x-2;
 
 	.dateInput {
 		@apply w-full bg-white border border-light rounded-md p-2 outline-none;
-	}
-
-	.searchIcon {
-		@apply text-light cursor-pointer;
 	}
 }

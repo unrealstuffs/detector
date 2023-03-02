@@ -21,22 +21,24 @@ const Data = () => {
 	const [data, setData] = useState({} as DataState)
 
 	useEffect(() => {
-		fetchTypes(setData, accessToken)
-		fetchIntensity(setData, accessToken)
-		fetchComposition(setData, accessToken)
-		fetchSpeed(setData, accessToken)
-		fetchDelay(setData, accessToken)
-		fetchDensity(setData, accessToken)
+		!searchFor.includes('types') && fetchTypes(setData, accessToken)
+		!searchFor.includes('intensity') && fetchIntensity(setData, accessToken)
+		!searchFor.includes('composition') &&
+			fetchComposition(setData, accessToken)
+		!searchFor.includes('speed') && fetchSpeed(setData, accessToken)
+		!searchFor.includes('delay') && fetchDelay(setData, accessToken)
+		!searchFor.includes('density') && fetchDensity(setData, accessToken)
 		const fetchTimer = setInterval(() => {
-			searchFor !== 'intensity' && fetchIntensity(setData, accessToken)
-			searchFor !== 'composition' &&
+			!searchFor.includes('intensity') &&
+				fetchIntensity(setData, accessToken)
+			!searchFor.includes('composition') &&
 				fetchComposition(setData, accessToken)
-			searchFor !== 'speed' && fetchSpeed(setData, accessToken)
-			searchFor !== 'delay' && fetchDelay(setData, accessToken)
-			searchFor !== 'density' && fetchDensity(setData, accessToken)
+			!searchFor.includes('speed') && fetchSpeed(setData, accessToken)
+			!searchFor.includes('delay') && fetchDelay(setData, accessToken)
+			!searchFor.includes('density') && fetchDensity(setData, accessToken)
 		}, 1000 * 60)
 		const fetchTypesTimer = setInterval(() => {
-			searchFor !== 'types' && fetchTypes(setData, accessToken)
+			!searchFor.includes('types') && fetchTypes(setData, accessToken)
 		}, 1000 * 10)
 
 		return () => {
@@ -78,7 +80,7 @@ const Data = () => {
 						Header: 'Направление',
 						accessor: (d: any) => {
 							if (
-								configuration &&
+								configuration[d.direction] &&
 								configuration[d.direction].reverseDirection
 							) {
 								return 'Обратное'
@@ -100,7 +102,7 @@ const Data = () => {
 						},
 					},
 				]}
-				tooltipText='Текст подсказки'
+				tooltipText='Список всех распознанных ГРЗ и соответствующих типов ТС по направлениям и полосам'
 				data={data.types}
 				tableName='types'
 			/>
@@ -119,7 +121,7 @@ const Data = () => {
 						Header: 'Направление',
 						accessor: (d: any) => {
 							if (
-								configuration &&
+								configuration[d.direction] &&
 								configuration[d.direction].reverseDirection
 							) {
 								return 'Обратное'
@@ -146,7 +148,7 @@ const Data = () => {
 					},
 					{ Header: 'Количество', accessor: 'quantity' },
 				]}
-				tooltipText='Текст подсказки'
+				tooltipText='Количество транспортных средств каждой расчетной категории (европейской классификации транспортного потока EUR 6), проследовавших за одну минуту в определенном направлении и полосе (ед.)'
 				data={data.composition}
 				tableName='composition'
 			/>
@@ -165,7 +167,7 @@ const Data = () => {
 						Header: 'Направление',
 						accessor: (d: any) => {
 							if (
-								configuration &&
+								configuration[d.direction] &&
 								configuration[d.direction].reverseDirection
 							) {
 								return 'Обратное'
@@ -188,7 +190,8 @@ const Data = () => {
 					},
 					{ Header: 'Интенсивность', accessor: 'intensity' },
 				]}
-				tooltipText='Текст подсказки'
+				tooltipText='Количество транспортных средств,
+проходящих за один час в определенном направлении и полосе (авто/час)'
 				data={data.intensity}
 				tableName='intensity'
 			/>
@@ -207,7 +210,7 @@ const Data = () => {
 						Header: 'Направление',
 						accessor: (d: any) => {
 							if (
-								configuration &&
+								configuration[d.direction] &&
 								configuration[d.direction].reverseDirection
 							) {
 								return 'Обратное'
@@ -230,7 +233,8 @@ const Data = () => {
 					},
 					{ Header: 'Средняя скорость', accessor: 'avgSpeed' },
 				]}
-				tooltipText='Текст подсказки'
+				tooltipText='Среднее арифметическое значений скоростей движения транспортных средств, проследовавших в одном
+направлении по определенной полосе (км/час)'
 				data={data.speed}
 				tableName='speed'
 			/>
@@ -250,7 +254,7 @@ const Data = () => {
 						Header: 'Направление',
 						accessor: (d: any) => {
 							if (
-								configuration &&
+								configuration[d.direction] &&
 								configuration[d.direction].reverseDirection
 							) {
 								return 'Обратное'
@@ -273,7 +277,8 @@ const Data = () => {
 					},
 					{ Header: 'Плотность движения', accessor: 'density' },
 				]}
-				tooltipText='Текст подсказки'
+				tooltipText='Отношение интенсивности дорожного движения к
+средней скорости движения транспортных средств, приходящейся на один километр полосы движения (авто/км)'
 				data={data.density}
 				tableName='density'
 			/>
@@ -292,7 +297,7 @@ const Data = () => {
 						Header: 'Направление',
 						accessor: (d: any) => {
 							if (
-								configuration &&
+								configuration[d.direction] &&
 								configuration[d.direction].reverseDirection
 							) {
 								return 'Обратное'
@@ -315,7 +320,7 @@ const Data = () => {
 					},
 					{ Header: 'Средняя задержка', accessor: 'avgDelay' },
 				]}
-				tooltipText='Текст подсказки'
+				tooltipText='Среднее время нахождения транспортного средства в зоне детектирования (сек.)'
 				data={data.delay}
 				tableName='delay'
 			/>
