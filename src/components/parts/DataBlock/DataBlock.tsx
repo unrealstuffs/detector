@@ -3,12 +3,11 @@ import { Tooltip } from 'react-tooltip'
 import { Russian } from 'flatpickr/dist/l10n/ru.js'
 import 'flatpickr/dist/themes/dark.css'
 import 'react-tooltip/dist/react-tooltip.css'
-import rangePlugin from 'flatpickr/dist/plugins/rangePlugin'
 
 import styles from './DataBlock.module.scss'
 import { AiOutlineCloseCircle, AiOutlineQuestionCircle } from 'react-icons/ai'
 import Table from '../Table/Table'
-import { FC, useRef } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { useTypedSelector } from '../../../hooks/useTypedSelector'
 import { DataState } from '../../../types/Data'
 import { useActions } from '../../../hooks/useActions'
@@ -31,14 +30,26 @@ const DataBlock: FC<DataBlockProps> = ({
 	setData,
 }) => {
 	const searchRef = useRef<Flatpickr>(null)
-	const secondSearchRef = useRef<HTMLInputElement>(null)
+	const secondSearchRef = useRef<Flatpickr>(null)
 	const { accessToken } = useTypedSelector(state => state.user)
 	const { setSearchFor, resetSearchFor } = useActions()
 
+	const [dates, setDates] = useState<{
+		from: Date[] | null
+		to: Date[] | null
+	}>({
+		from: null,
+		to: null,
+	})
+
 	const resetSearch = () => {
 		if (!searchRef?.current?.flatpickr) return
+		if (!secondSearchRef?.current?.flatpickr) return
 		searchRef.current!.flatpickr.clear()
-		secondSearchRef.current!.value = ''
+		secondSearchRef.current!.flatpickr.clear()
+
+		setDates({ from: null, to: null })
+
 		resetSearchFor(tableName)
 
 		//@ts-ignore
@@ -48,16 +59,19 @@ const DataBlock: FC<DataBlockProps> = ({
 		}))
 	}
 
-	const sendSearchDates = async (dates: Date[], table: string) => {
-		if (dates.length !== 2) {
+	useEffect(() => {
+		sendSearchDates()
+	}, [dates])
+
+	const sendSearchDates = async () => {
+		if (!dates.from || !dates.to) {
 			return
 		}
-
 		let url = ''
 
-		setSearchFor(table)
+		setSearchFor(tableName)
 
-		switch (table) {
+		switch (tableName) {
 			case 'types':
 				url = `${process.env.REACT_APP_SET_VEHICLE_TYPES_AND_PLATES}`
 				break
@@ -80,12 +94,19 @@ const DataBlock: FC<DataBlockProps> = ({
 				return
 		}
 
+		console.log(
+			JSON.stringify({
+				from: dates.from[0].toISOString(),
+				to: dates.to[0].toISOString(),
+			})
+		)
+
 		const response = await fetch(url, {
 			method: 'POST',
 			headers: {
 				Authorization: `${accessToken}`,
 			},
-			body: JSON.stringify({ from: dates[0], to: dates[1] }),
+			body: JSON.stringify({ from: dates.from[0], to: dates.to[0] }),
 		})
 
 		const responseData = await response.json()
@@ -93,12 +114,12 @@ const DataBlock: FC<DataBlockProps> = ({
 		//@ts-ignore
 		setData(prev => ({
 			...prev,
-			[table]: [],
+			[tableName]: [],
 		}))
 		//@ts-ignore
 		setData(prev => ({
 			...prev,
-			[table]: JSON.parse(responseData.data || []),
+			[tableName]: JSON.parse(responseData.data || []),
 		}))
 	}
 
@@ -128,27 +149,37 @@ const DataBlock: FC<DataBlockProps> = ({
 							disableMobile: true,
 							enableTime: true,
 							locale: Russian,
-							mode: 'range',
 							maxDate: 'today',
 							minuteIncrement: 1,
-							plugins: [
-								new (rangePlugin as any)({
-									input: `#input-${tableName}`,
-								}),
-							],
 						}}
 						placeholder='От'
 						className={styles.dateInput}
-						onClose={selectedDates =>
-							sendSearchDates(selectedDates, tableName)
+						onClose={selectedDate =>
+							setDates({
+								from: selectedDate,
+								to: dates.to,
+							})
 						}
 					/>
-					<input
+					<Flatpickr
 						ref={secondSearchRef}
-						className={styles.dateInput}
-						type='text'
-						id={'input-' + tableName}
+						options={{
+							dateFormat: 'd-m-Y H:i',
+							defaultDate: '',
+							disableMobile: true,
+							enableTime: true,
+							locale: Russian,
+							maxDate: 'today',
+							minuteIncrement: 1,
+						}}
 						placeholder='До'
+						className={styles.dateInput}
+						onClose={selectedDate =>
+							setDates({
+								from: dates.from,
+								to: selectedDate,
+							})
+						}
 					/>
 				</div>
 				<AiOutlineCloseCircle
