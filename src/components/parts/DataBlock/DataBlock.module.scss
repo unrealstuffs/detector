@@ -3,7 +3,7 @@
 }
 
 .dataHeader {
-	@apply text-dark text-lg font-bold pb-4 border-b border-dashed border-light mb-4 flex items-center gap-x-2;
+	@apply text-dark text-lg font-bold pb-4 flex items-center gap-x-2 border-b border-dashed border-light mb-4 cursor-pointer select-none;
 
 	.icon {
 		@apply text-light cursor-pointer;
@@ -26,18 +26,10 @@
 	}
 }
 
-.dateRow {
-	@apply flex items-center justify-between gap-x-2 mb-4;
+.searchIcon {
+	@apply flex justify-between items-center gap-x-2 mb-4;
 
-	.deleteIcon {
-		@apply text-light cursor-pointer;
-	}
-}
-
-.datePicker {
-	@apply w-full flex items-center justify-between gap-x-2;
-
-	.dateInput {
-		@apply w-full bg-white border border-light rounded-md p-2 outline-none;
+	.select {
+		@apply bg-white border border-light rounded-md p-2 outline-none;
 	}
 }

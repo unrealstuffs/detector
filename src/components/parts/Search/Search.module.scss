@@ -1,0 +1,36 @@
+.search {
+	@apply mb-4 border-b border-dashed border-light pb-2;
+}
+
+.input,
+.select {
+	@apply bg-white border border-light rounded-md p-2 outline-none;
+}
+
+.datePicker {
+	@apply flex items-center justify-between gap-x-2 mb-2;
+
+	.deleteIcon {
+		@apply text-light cursor-pointer;
+	}
+}
+
+.dateFields {
+	@apply w-full flex items-center justify-between gap-x-2;
+
+	.dateInput {
+		@apply w-full;
+	}
+}
+
+.searchFields {
+	@apply grid grid-cols-2 gap-2 mb-2;
+}
+
+.searchIcon {
+	@apply cursor-pointer text-white;
+}
+
+.button {
+	@apply bg-[#5BC4D1] rounded text-white p-2;
+}
