@@ -7,9 +7,10 @@ import 'flatpickr/dist/themes/material_blue.css'
 interface Props {
 	columns: Array<Column<object>>
 	data: Array<object>
+	rowsCount: number
 }
 
-const Table: FC<Props> = ({ columns, data }) => {
+const Table: FC<Props> = ({ columns, data, rowsCount }) => {
 	const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
 		useTable(
 			{
@@ -19,7 +20,7 @@ const Table: FC<Props> = ({ columns, data }) => {
 			useSortBy
 		)
 
-	const pageRows = rows.slice(0, 30)
+	const pageRows = rows.slice(0, rowsCount)
 
 	return (
 		<table {...getTableProps()} className={styles.table}>

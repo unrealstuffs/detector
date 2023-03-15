@@ -32,5 +32,9 @@
 }
 
 .button {
-	@apply bg-[#5BC4D1] rounded text-white p-2;
+	@apply rounded p-2 bg-accent text-white;
+}
+
+.delete {
+	@apply text-light rounded bg-white p-2;
 }

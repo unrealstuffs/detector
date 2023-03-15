@@ -5,8 +5,30 @@ import 'react-tooltip/dist/react-tooltip.css'
 import styles from './Search.module.scss'
 import { useActions } from '../../../hooks/useActions'
 import { useTypedSelector } from '../../../hooks/useTypedSelector'
+import dayjs from 'dayjs'
+import { DataState } from '../../../types/Data'
+import { AiOutlineClose } from 'react-icons/ai'
 
-const Search: FC<{ tableName: string }> = ({ tableName }) => {
+interface SearchData {
+	licensePlates: string[]
+	vehicleTypes: string[]
+	directions: string[]
+	lines: string[]
+	intensity: { value: string; statement: 'equal' | 'less' | 'more' }
+	quantity: { value: string; statement: 'equal' | 'less' | 'more' }
+	avgSpeed: { value: string; statement: 'equal' | 'less' | 'more' }
+	avgDelay: { value: string; statement: 'equal' | 'less' | 'more' }
+	density: { value: string; statement: 'equal' | 'less' | 'more' }
+	timestampRange: {
+		from: Date | ''
+		to: Date | ''
+	}
+}
+
+const Search: FC<{
+	tableName: string
+	setData: (state: DataState) => void
+}> = ({ tableName, setData }) => {
 	const { resetSearchFor } = useActions()
 
 	const searchRef = useRef<Flatpickr>(null)
@@ -15,12 +37,20 @@ const Search: FC<{ tableName: string }> = ({ tableName }) => {
 	const { accessToken } = useTypedSelector(state => state.user)
 	const { setSearchFor } = useActions()
 
-	const [dates, setDates] = useState<{
-		from: Date[] | null
-		to: Date[] | null
-	}>({
-		from: null,
-		to: null,
+	const [searchData, setSearchData] = useState<SearchData>({
+		licensePlates: [],
+		vehicleTypes: [],
+		directions: [],
+		lines: [],
+		intensity: { value: '', statement: 'equal' },
+		quantity: { value: '', statement: 'equal' },
+		avgSpeed: { value: '', statement: 'equal' },
+		avgDelay: { value: '', statement: 'equal' },
+		density: { value: '', statement: 'equal' },
+		timestampRange: {
+			from: '',
+			to: '',
+		},
 	})
 
 	const resetSearch = () => {
@@ -29,7 +59,21 @@ const Search: FC<{ tableName: string }> = ({ tableName }) => {
 		searchRef.current!.flatpickr.clear()
 		secondSearchRef.current!.flatpickr.clear()
 
-		setDates({ from: null, to: null })
+		setSearchData({
+			licensePlates: [],
+			vehicleTypes: [],
+			directions: [],
+			lines: [],
+			intensity: { value: '', statement: 'equal' },
+			quantity: { value: '', statement: 'equal' },
+			avgSpeed: { value: '', statement: 'equal' },
+			avgDelay: { value: '', statement: 'equal' },
+			density: { value: '', statement: 'equal' },
+			timestampRange: {
+				from: '',
+				to: '',
+			},
+		})
 
 		resetSearchFor(tableName)
 
@@ -40,52 +84,112 @@ const Search: FC<{ tableName: string }> = ({ tableName }) => {
 		}))
 	}
 
-	const sendSearchDates = async () => {
-		if (!dates.from || !dates.to) {
+	const sendSearchData = async () => {
+		if (!searchData.timestampRange.from || !searchData.timestampRange.to) {
 			return
 		}
-		let url = ''
+		//@ts-ignore
+		setData(prev => ({
+			...prev,
+			[tableName]: [],
+		}))
 
+		let url = ''
 		setSearchFor(tableName)
+
+		let searchObject = {}
 
 		switch (tableName) {
 			case 'types':
 				url = `${process.env.REACT_APP_SET_VEHICLE_TYPES_AND_PLATES}`
+				searchObject = {
+					licensePlates: searchData.licensePlates,
+					vehicleTypes: searchData.vehicleTypes,
+					directions: searchData.directions,
+					lines: searchData.lines,
+					timestampRange: {
+						from: searchData.timestampRange.from,
+						to: searchData.timestampRange.to,
+					},
+				}
 				break
 			case 'intensity':
 				url = `${process.env.REACT_APP_SET_TRAFFIC_INTENSITY}`
+				searchObject = {
+					directions: searchData.directions,
+					lines: searchData.lines,
+					intensity: searchData.intensity,
+					timestampRange: {
+						from: searchData.timestampRange.from,
+						to: searchData.timestampRange.to,
+					},
+				}
 				break
 			case 'composition':
 				url = `${process.env.REACT_APP_SET_VEH_COMPOSITION}`
+				searchObject = {
+					vehicleTypes: searchData.vehicleTypes,
+					directions: searchData.directions,
+					lines: searchData.lines,
+					quantity: searchData.quantity,
+					timestampRange: {
+						from: searchData.timestampRange.from,
+						to: searchData.timestampRange.to,
+					},
+				}
 				break
 			case 'speed':
 				url = `${process.env.REACT_APP_SET_AVERAGE_SPEED}`
+				searchObject = {
+					directions: searchData.directions,
+					lines: searchData.lines,
+					avgSpeed: searchData.avgSpeed,
+					timestampRange: {
+						from: searchData.timestampRange.from,
+						to: searchData.timestampRange.to,
+					},
+				}
 				break
 			case 'delay':
 				url = `${process.env.REACT_APP_SET_AVERAGE_DELAY}`
+				searchObject = {
+					directions: searchData.directions,
+					lines: searchData.lines,
+					avgDelay: searchData.avgDelay,
+					timestampRange: {
+						from: searchData.timestampRange.from,
+						to: searchData.timestampRange.to,
+					},
+				}
 				break
 			case 'density':
 				url = `${process.env.REACT_APP_SET_TRAFFIC_DENSITY}`
+				searchObject = {
+					directions: searchData.directions,
+					lines: searchData.lines,
+					density: searchData.density,
+					timestampRange: {
+						from: searchData.timestampRange.from,
+						to: searchData.timestampRange.to,
+					},
+				}
 				break
 			default:
 				return
 		}
+
+		console.log(JSON.stringify(searchObject))
 
 		const response = await fetch(url, {
 			method: 'POST',
 			headers: {
 				Authorization: `${accessToken}`,
 			},
-			body: JSON.stringify({ from: dates.from[0], to: dates.to[0] }),
+			body: JSON.stringify(searchObject),
 		})
 
 		const responseData = await response.json()
 
-		//@ts-ignore
-		setData(prev => ({
-			...prev,
-			[tableName]: [],
-		}))
 		//@ts-ignore
 		setData(prev => ({
 			...prev,
@@ -101,56 +205,87 @@ const Search: FC<{ tableName: string }> = ({ tableName }) => {
 						ref={searchRef}
 						options={{
 							dateFormat: 'd-m-Y H:i',
-							defaultDate: '',
+							defaultDate: searchData.timestampRange.from,
 							disableMobile: true,
 							enableTime: true,
 							locale: Russian,
+							minDate: dayjs(new Date())
+								.subtract(2, 'days')
+								.toString(),
 							maxDate: 'today',
 							minuteIncrement: 1,
 						}}
 						placeholder='От'
 						className={`${styles.dateInput} ${styles.input}`}
 						onClose={selectedDate =>
-							setDates({
-								from: selectedDate,
-								to: dates.to,
-							})
+							setSearchData(prev => ({
+								...prev,
+								timestampRange: {
+									...prev.timestampRange,
+									from: selectedDate[0],
+								},
+							}))
 						}
 					/>
 					<Flatpickr
 						ref={secondSearchRef}
 						options={{
 							dateFormat: 'd-m-Y H:i',
-							defaultDate: '',
+							defaultDate: searchData.timestampRange.to,
 							disableMobile: true,
 							enableTime: true,
 							locale: Russian,
+							minDate: searchData.timestampRange.from,
 							maxDate: 'today',
 							minuteIncrement: 1,
 						}}
 						placeholder='До'
 						className={`${styles.dateInput} ${styles.input}`}
-						onClose={selectedDate =>
-							setDates({
-								from: dates.from,
-								to: selectedDate,
-							})
+						onChange={selectedDate =>
+							setSearchData(prev => ({
+								...prev,
+								timestampRange: {
+									...prev.timestampRange,
+									to: selectedDate[0],
+								},
+							}))
 						}
 					/>
 				</div>
-				<button className={styles.button}>Поиск</button>
+				<button className={styles.delete} onClick={resetSearch}>
+					<AiOutlineClose size={20} />
+				</button>
+				<button className={styles.button} onClick={sendSearchData}>
+					Поиск
+				</button>
 			</div>
 			<div className={styles.searchFields}>
-				<select className={styles.select}>
-					<option value='_' selected>
+				<select
+					className={styles.select}
+					onChange={e =>
+						setSearchData(prev => ({
+							...prev,
+							lines: [...prev.lines, e.target.value],
+						}))
+					}
+				>
+					<option value='' selected>
 						Полоса
 					</option>
 					<option value='l_0'>l-1</option>
 					<option value='l_1'>l-2</option>
 					<option value='l_2'>l-3</option>
 				</select>
-				<select className={styles.select}>
-					<option value='_' selected>
+				<select
+					className={styles.select}
+					onChange={e =>
+						setSearchData(prev => ({
+							...prev,
+							directions: [e.target.value],
+						}))
+					}
+				>
+					<option value='' selected>
 						Направление
 					</option>
 					<option value='d_0'>Прямое</option>
@@ -158,41 +293,74 @@ const Search: FC<{ tableName: string }> = ({ tableName }) => {
 				</select>
 				{tableName === 'types' && (
 					<>
-						<select className={styles.select}>
-							<option value='_' selected>
+						<select
+							className={styles.select}
+							onChange={e =>
+								setSearchData(prev => ({
+									...prev,
+									vehicleTypes: [e.target.value],
+								}))
+							}
+						>
+							<option value='' selected>
 								Тип ТС
 							</option>
-							<option value='Седан'>Седан</option>
-							<option value='Купе'>Купе</option>
-							<option value='Грузовая машина'>
+							<option value='седан'>Седан</option>
+							<option value='купе'>Купе</option>
+							<option value='грузовая машина'>
 								Грузовая машина
 							</option>
-							<option value='Автобус'>Автобус</option>
+							<option value='автобус'>Автобус</option>
 						</select>
 						<input
 							type='text'
 							placeholder='Номер ГРЗ...'
 							className={styles.input}
+							value={searchData.licensePlates[0]}
+							onChange={e =>
+								setSearchData(prev => ({
+									...prev,
+									licensePlates: [e.target.value],
+								}))
+							}
 						/>
 					</>
 				)}
 				{tableName === 'composition' && (
 					<>
-						<select className={styles.select}>
-							<option value='_' selected>
+						<select
+							className={styles.select}
+							onChange={e =>
+								setSearchData(prev => ({
+									...prev,
+									vehicleTypes: [e.target.value],
+								}))
+							}
+						>
+							<option value='' selected>
 								Тип ТС
 							</option>
-							<option value='Седан'>Седан</option>
-							<option value='Купе'>Купе</option>
-							<option value='Грузовая машина'>
+							<option value='седан'>Седан</option>
+							<option value='купе'>Купе</option>
+							<option value='грузовая машина'>
 								Грузовая машина
 							</option>
-							<option value='Автобус'>Автобус</option>
+							<option value='автобус'>Автобус</option>
 						</select>
 						<input
 							type='number'
 							placeholder='Количество...'
 							className={styles.input}
+							value={searchData.quantity.value}
+							onChange={e =>
+								setSearchData(prev => ({
+									...prev,
+									quantity: {
+										value: e.target.value,
+										statement: 'equal',
+									},
+								}))
+							}
 						/>
 					</>
 				)}
@@ -201,6 +369,16 @@ const Search: FC<{ tableName: string }> = ({ tableName }) => {
 						type='number'
 						placeholder='Интенсивность...'
 						className={styles.input}
+						value={searchData.intensity.value}
+						onChange={e =>
+							setSearchData(prev => ({
+								...prev,
+								intensity: {
+									value: e.target.value,
+									statement: 'equal',
+								},
+							}))
+						}
 					/>
 				)}
 				{tableName === 'speed' && (
@@ -208,6 +386,16 @@ const Search: FC<{ tableName: string }> = ({ tableName }) => {
 						type='number'
 						placeholder='Средняя скорость...'
 						className={styles.input}
+						value={searchData.avgSpeed.value}
+						onChange={e =>
+							setSearchData(prev => ({
+								...prev,
+								avgSpeed: {
+									value: e.target.value,
+									statement: 'equal',
+								},
+							}))
+						}
 					/>
 				)}
 				{tableName === 'density' && (
@@ -215,6 +403,16 @@ const Search: FC<{ tableName: string }> = ({ tableName }) => {
 						type='number'
 						placeholder='Плотность...'
 						className={styles.input}
+						value={searchData.density.value}
+						onChange={e =>
+							setSearchData(prev => ({
+								...prev,
+								density: {
+									value: e.target.value,
+									statement: 'equal',
+								},
+							}))
+						}
 					/>
 				)}
 				{tableName === 'delay' && (
@@ -222,6 +420,16 @@ const Search: FC<{ tableName: string }> = ({ tableName }) => {
 						type='number'
 						placeholder='Средняя задержка...'
 						className={styles.input}
+						value={searchData.avgDelay.value}
+						onChange={e =>
+							setSearchData(prev => ({
+								...prev,
+								avgDelay: {
+									value: e.target.value,
+									statement: 'equal',
+								},
+							}))
+						}
 					/>
 				)}
 			</div>

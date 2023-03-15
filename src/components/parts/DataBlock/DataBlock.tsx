@@ -31,6 +31,7 @@ const DataBlock: FC<DataBlockProps> = ({
 }) => {
 	const [showTable, setShowTable] = useState(true)
 	const [showForm, setShowForm] = useState(false)
+	const [rowsCount, setRowsCount] = useState(30)
 
 	return (
 		<div className={styles.dataBlock}>
@@ -62,8 +63,11 @@ const DataBlock: FC<DataBlockProps> = ({
 			{showTable && (
 				<>
 					<div className={styles.searchIcon}>
-						<select className={styles.select}>
-							<option value='_' selected>
+						<select
+							className={styles.select}
+							onChange={e => setRowsCount(+e.target.value)}
+						>
+							<option value='30' selected>
 								Показывать по
 							</option>
 							<option value='10'>10 записей</option>
@@ -79,8 +83,14 @@ const DataBlock: FC<DataBlockProps> = ({
 							style={{ cursor: 'pointer' }}
 						/>
 					</div>
-					{showForm && <Search tableName={tableName} />}
-					<Table columns={columns || []} data={data || []} />
+					{showForm && (
+						<Search tableName={tableName} setData={setData} />
+					)}
+					<Table
+						columns={columns || []}
+						data={data || []}
+						rowsCount={rowsCount}
+					/>
 				</>
 			)}
 		</div>

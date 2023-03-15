@@ -20,32 +20,32 @@ const Data = () => {
 
 	const [data, setData] = useState({} as DataState)
 
-	useEffect(() => {
-		!searchFor.includes('types') && fetchTypes(setData, accessToken)
-		!searchFor.includes('intensity') && fetchIntensity(setData, accessToken)
-		!searchFor.includes('composition') &&
-			fetchComposition(setData, accessToken)
-		!searchFor.includes('speed') && fetchSpeed(setData, accessToken)
-		!searchFor.includes('delay') && fetchDelay(setData, accessToken)
-		!searchFor.includes('density') && fetchDensity(setData, accessToken)
-		const fetchTimer = setInterval(() => {
-			!searchFor.includes('intensity') &&
-				fetchIntensity(setData, accessToken)
-			!searchFor.includes('composition') &&
-				fetchComposition(setData, accessToken)
-			!searchFor.includes('speed') && fetchSpeed(setData, accessToken)
-			!searchFor.includes('delay') && fetchDelay(setData, accessToken)
-			!searchFor.includes('density') && fetchDensity(setData, accessToken)
-		}, 1000 * 60)
-		const fetchTypesTimer = setInterval(() => {
-			!searchFor.includes('types') && fetchTypes(setData, accessToken)
-		}, 1000 * 10)
+	// useEffect(() => {
+	// 	// !searchFor.includes('types') && fetchTypes(setData, accessToken)
+	// 	// !searchFor.includes('intensity') && fetchIntensity(setData, accessToken)
+	// 	// !searchFor.includes('composition') &&
+	// 	// 	fetchComposition(setData, accessToken)
+	// 	// !searchFor.includes('speed') && fetchSpeed(setData, accessToken)
+	// 	// !searchFor.includes('delay') && fetchDelay(setData, accessToken)
+	// 	// !searchFor.includes('density') && fetchDensity(setData, accessToken)
+	// 	const fetchTimer = setInterval(() => {
+	// 		!searchFor.includes('intensity') &&
+	// 			fetchIntensity(setData, accessToken)
+	// 		!searchFor.includes('composition') &&
+	// 			fetchComposition(setData, accessToken)
+	// 		!searchFor.includes('speed') && fetchSpeed(setData, accessToken)
+	// 		!searchFor.includes('delay') && fetchDelay(setData, accessToken)
+	// 		!searchFor.includes('density') && fetchDensity(setData, accessToken)
+	// 	}, 1000 * 60)
+	// 	const fetchTypesTimer = setInterval(() => {
+	// 		!searchFor.includes('types') && fetchTypes(setData, accessToken)
+	// 	}, 1000 * 10)
 
-		return () => {
-			clearInterval(fetchTimer)
-			clearInterval(fetchTypesTimer)
-		}
-	}, [accessToken, searchFor])
+	// 	return () => {
+	// 		clearInterval(fetchTimer)
+	// 		clearInterval(fetchTypesTimer)
+	// 	}
+	// }, [searchFor, accessToken])
 
 	return (
 		<div className={styles.data}>
