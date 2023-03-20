@@ -14,11 +14,11 @@ interface SearchData {
 	vehicleTypes: string[]
 	directions: string[]
 	lines: string[]
-	intensity: { value: string; statement: 'equal' | 'less' | 'more' }
-	quantity: { value: string; statement: 'equal' | 'less' | 'more' }
-	avgSpeed: { value: string; statement: 'equal' | 'less' | 'more' }
-	avgDelay: { value: string; statement: 'equal' | 'less' | 'more' }
-	density: { value: string; statement: 'equal' | 'less' | 'more' }
+	intensity: { value: string; statement: string }
+	quantity: { value: string; statement: string }
+	avgSpeed: { value: string; statement: string }
+	avgDelay: { value: string; statement: string }
+	density: { value: string; statement: string }
 	timestampRange: {
 		from: Date | ''
 		to: Date | ''
@@ -85,6 +85,7 @@ const Search: FC<{
 	}
 
 	const sendSearchData = async () => {
+		console.log(searchData)
 		if (!searchData.timestampRange.from || !searchData.timestampRange.to) {
 			return
 		}
@@ -178,8 +179,6 @@ const Search: FC<{
 				return
 		}
 
-		console.log(JSON.stringify(searchObject))
-
 		const response = await fetch(url, {
 			method: 'POST',
 			headers: {
@@ -193,7 +192,7 @@ const Search: FC<{
 		//@ts-ignore
 		setData(prev => ({
 			...prev,
-			[tableName]: JSON.parse(responseData.data || []),
+			[tableName]: JSON.parse(responseData.data) || [],
 		}))
 	}
 
@@ -305,12 +304,12 @@ const Search: FC<{
 							<option value='' selected>
 								Тип ТС
 							</option>
-							<option value='седан'>Седан</option>
-							<option value='купе'>Купе</option>
-							<option value='грузовая машина'>
-								Грузовая машина
-							</option>
 							<option value='автобус'>Автобус</option>
+							<option value='легковой'>Легковой</option>
+							<option value='микроавтобус'>Микроавтобус</option>
+							<option value='небольшой грузовик'>
+								Небольшой грузовик
+							</option>
 						</select>
 						<input
 							type='text'
@@ -340,97 +339,187 @@ const Search: FC<{
 							<option value='' selected>
 								Тип ТС
 							</option>
-							<option value='седан'>Седан</option>
-							<option value='купе'>Купе</option>
-							<option value='грузовая машина'>
-								Грузовая машина
-							</option>
 							<option value='автобус'>Автобус</option>
+							<option value='легковой'>Легковой</option>
+							<option value='микроавтобус'>Микроавтобус</option>
+							<option value='небольшой грузовик'>
+								Небольшой грузовик
+							</option>
 						</select>
+						<div className={styles.numField}>
+							<input
+								type='number'
+								placeholder='Количество...'
+								className={styles.input}
+								value={searchData.quantity.value}
+								onChange={e =>
+									setSearchData(prev => ({
+										...prev,
+										quantity: {
+											...prev.quantity,
+											value: e.target.value,
+										},
+									}))
+								}
+							/>
+							<select
+								className={styles.select}
+								onChange={e =>
+									setSearchData(prev => ({
+										...prev,
+										quantity: {
+											...prev.quantity,
+											statement: e.target.value,
+										},
+									}))
+								}
+							>
+								<option value='equal'>Равно</option>
+								<option value='less'>Меньше</option>
+								<option value='more'>Больше</option>
+							</select>
+						</div>
+					</>
+				)}
+				{tableName === 'intensity' && (
+					<div className={styles.numField}>
 						<input
 							type='number'
-							placeholder='Количество...'
+							placeholder='Интенсивность...'
 							className={styles.input}
-							value={searchData.quantity.value}
+							value={searchData.intensity.value}
 							onChange={e =>
 								setSearchData(prev => ({
 									...prev,
-									quantity: {
+									intensity: {
+										...prev.intensity,
 										value: e.target.value,
-										statement: 'equal',
 									},
 								}))
 							}
 						/>
-					</>
-				)}
-				{tableName === 'intensity' && (
-					<input
-						type='number'
-						placeholder='Интенсивность...'
-						className={styles.input}
-						value={searchData.intensity.value}
-						onChange={e =>
-							setSearchData(prev => ({
-								...prev,
-								intensity: {
-									value: e.target.value,
-									statement: 'equal',
-								},
-							}))
-						}
-					/>
+						<select
+							className={styles.select}
+							onChange={e =>
+								setSearchData(prev => ({
+									...prev,
+									intensity: {
+										...prev.intensity,
+										statement: e.target.value,
+									},
+								}))
+							}
+						>
+							<option value='equal'>Равно</option>
+							<option value='less'>Меньше</option>
+							<option value='more'>Больше</option>
+						</select>
+					</div>
 				)}
 				{tableName === 'speed' && (
-					<input
-						type='number'
-						placeholder='Средняя скорость...'
-						className={styles.input}
-						value={searchData.avgSpeed.value}
-						onChange={e =>
-							setSearchData(prev => ({
-								...prev,
-								avgSpeed: {
-									value: e.target.value,
-									statement: 'equal',
-								},
-							}))
-						}
-					/>
+					<div className={styles.numField}>
+						<input
+							type='number'
+							placeholder='Средняя скорость...'
+							className={styles.input}
+							value={searchData.avgSpeed.value}
+							onChange={e =>
+								setSearchData(prev => ({
+									...prev,
+									avgSpeed: {
+										...prev.avgSpeed,
+										value: e.target.value,
+									},
+								}))
+							}
+						/>
+						<select
+							className={styles.select}
+							onChange={e =>
+								setSearchData(prev => ({
+									...prev,
+									avgSpeed: {
+										...prev.avgSpeed,
+										statement: e.target.value,
+									},
+								}))
+							}
+						>
+							<option value='equal'>Равно</option>
+							<option value='less'>Меньше</option>
+							<option value='more'>Больше</option>
+						</select>
+					</div>
 				)}
 				{tableName === 'density' && (
-					<input
-						type='number'
-						placeholder='Плотность...'
-						className={styles.input}
-						value={searchData.density.value}
-						onChange={e =>
-							setSearchData(prev => ({
-								...prev,
-								density: {
-									value: e.target.value,
-									statement: 'equal',
-								},
-							}))
-						}
-					/>
+					<div className={styles.numField}>
+						<input
+							type='number'
+							placeholder='Плотность...'
+							className={styles.input}
+							value={searchData.density.value}
+							onChange={e =>
+								setSearchData(prev => ({
+									...prev,
+									density: {
+										...prev.density,
+										value: e.target.value,
+									},
+								}))
+							}
+						/>
+						<select
+							className={styles.select}
+							onChange={e =>
+								setSearchData(prev => ({
+									...prev,
+									density: {
+										...prev.density,
+										statement: e.target.value,
+									},
+								}))
+							}
+						>
+							<option value='equal'>Равно</option>
+							<option value='less'>Меньше</option>
+							<option value='more'>Больше</option>
+						</select>
+					</div>
 				)}
 				{tableName === 'delay' && (
-					<input
-						type='number'
-						placeholder='Средняя задержка...'
-						className={styles.input}
-						value={searchData.avgDelay.value}
-						onChange={e =>
-							setSearchData(prev => ({
-								...prev,
-								avgDelay: {
-									value: e.target.value,
-									statement: 'equal',
-								},
-							}))
-						}
-					/>
+					<div className={styles.numField}>
+						<input
+							type='number'
+							placeholder='Средняя задержка...'
+							className={styles.input}
+							value={searchData.avgDelay.value}
+							onChange={e =>
+								setSearchData(prev => ({
+									...prev,
+									avgDelay: {
+										...prev.avgDelay,
+										value: e.target.value,
+									},
+								}))
+							}
+						/>
+						<select
+							className={styles.select}
+							onChange={e =>
+								setSearchData(prev => ({
+									...prev,
+									avgDelay: {
+										...prev.avgDelay,
+										statement: e.target.value,
+									},
+								}))
+							}
+						>
+							<option value='equal'>Равно</option>
+							<option value='less'>Меньше</option>
+							<option value='more'>Больше</option>
+						</select>
+					</div>
 				)}
 			</div>
 		</div>

@@ -116,6 +116,7 @@ const Shot: FC<{ isShot: boolean }> = ({ isShot }) => {
 			setVideoLoading(true)
 			videoRef.current?.load()
 			videoRef.current?.play()
+			videoRef.current!.muted = true
 		}
 	}, [isShot])
 
@@ -168,6 +169,7 @@ const Shot: FC<{ isShot: boolean }> = ({ isShot }) => {
 					autoPlay
 					width='100%'
 					loop
+					muted
 					ref={videoRef}
 					onLoadedData={() => setVideoLoading(false)}
 				>
