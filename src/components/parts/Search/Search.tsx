@@ -5,9 +5,9 @@ import 'react-tooltip/dist/react-tooltip.css'
 import styles from './Search.module.scss'
 import { useActions } from '../../../hooks/useActions'
 import { useTypedSelector } from '../../../hooks/useTypedSelector'
-import dayjs from 'dayjs'
 import { DataState } from '../../../types/Data'
 import { AiOutlineClose } from 'react-icons/ai'
+import { Fetch } from '../../../types/Fetch'
 
 interface SearchData {
 	licensePlates: string[]
@@ -28,7 +28,8 @@ interface SearchData {
 const Search: FC<{
 	tableName: string
 	setData: (state: DataState) => void
-}> = ({ tableName, setData }) => {
+	setStatus: (status: Fetch) => void
+}> = ({ tableName, setData, setStatus }) => {
 	const { resetSearchFor } = useActions()
 
 	const searchRef = useRef<Flatpickr>(null)
@@ -54,6 +55,7 @@ const Search: FC<{
 	})
 
 	const resetSearch = () => {
+		setStatus('init')
 		if (!searchRef?.current?.flatpickr) return
 		if (!secondSearchRef?.current?.flatpickr) return
 		searchRef.current!.flatpickr.clear()
@@ -85,10 +87,10 @@ const Search: FC<{
 	}
 
 	const sendSearchData = async () => {
-		console.log(searchData)
 		if (!searchData.timestampRange.from || !searchData.timestampRange.to) {
 			return
 		}
+		setStatus('loading')
 		//@ts-ignore
 		setData(prev => ({
 			...prev,
@@ -179,21 +181,37 @@ const Search: FC<{
 				return
 		}
 
-		const response = await fetch(url, {
-			method: 'POST',
-			headers: {
-				Authorization: `${accessToken}`,
-			},
-			body: JSON.stringify(searchObject),
-		})
+		try {
+			const response = await fetch(url, {
+				method: 'POST',
+				headers: {
+					Authorization: `${accessToken}`,
+				},
+				body: JSON.stringify(searchObject),
+			})
 
-		const responseData = await response.json()
+			const responseData = await response.json()
 
-		//@ts-ignore
-		setData(prev => ({
-			...prev,
-			[tableName]: JSON.parse(responseData.data) || [],
-		}))
+			if (!JSON.parse(responseData.data).length) {
+				setStatus('nodata')
+
+				//@ts-ignore
+				setData(prev => ({
+					...prev,
+					[tableName]: [],
+				}))
+			} else {
+				//@ts-ignore
+				setData(prev => ({
+					...prev,
+					[tableName]: JSON.parse(responseData.data),
+				}))
+
+				setStatus('success')
+			}
+		} catch {
+			setStatus('error')
+		}
 	}
 
 	return (
@@ -208,9 +226,6 @@ const Search: FC<{
 							disableMobile: true,
 							enableTime: true,
 							locale: Russian,
-							minDate: dayjs(new Date())
-								.subtract(2, 'days')
-								.toString(),
 							maxDate: 'today',
 							minuteIncrement: 1,
 						}}

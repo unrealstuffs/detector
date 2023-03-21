@@ -20,35 +20,28 @@ const Data = () => {
 
 	const [data, setData] = useState({} as DataState)
 
-	// useEffect(() => {
-	// 	// !searchFor.includes('types') && fetchTypes(setData, accessToken)
-	// 	// !searchFor.includes('intensity') && fetchIntensity(setData, accessToken)
-	// 	// !searchFor.includes('composition') &&
-	// 	// 	fetchComposition(setData, accessToken)
-	// 	// !searchFor.includes('speed') && fetchSpeed(setData, accessToken)
-	// 	// !searchFor.includes('delay') && fetchDelay(setData, accessToken)
-	// 	// !searchFor.includes('density') && fetchDensity(setData, accessToken)
-	// 	const fetchShortTimer = setInterval(() => {
-	// 		!searchFor.includes('composition') &&
-	// 			fetchComposition(setData, accessToken)
-	// 		!searchFor.includes('delay') && fetchDelay(setData, accessToken)
-	// 	}, 1000 * 60)
-	// 	const fetchLongTimer = setInterval(() => {
-	// 		!searchFor.includes('intensity') &&
-	// 			fetchIntensity(setData, accessToken)
-	// 		!searchFor.includes('speed') && fetchSpeed(setData, accessToken)
-	// 		!searchFor.includes('density') && fetchDensity(setData, accessToken)
-	// 	}, 1000 * 60 * 15)
-	// 	const fetchTypesTimer = setInterval(() => {
-	// 		!searchFor.includes('types') && fetchTypes(setData, accessToken)
-	// 	}, 1000 * 10)
+	useEffect(() => {
+		const fetchShortTimer = setInterval(() => {
+			!searchFor.includes('composition') &&
+				fetchComposition(setData, accessToken)
+			!searchFor.includes('delay') && fetchDelay(setData, accessToken)
+		}, 1000 * 60)
+		const fetchLongTimer = setInterval(() => {
+			!searchFor.includes('intensity') &&
+				fetchIntensity(setData, accessToken)
+			!searchFor.includes('speed') && fetchSpeed(setData, accessToken)
+			!searchFor.includes('density') && fetchDensity(setData, accessToken)
+		}, 1000 * 60 * 15)
+		const fetchTypesTimer = setInterval(() => {
+			!searchFor.includes('types') && fetchTypes(setData, accessToken)
+		}, 1000 * 10)
 
-	// 	return () => {
-	// 		clearInterval(fetchShortTimer)
-	// 		clearInterval(fetchLongTimer)
-	// 		clearInterval(fetchTypesTimer)
-	// 	}
-	// }, [searchFor, accessToken])
+		return () => {
+			clearInterval(fetchShortTimer)
+			clearInterval(fetchLongTimer)
+			clearInterval(fetchTypesTimer)
+		}
+	}, [searchFor, accessToken])
 
 	return (
 		<div className={styles.data}>
@@ -68,7 +61,7 @@ const Data = () => {
 						accessor: (d: any) => {
 							if (d.licensePlate) {
 								return d.licensePlate
-									.replace(/!/g, ' ')
+									.replace(/!/g, '')
 									.replace(/rf/, '')
 							} else {
 								return d.licensePlate
