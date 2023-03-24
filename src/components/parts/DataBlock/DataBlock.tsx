@@ -1,5 +1,5 @@
 import { Tooltip } from 'react-tooltip'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styles from './DataBlock.module.scss'
 import {
 	AiOutlineCaretDown,
@@ -11,6 +11,7 @@ import Table from '../Table/Table'
 import { FC } from 'react'
 import { DataState } from '../../../types/Data'
 import Search from '../Search/Search'
+import { Fetch } from '../../../types/Fetch'
 
 interface DataBlockProps {
 	data: any
@@ -32,6 +33,15 @@ const DataBlock: FC<DataBlockProps> = ({
 	const [showTable, setShowTable] = useState(true)
 	const [showForm, setShowForm] = useState(false)
 	const [rowsCount, setRowsCount] = useState(30)
+	const [status, setStatus] = useState<Fetch>('init')
+
+	useEffect(() => {
+		const subscriber = setInterval(() => {
+			status !== 'success' && setStatus('init')
+		}, 5000)
+
+		return () => clearInterval(subscriber)
+	}, [status])
 
 	return (
 		<div className={styles.dataBlock}>
@@ -84,12 +94,17 @@ const DataBlock: FC<DataBlockProps> = ({
 						/>
 					</div>
 					{showForm && (
-						<Search tableName={tableName} setData={setData} />
+						<Search
+							tableName={tableName}
+							setData={setData}
+							setStatus={setStatus}
+						/>
 					)}
 					<Table
 						columns={columns || []}
 						data={data || []}
 						rowsCount={rowsCount}
+						status={status}
 					/>
 				</>
 			)}
