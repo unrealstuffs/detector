@@ -3,14 +3,16 @@ import { FC } from 'react'
 import { useTable, useSortBy, Column } from 'react-table'
 import { AiOutlineCaretDown, AiOutlineCaretUp } from 'react-icons/ai'
 import 'flatpickr/dist/themes/material_blue.css'
+import { Fetch } from '../../../types/Fetch'
 
 interface Props {
 	columns: Array<Column<object>>
 	data: Array<object>
 	rowsCount: number
+	status: Fetch
 }
 
-const Table: FC<Props> = ({ columns, data, rowsCount }) => {
+const Table: FC<Props> = ({ columns, data, rowsCount, status }) => {
 	const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
 		useTable(
 			{
@@ -80,9 +82,17 @@ const Table: FC<Props> = ({ columns, data, rowsCount }) => {
 						</tr>
 					)
 				})}
-				{!rows.length && (
+				{status !== 'success' && (
 					<tr>
-						<td colSpan={columns.length}>Нет данных...</td>
+						<td
+							colSpan={columns.length}
+							style={{ textAlign: 'center' }}
+						>
+							{status === 'init' && 'Нет данных'}
+							{status === 'error' && 'Ошибка сервера'}
+							{status === 'loading' && 'Загрузка'}
+							{status === 'nodata' && 'Не найдено'}
+						</td>
 					</tr>
 				)}
 			</tbody>
