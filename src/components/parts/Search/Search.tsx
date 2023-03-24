@@ -85,7 +85,6 @@ const Search: FC<{
 	}
 
 	const sendSearchData = async () => {
-		console.log(searchData)
 		if (!searchData.timestampRange.from || !searchData.timestampRange.to) {
 			return
 		}
