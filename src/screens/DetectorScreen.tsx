@@ -18,7 +18,7 @@ const DetectorScreen = () => {
 		useActions()
 
 	useEffect(() => {
-		fetchZoneConfig(setConfiguration, accessToken)
+		fetchZoneConfig(setConfiguration, accessToken, 10)
 		fetchCameraConfig(setCameraConfig, accessToken)
 		fetchDetectorConfig(setDetectorConfig, accessToken)
 	}, [accessToken])

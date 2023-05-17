@@ -1,0 +1,12 @@
+.input,
+.select {
+	@apply bg-white border border-light rounded-md p-2 outline-none;
+}
+
+.input {
+	@apply w-2/3;
+}
+
+.select {
+	@apply w-1/2;
+}

@@ -43,11 +43,11 @@
 				@apply flex items-center gap-x-2;
 
 				input[type='text'] {
-					@apply basis-3/4 w-full;
+					@apply basis-2/3 w-full;
 				}
 
 				input[type='number'] {
-					@apply bg-white border w-full border-light rounded-md outline-none font-normal basis-1/4;
+					@apply bg-white border w-full border-light rounded-md outline-none font-normal basis-1/3;
 				}
 			}
 		}

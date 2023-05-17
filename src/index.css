@@ -6,17 +6,15 @@
 	@apply box-border;
 }
 
-html,
-body,
-#root {
-	@apply h-full;
-}
-
 body {
 	font-family: 'Vela Sans', 'Roboto', sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	@apply m-0 overflow-y-hidden;
+	@apply m-0 overflow-y-hidden h-screen;
+}
+
+#root {
+	@apply h-full;
 }
 
 code {

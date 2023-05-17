@@ -70,11 +70,7 @@ const ZoneConfig = () => {
 		})
 	}
 
-	const setLineLength = (
-		e: React.ChangeEvent<HTMLInputElement>,
-		index: number,
-		lineIndex: number
-	) => {
+	const setLineLength = (value: number, index: number, lineIndex: number) => {
 		setConfiguration({
 			...configuration,
 			['d_' + index]: {
@@ -83,7 +79,7 @@ const ZoneConfig = () => {
 					...configuration[`d_${index}`]['s'],
 					['l_' + lineIndex]: {
 						...configuration[`d_${index}`]['s']['l_' + lineIndex],
-						length: e.target.value,
+						length: value,
 					},
 				},
 			},
@@ -234,19 +230,37 @@ const ZoneConfig = () => {
 										/>
 										<input
 											type='number'
+											min={0}
+											max={99}
 											value={
 												configuration[`d_${index}`][
 													's'
 												][`l_${lineIndex}`]['length'] ||
-												0
+												1
 											}
-											onChange={e =>
+											onChange={e => {
+												if (+e.target.value < 1) {
+													setLineLength(
+														1,
+														index,
+														lineIndex
+													)
+													return
+												}
+												if (+e.target.value >= 99) {
+													setLineLength(
+														99,
+														index,
+														lineIndex
+													)
+													return
+												}
 												setLineLength(
-													e,
+													+e.target.value,
 													index,
 													lineIndex
 												)
-											}
+											}}
 										/>
 									</div>
 								)

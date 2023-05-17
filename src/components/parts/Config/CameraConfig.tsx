@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useActions } from '../../../hooks/useActions'
 import { useTypedSelector } from '../../../hooks/useTypedSelector'
 import Message from '../../ui/Message/Message'
+import NumInput from '../../ui/NumInput/NumInput'
 
 import styles from './styles.module.scss'
 
@@ -97,69 +98,69 @@ const CameraConfig = () => {
 				<div></div>
 				<div className={`${styles.numGroup}`}>
 					<label>Параметры зума</label>
-					<input
-						type='number'
+					<NumInput
+						value={cameraConfig.zoom}
+						increment={100}
+						bigIncrement={1000}
 						max={20000}
 						min={0}
-						value={cameraConfig.zoom}
-						step={100}
-						onChange={e => {
+						changeValue={value =>
 							setCameraConfig({
 								...cameraConfig,
-								zoom: +e.target.value,
+								zoom: +value,
 							})
-						}}
+						}
 					/>
 				</div>
 
 				<div className={`${styles.numGroup}`}>
 					<label>Параметры сервопривода Х (°)</label>
-					<input
-						type='number'
+					<NumInput
+						value={cameraConfig.servoX}
+						increment={1}
+						bigIncrement={5}
 						max={95}
 						min={85}
-						value={cameraConfig.servoX}
-						step={1}
-						onChange={e => {
+						changeValue={value =>
 							setCameraConfig({
 								...cameraConfig,
-								servoX: +e.target.value,
+								servoX: +value,
 							})
-						}}
+						}
 					/>
 				</div>
 
 				<div className={`${styles.numGroup}`}>
 					<label>Параметры фокуса</label>
-					<input
-						type='number'
+					<NumInput
+						value={cameraConfig.focus}
+						increment={100}
+						bigIncrement={1000}
 						max={20000}
 						min={0}
-						value={cameraConfig.focus}
-						step={100}
-						onChange={e => {
+						changeValue={value =>
 							setCameraConfig({
 								...cameraConfig,
-								focus: +e.target.value,
+								focus: +value,
 							})
-						}}
+						}
 					/>
 				</div>
 
 				<div className={`${styles.numGroup}`}>
 					<label>Параметры сервопривода Y(°)</label>
-					<input
-						type='number'
+					<NumInput
+						value={cameraConfig.servoY}
+						increment={1}
+						bigIncrement={5}
 						max={95}
 						min={85}
-						value={cameraConfig.servoY}
-						step={1}
-						onChange={e => {
+						changeValue={value =>
 							setCameraConfig({
 								...cameraConfig,
-								servoY: +e.target.value,
+								servoY: +value,
 							})
-						}}
+						}
 					/>
 				</div>
 			</div>

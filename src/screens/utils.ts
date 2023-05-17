@@ -1,6 +1,11 @@
+const sleep = (ms: number) => {
+	return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 export const fetchZoneConfig = async (
 	setConfiguration: (conf: any) => void,
-	accessToken: string | null
+	accessToken: string | null,
+	n: number
 ) => {
 	try {
 		const response = await fetch(`${process.env.REACT_APP_EDIT_ZONE_URL}`, {
@@ -18,7 +23,9 @@ export const fetchZoneConfig = async (
 			console.log('Error')
 		}
 	} catch (err) {
-		console.log(err)
+		if (n <= 1) throw err
+		await sleep(1000)
+		fetchZoneConfig(setConfiguration, accessToken, n - 1)
 	}
 }
 

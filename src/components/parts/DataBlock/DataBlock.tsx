@@ -1,5 +1,5 @@
 import { Tooltip } from 'react-tooltip'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import styles from './DataBlock.module.scss'
 import {
 	AiOutlineCaretDown,
@@ -35,14 +35,6 @@ const DataBlock: FC<DataBlockProps> = ({
 	const [rowsCount, setRowsCount] = useState(30)
 	const [status, setStatus] = useState<Fetch>('init')
 
-	useEffect(() => {
-		const subscriber = setInterval(() => {
-			status !== 'success' && setStatus('init')
-		}, 5000)
-
-		return () => clearInterval(subscriber)
-	}, [status])
-
 	return (
 		<div className={styles.dataBlock}>
 			<div
@@ -68,7 +60,7 @@ const DataBlock: FC<DataBlockProps> = ({
 				anchorSelect={`#tooltip-${tableName}`}
 				place='bottom'
 				content={tooltipText}
-				style={{ maxWidth: 300 }}
+				style={{ maxWidth: 400 }}
 			/>
 			{showTable && (
 				<>

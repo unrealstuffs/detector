@@ -8,22 +8,8 @@ import { useTypedSelector } from '../../../hooks/useTypedSelector'
 import { DataState } from '../../../types/Data'
 import { AiOutlineClose } from 'react-icons/ai'
 import { Fetch } from '../../../types/Fetch'
-
-interface SearchData {
-	licensePlates: string[]
-	vehicleTypes: string[]
-	directions: string[]
-	lines: string[]
-	intensity: { value: string; statement: string }
-	quantity: { value: string; statement: string }
-	avgSpeed: { value: string; statement: string }
-	avgDelay: { value: string; statement: string }
-	density: { value: string; statement: string }
-	timestampRange: {
-		from: Date | ''
-		to: Date | ''
-	}
-}
+import IntervalConverter from './IntervalConverter/IntervalConverter'
+import SearchData from './types/SearchData.interface'
 
 const Search: FC<{
 	tableName: string
@@ -36,6 +22,7 @@ const Search: FC<{
 	const secondSearchRef = useRef<Flatpickr>(null)
 
 	const { accessToken } = useTypedSelector(state => state.user)
+	const { configuration } = useTypedSelector(state => state.detector)
 	const { setSearchFor } = useActions()
 
 	const [searchData, setSearchData] = useState<SearchData>({
@@ -43,11 +30,12 @@ const Search: FC<{
 		vehicleTypes: [],
 		directions: [],
 		lines: [],
-		intensity: { value: '', statement: 'equal' },
-		quantity: { value: '', statement: 'equal' },
-		avgSpeed: { value: '', statement: 'equal' },
-		avgDelay: { value: '', statement: 'equal' },
-		density: { value: '', statement: 'equal' },
+		interval: 0,
+		intensity: { value: '', statement: 'more' },
+		quantity: { value: '', statement: 'more' },
+		avgSpeed: { value: '', statement: 'more' },
+		avgDelay: { value: '', statement: 'more' },
+		density: { value: '', statement: 'more' },
 		timestampRange: {
 			from: '',
 			to: '',
@@ -66,11 +54,12 @@ const Search: FC<{
 			vehicleTypes: [],
 			directions: [],
 			lines: [],
-			intensity: { value: '', statement: 'equal' },
-			quantity: { value: '', statement: 'equal' },
-			avgSpeed: { value: '', statement: 'equal' },
-			avgDelay: { value: '', statement: 'equal' },
-			density: { value: '', statement: 'equal' },
+			interval: 0,
+			intensity: { value: '', statement: 'more' },
+			quantity: { value: '', statement: 'more' },
+			avgSpeed: { value: '', statement: 'more' },
+			avgDelay: { value: '', statement: 'more' },
+			density: { value: '', statement: 'more' },
 			timestampRange: {
 				from: '',
 				to: '',
@@ -121,7 +110,12 @@ const Search: FC<{
 				searchObject = {
 					directions: searchData.directions,
 					lines: searchData.lines,
-					intensity: searchData.intensity,
+					intensity: {
+						value: searchData.intensity.value || '0',
+						statement: searchData.intensity.value
+							? searchData.intensity.statement
+							: 'more',
+					},
 					timestampRange: {
 						from: searchData.timestampRange.from,
 						to: searchData.timestampRange.to,
@@ -134,7 +128,13 @@ const Search: FC<{
 					vehicleTypes: searchData.vehicleTypes,
 					directions: searchData.directions,
 					lines: searchData.lines,
-					quantity: searchData.quantity,
+					interval: searchData.interval || 0,
+					quantity: {
+						value: searchData.quantity.value || '0',
+						statement: searchData.quantity.value
+							? searchData.quantity.statement
+							: 'more',
+					},
 					timestampRange: {
 						from: searchData.timestampRange.from,
 						to: searchData.timestampRange.to,
@@ -146,7 +146,12 @@ const Search: FC<{
 				searchObject = {
 					directions: searchData.directions,
 					lines: searchData.lines,
-					avgSpeed: searchData.avgSpeed,
+					avgSpeed: {
+						value: searchData.avgSpeed.value || '0',
+						statement: searchData.avgSpeed.value
+							? searchData.avgSpeed.statement
+							: 'more',
+					},
 					timestampRange: {
 						from: searchData.timestampRange.from,
 						to: searchData.timestampRange.to,
@@ -158,7 +163,12 @@ const Search: FC<{
 				searchObject = {
 					directions: searchData.directions,
 					lines: searchData.lines,
-					avgDelay: searchData.avgDelay,
+					avgDelay: {
+						value: searchData.avgDelay.value || '0',
+						statement: searchData.avgDelay.value
+							? searchData.avgDelay.statement
+							: 'more',
+					},
 					timestampRange: {
 						from: searchData.timestampRange.from,
 						to: searchData.timestampRange.to,
@@ -170,7 +180,12 @@ const Search: FC<{
 				searchObject = {
 					directions: searchData.directions,
 					lines: searchData.lines,
-					density: searchData.density,
+					density: {
+						value: searchData.density.value || '0',
+						statement: searchData.density.value
+							? searchData.density.statement
+							: 'more',
+					},
 					timestampRange: {
 						from: searchData.timestampRange.from,
 						to: searchData.timestampRange.to,
@@ -204,7 +219,7 @@ const Search: FC<{
 				//@ts-ignore
 				setData(prev => ({
 					...prev,
-					[tableName]: JSON.parse(responseData.data),
+					[tableName]: JSON.parse(responseData.data).slice(0, 100),
 				}))
 
 				setStatus('success')
@@ -221,10 +236,11 @@ const Search: FC<{
 					<Flatpickr
 						ref={searchRef}
 						options={{
-							dateFormat: 'd-m-Y H:i',
+							dateFormat: 'd-m-Y H:i:S',
 							defaultDate: searchData.timestampRange.from,
 							disableMobile: true,
 							enableTime: true,
+							enableSeconds: true,
 							locale: Russian,
 							maxDate: 'today',
 							minuteIncrement: 1,
@@ -244,10 +260,11 @@ const Search: FC<{
 					<Flatpickr
 						ref={secondSearchRef}
 						options={{
-							dateFormat: 'd-m-Y H:i',
+							dateFormat: 'd-m-Y H:i:S',
 							defaultDate: searchData.timestampRange.to,
 							disableMobile: true,
 							enableTime: true,
+							enableSeconds: true,
 							locale: Russian,
 							minDate: searchData.timestampRange.from,
 							maxDate: 'today',
@@ -265,6 +282,9 @@ const Search: FC<{
 							}))
 						}
 					/>
+					{tableName === 'composition' && (
+						<IntervalConverter setSearchData={setSearchData} />
+					)}
 				</div>
 				<button className={styles.delete} onClick={resetSearch}>
 					<AiOutlineClose size={20} />
@@ -279,12 +299,12 @@ const Search: FC<{
 					onChange={e =>
 						setSearchData(prev => ({
 							...prev,
-							lines: [...prev.lines, e.target.value],
+							lines: e.target.value ? [e.target.value] : [],
 						}))
 					}
 				>
 					<option value='' selected>
-						Полоса
+						Все полосы
 					</option>
 					<option value='l_0'>l-1</option>
 					<option value='l_1'>l-2</option>
@@ -295,15 +315,20 @@ const Search: FC<{
 					onChange={e =>
 						setSearchData(prev => ({
 							...prev,
-							directions: [e.target.value],
+							directions: e.target.value ? [e.target.value] : [],
 						}))
 					}
 				>
 					<option value='' selected>
-						Направление
+						Все направления
 					</option>
-					<option value='d_0'>Прямое</option>
-					<option value='d_1'>Обратное</option>
+					{Object.keys(configuration).map(val => (
+						<option value={val}>
+							{configuration[val].reverseDirection
+								? 'Обратное'
+								: 'Прямое'}
+						</option>
+					))}
 				</select>
 				{tableName === 'types' && (
 					<>
@@ -312,7 +337,9 @@ const Search: FC<{
 							onChange={e =>
 								setSearchData(prev => ({
 									...prev,
-									vehicleTypes: [e.target.value],
+									vehicleTypes: e.target.value
+										? [e.target.value]
+										: [],
 								}))
 							}
 						>
@@ -330,11 +357,13 @@ const Search: FC<{
 							type='text'
 							placeholder='Номер ГРЗ...'
 							className={styles.input}
-							value={searchData.licensePlates[0]}
+							value={searchData.licensePlates[0] || ''}
 							onChange={e =>
 								setSearchData(prev => ({
 									...prev,
-									licensePlates: [e.target.value],
+									licensePlates: e.target.value
+										? [e.target.value]
+										: [],
 								}))
 							}
 						/>
@@ -347,7 +376,9 @@ const Search: FC<{
 							onChange={e =>
 								setSearchData(prev => ({
 									...prev,
-									vehicleTypes: [e.target.value],
+									vehicleTypes: e.target.value
+										? [e.target.value]
+										: [],
 								}))
 							}
 						>
@@ -389,9 +420,9 @@ const Search: FC<{
 									}))
 								}
 							>
-								<option value='equal'>Равно</option>
-								<option value='less'>Меньше</option>
 								<option value='more'>Больше</option>
+								<option value='less'>Меньше</option>
+								<option value='equal'>Равно</option>
 							</select>
 						</div>
 					</>
@@ -425,9 +456,9 @@ const Search: FC<{
 								}))
 							}
 						>
-							<option value='equal'>Равно</option>
-							<option value='less'>Меньше</option>
 							<option value='more'>Больше</option>
+							<option value='less'>Меньше</option>
+							<option value='equal'>Равно</option>
 						</select>
 					</div>
 				)}
@@ -460,9 +491,9 @@ const Search: FC<{
 								}))
 							}
 						>
-							<option value='equal'>Равно</option>
-							<option value='less'>Меньше</option>
 							<option value='more'>Больше</option>
+							<option value='less'>Меньше</option>
+							<option value='equal'>Равно</option>
 						</select>
 					</div>
 				)}
@@ -495,9 +526,9 @@ const Search: FC<{
 								}))
 							}
 						>
-							<option value='equal'>Равно</option>
-							<option value='less'>Меньше</option>
 							<option value='more'>Больше</option>
+							<option value='less'>Меньше</option>
+							<option value='equal'>Равно</option>
 						</select>
 					</div>
 				)}
@@ -530,9 +561,9 @@ const Search: FC<{
 								}))
 							}
 						>
-							<option value='equal'>Равно</option>
-							<option value='less'>Меньше</option>
 							<option value='more'>Больше</option>
+							<option value='less'>Меньше</option>
+							<option value='equal'>Равно</option>
 						</select>
 					</div>
 				)}

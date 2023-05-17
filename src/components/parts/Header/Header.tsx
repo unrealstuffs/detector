@@ -4,7 +4,6 @@ import { useActions } from '../../../hooks/useActions'
 import styles from './Header.module.scss'
 
 const Header = () => {
-	// const navigate = useNavigate()
 	const [showUserMenu, setShowUserMenu] = useState(false)
 
 	const { setUser } = useActions()

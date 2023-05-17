@@ -82,7 +82,7 @@ const Table: FC<Props> = ({ columns, data, rowsCount, status }) => {
 						</tr>
 					)
 				})}
-				{status !== 'success' && (
+				{status !== 'success' && !pageRows.length && (
 					<tr>
 						<td
 							colSpan={columns.length}

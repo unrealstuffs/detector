@@ -1,0 +1,9 @@
+.numInput {
+	@apply flex justify-between items-center;
+	input {
+		@apply w-full;
+	}
+	button {
+		@apply p-1 rounded-full shadow-sm;
+	}
+}

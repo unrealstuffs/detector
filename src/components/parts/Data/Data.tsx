@@ -21,12 +21,19 @@ const Data = () => {
 	const [data, setData] = useState({} as DataState)
 
 	useEffect(() => {
-		const fetchShortTimer = setInterval(() => {
+		fetchComposition(setData, accessToken)
+		fetchDelay(setData, accessToken)
+		fetchIntensity(setData, accessToken)
+		fetchSpeed(setData, accessToken)
+		fetchDensity(setData, accessToken)
+		fetchTypes(setData, accessToken)
+	}, [accessToken])
+
+	useEffect(() => {
+		const fetchLongTimer = setInterval(() => {
 			!searchFor.includes('composition') &&
 				fetchComposition(setData, accessToken)
 			!searchFor.includes('delay') && fetchDelay(setData, accessToken)
-		}, 1000 * 60)
-		const fetchLongTimer = setInterval(() => {
 			!searchFor.includes('intensity') &&
 				fetchIntensity(setData, accessToken)
 			!searchFor.includes('speed') && fetchSpeed(setData, accessToken)
@@ -37,7 +44,6 @@ const Data = () => {
 		}, 1000 * 10)
 
 		return () => {
-			clearInterval(fetchShortTimer)
 			clearInterval(fetchLongTimer)
 			clearInterval(fetchTypesTimer)
 		}
@@ -53,7 +59,9 @@ const Data = () => {
 						Header: 'Время',
 						id: 'timestamp',
 						accessor: (d: any) => {
-							return dayjs(d.timestamp).format('DD-MM-YY HH:mm')
+							return dayjs(d.timestamp).format(
+								'DD-MM-YY HH:mm:ss'
+							)
 						},
 					},
 					{
@@ -107,10 +115,19 @@ const Data = () => {
 				header='Состав транспортных средств'
 				columns={[
 					{
-						id: 'timestamp',
+						id: 'timestampRange',
 						Header: 'Время',
 						accessor: (d: any) => {
-							return dayjs(d.timestamp).format('DD-MM-YY HH:mm')
+							if (d.timestampRange) {
+								return `${dayjs(d.timestampRange.from).format(
+									'DD-MM-YY HH:mm:ss'
+								)} \n ${dayjs(d.timestampRange.to).format(
+									'DD-MM-YY HH:mm:ss'
+								)}`
+							}
+							return dayjs(d.timestamp).format(
+								'DD-MM-YY HH:mm:ss'
+							)
 						},
 					},
 					{
@@ -144,7 +161,7 @@ const Data = () => {
 					},
 					{ Header: 'Количество', accessor: 'quantity' },
 				]}
-				tooltipText='Количество транспортных средств каждой расчетной категории (европейской классификации транспортного потока EUR 6), проследовавших за одну минуту в определенном направлении и полосе (ед.)'
+				tooltipText='Количество транспортных средств каждой расчетной категории (европейской классификации транспортного потока EUR 6), проследовавших за одну минуту в определенном направлении и полосе (ед.). Интервал разбиения указывает, с каким периодом нужно запрашивать данные, при указании 0 или пустого поля, будет выведена суммарная информация за запрашиваемый период времени.'
 				data={data.composition}
 				tableName='composition'
 			/>
@@ -156,7 +173,9 @@ const Data = () => {
 						Header: 'Время',
 						id: 'timestamp',
 						accessor: (d: any) => {
-							return dayjs(d.timestamp).format('DD-MM-YY HH:mm')
+							return dayjs(d.timestamp).format(
+								'DD-MM-YY HH:mm:ss'
+							)
 						},
 					},
 					{
@@ -199,7 +218,9 @@ const Data = () => {
 						Header: 'Время',
 						id: 'timestamp',
 						accessor: (d: any) => {
-							return dayjs(d.timestamp).format('DD-MM-YY HH:mm')
+							return dayjs(d.timestamp).format(
+								'DD-MM-YY HH:mm:ss'
+							)
 						},
 					},
 					{
@@ -242,7 +263,9 @@ const Data = () => {
 						Header: 'Время',
 						id: 'timestamp',
 						accessor: (d: any) => {
-							return dayjs(d.timestamp).format('DD-MM-YY HH:mm')
+							return dayjs(d.timestamp).format(
+								'DD-MM-YY HH:mm:ss'
+							)
 						},
 					},
 
@@ -286,7 +309,9 @@ const Data = () => {
 						Header: 'Время',
 						id: 'timestamp',
 						accessor: (d: any) => {
-							return dayjs(d.timestamp).format('DD-MM-YY HH:mm')
+							return dayjs(d.timestamp).format(
+								'DD-MM-YY HH:mm:ss'
+							)
 						},
 					},
 					{
