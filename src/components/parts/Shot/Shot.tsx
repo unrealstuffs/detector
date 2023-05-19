@@ -5,32 +5,25 @@ import Message from '../../ui/Message/Message'
 import styles from './Shot.module.scss'
 import { drawImage, drawPolygons, handleStepBack, setPoint } from './utils'
 
-const Shot: FC<{ isShot: boolean }> = ({ isShot }) => {
-	// refs
-	const canvasRef = useRef<HTMLCanvasElement>(null)
-	const contextRef = useRef<CanvasRenderingContext2D | null>(null)
-	const videoRef = useRef<HTMLVideoElement | null>(null)
+interface ShotProps {
+	isShot: boolean
+}
 
-	//fetch state
+const Shot: FC<ShotProps> = ({ isShot }) => {
+	const canvasRef = useRef<HTMLCanvasElement>(null)
+	const videoRef = useRef<HTMLVideoElement | null>(null)
+	const clearLayout = useRef<HTMLButtonElement | null>(null)
+
 	const [loading, setLoading] = useState(false)
 	const [success, setSuccess] = useState(false)
 	const [error, setError] = useState(false)
-
 	const [videoLoading, setVideoLoading] = useState(true)
 
-	//redux
 	const { accessToken } = useTypedSelector(state => state.user)
 	const { configuration, mode, detectorName } = useTypedSelector(
 		state => state.detector
 	)
 	const { setConfiguration, removeConfiguration } = useActions()
-
-	const [ratio, setRatio] = useState<number>(1)
-
-	const resetImage = () => {
-		drawImage(contextRef.current, canvasRef.current)
-		removeConfiguration()
-	}
 
 	const sendData = async () => {
 		const data = {
@@ -55,6 +48,7 @@ const Shot: FC<{ isShot: boolean }> = ({ isShot }) => {
 				},
 			},
 		}
+
 		try {
 			setLoading(true)
 			const response = await fetch(
@@ -70,44 +64,78 @@ const Shot: FC<{ isShot: boolean }> = ({ isShot }) => {
 			const resData = await response.json()
 
 			if (resData.result === 'success') {
-				setLoading(false)
 				setSuccess(true)
 				setTimeout(() => setSuccess(false), 5000)
 			} else {
-				setLoading(false)
 				setError(true)
 				setTimeout(() => setError(false), 5000)
 			}
 		} catch (err) {
 			console.log(err)
-			setLoading(false)
 			setError(true)
 			setTimeout(() => setError(false), 5000)
+		} finally {
+			setLoading(false)
 		}
 	}
 
 	useEffect(() => {
-		contextRef.current?.scale(ratio, ratio)
-	}, [ratio])
+		const video = videoRef.current
+		const canvas = canvasRef.current
+		const clear = clearLayout.current
+		const context = canvas?.getContext('2d')
+		const bounding = canvas?.getBoundingClientRect()
+		let ratio = 1
 
-	useEffect(() => {
-		if (videoRef.current?.videoWidth && canvasRef.current) {
-			canvasRef.current.width = videoRef.current!.videoWidth
-			canvasRef.current.height = videoRef.current!.videoHeight
-			contextRef.current = canvasRef.current.getContext('2d')
-			setRatio(
-				videoRef.current!.videoWidth / videoRef.current!.offsetWidth
-			)
-			drawImage(contextRef.current, canvasRef.current)
-		}
-	}, [videoRef.current?.videoWidth, contextRef.current, canvasRef.current])
+		const drawOverlay = () => {
+			if (!video || !canvas || !context || !bounding) return
 
-	useEffect(() => {
-		if (configuration && contextRef.current) {
-			drawImage(contextRef.current, canvasRef.current)
-			drawPolygons(configuration, contextRef.current)
+			const { videoWidth, videoHeight } = video
+			canvas.width = videoWidth
+			canvas.height = videoHeight
+			ratio = videoWidth / video.offsetWidth
+			context.scale(ratio, ratio)
 		}
-	}, [configuration, contextRef.current])
+
+		const handleCanvasClick = (event: MouseEvent) => {
+			if (!canvas) return
+			if (
+				setPoint(
+					event,
+					configuration,
+					bounding,
+					mode,
+					setConfiguration,
+					ratio
+				) === undefined
+			) {
+				drawOverlay()
+			}
+		}
+
+		if (configuration) {
+			drawImage(context, canvas)
+			drawPolygons(configuration, context)
+		}
+
+		const resetImage = () => {
+			drawImage(context, canvas)
+			removeConfiguration()
+		}
+
+		video?.addEventListener('loadedmetadata', () => {
+			drawOverlay()
+			setVideoLoading(false)
+		})
+		clear?.addEventListener('click', resetImage)
+		canvas?.addEventListener('click', handleCanvasClick)
+
+		return () => {
+			video?.removeEventListener('loadedmetadata', drawOverlay)
+			clear?.removeEventListener('click', resetImage)
+			canvas?.removeEventListener('click', handleCanvasClick)
+		}
+	}, [configuration, setConfiguration, mode, removeConfiguration])
 
 	useEffect(() => {
 		if (isShot) {
@@ -140,7 +168,7 @@ const Shot: FC<{ isShot: boolean }> = ({ isShot }) => {
 							Шаг назад
 						</button>
 						<button
-							onClick={resetImage}
+							ref={clearLayout}
 							className={styles.clearButton}
 						>
 							Стереть
@@ -171,35 +199,22 @@ const Shot: FC<{ isShot: boolean }> = ({ isShot }) => {
 					loop
 					muted
 					ref={videoRef}
-					onLoadedData={() => setVideoLoading(false)}
+					// onLoadedData={() => setVideoLoading(false)}
 				>
 					<source
-						// src='/assets/videoplayback.mp4'
-						src={`http://${
-							window.location.host
-						}/pipeline-stream?reset=${Math.round(
-							Math.random() * 1000
-						)}`}
+						src='/assets/videoplayback.mp4'
+						// src={`http://${
+						// 	window.location.host
+						// }/pipeline-stream?reset=${Math.round(
+						// 	Math.random() * 1000
+						// )}`}
 						// src={`http://212.192.41.6:20407/pipeline-stream?reset=${Math.round(
 						// 	Math.random() * 1000
 						// )}`}
 						type='video/ogg'
 					/>
 				</video>
-				<canvas
-					ref={canvasRef}
-					onClick={e =>
-						isShot &&
-						setPoint(
-							e,
-							configuration,
-							canvasRef.current?.getBoundingClientRect(),
-							mode,
-							setConfiguration,
-							ratio
-						)
-					}
-				></canvas>
+				<canvas ref={canvasRef}></canvas>
 			</div>
 		</div>
 	)

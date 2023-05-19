@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styles from './IntervalConverter.module.scss'
-import SearchData from '../types/SearchData.interface'
+import SearchData from '../../types/SearchData.interface'
 
 type UnitsType = 'seconds' | 'minutes' | 'hours' | 'days'
 

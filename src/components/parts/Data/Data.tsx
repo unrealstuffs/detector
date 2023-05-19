@@ -68,9 +68,7 @@ const Data = () => {
 						Header: 'ГРЗ',
 						accessor: (d: any) => {
 							if (d.licensePlate) {
-								return d.licensePlate
-									.replace(/!/g, '')
-									.replace(/rf/, '')
+								return d.licensePlate.replace(/!/g, '')
 							} else {
 								return d.licensePlate
 							}
