@@ -63,20 +63,20 @@ const CameraConfig = () => {
 					setLoading(false)
 					setSuccess(true)
 					setTimeout(() => setSuccess(false), 4000)
-				}, 60000)
+				}, 5000)
 			} else {
 				setTimeout(() => {
 					setLoading(false)
 					setError(true)
 					setTimeout(() => setError(false), 4000)
-				}, 60000)
+				}, 5000)
 			}
 		} catch (err) {
 			setTimeout(() => {
 				setLoading(false)
 				setError(true)
 				setTimeout(() => setError(false), 4000)
-			}, 60000)
+			}, 5000)
 		}
 	}
 	return (

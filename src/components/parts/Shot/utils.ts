@@ -130,16 +130,16 @@ export const drawPolygons = (dots: any, context: any) => {
 }
 
 export const setPoint = (
-	e: React.MouseEvent<HTMLCanvasElement>,
+	e: MouseEvent,
 	dots: any,
 	bounding: any,
 	mode: string,
 	setDots: Function,
 	ratio: number
-): void => {
+): boolean | undefined => {
 	const zoneObj = Object.keys(dots).length
 	if (!zoneObj) {
-		return
+		return false
 	}
 	const lineObj = dots[`d_${zoneObj - 1}`]
 		? Object.keys(dots[`d_${zoneObj - 1}`].s).length
@@ -198,7 +198,7 @@ export const setPoint = (
 					},
 				})
 			} else {
-				return
+				return false
 			}
 			break
 		case 'counter':
@@ -207,7 +207,7 @@ export const setPoint = (
 					`s_${counterObj - 1}`
 				].pl.length >= 2
 			)
-				return
+				return false
 
 			if (
 				isPointInPoly(
@@ -251,11 +251,11 @@ export const setPoint = (
 					},
 				})
 			} else {
-				return
+				return false
 			}
 			break
 		default:
-			return
+			return false
 	}
 }
 
