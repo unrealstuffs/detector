@@ -1,50 +1,46 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 interface DetectorState {
-	id: string | null
-	configuration: any
-	mode: 'zone' | 'line' | 'counter'
 	detectorName: string
-	detectorConfig: {
-		[key: string]: number
-	}
 }
-
-const emptyConfiguration = {}
 
 const initialState: DetectorState = {
-	id: null,
-	configuration: emptyConfiguration,
-	mode: 'zone',
 	detectorName: '',
-	detectorConfig: {},
 }
+
+export const getDetectorName = createAsyncThunk(
+	'detector/getDetectorName',
+	async (accessToken: string) => {
+		const response = await fetch(
+			`${process.env.REACT_APP_DEVICE_HOSTNAME}`,
+			{
+				headers: {
+					Authorization: `${accessToken}`,
+				},
+			}
+		)
+		const data = await response.json()
+		if (data.result) {
+			return data.data
+		}
+	}
+)
 
 const detectorSlice = createSlice({
 	name: 'detector',
 	initialState,
 	reducers: {
-		setDetector(state, action) {
-			state.id = action.payload.id
-		},
-		removeDetector(state) {
-			state.id = null
-		},
-		setConfiguration(state, action) {
-			state.configuration = action.payload
-		},
-		removeConfiguration(state) {
-			state.configuration = emptyConfiguration
-		},
-		setMode(state, action) {
-			state.mode = action.payload
-		},
 		setDetectorName(state, action) {
 			state.detectorName = action.payload
 		},
-		setDetectorConfig(state, action) {
-			state.detectorConfig = action.payload
-		},
+	},
+	extraReducers: builder => {
+		builder.addCase(getDetectorName.fulfilled, (state, action) => {
+			state.detectorName = action.payload
+		})
+		builder.addCase(getDetectorName.rejected, state => {
+			state.detectorName = 'Device Name not detected'
+		})
 	},
 })
 

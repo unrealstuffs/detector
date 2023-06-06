@@ -1,34 +1,28 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { useActions } from './hooks/useActions'
 import { useTypedSelector } from './hooks/useTypedSelector'
 import DetectorScreen from './screens/DetectorScreen'
 import LoginScreen from './screens/LoginScreen'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from './store'
+import { getDetectorName } from './store/slices/detectorSlice'
 
 const App = () => {
 	const { accessToken } = useTypedSelector(state => state.user)
-	const { setDetectorName } = useActions()
+	const { detectorName } = useTypedSelector(state => state.detector)
+
+	const dispatch = useDispatch<AppDispatch>()
 	useEffect(() => {
 		const loadTitle = async () => {
-			try {
-				const response = await fetch(
-					`${process.env.REACT_APP_DEVICE_HOSTNAME}`,
-					{
-						headers: {
-							Authorization: `${accessToken}`,
-						},
-					}
-				)
-				const data = await response.json()
-				document.title = data.data
-				setDetectorName(data.data)
-			} catch (err) {
-				document.title = 'dtm-'
-			}
+			await dispatch(getDetectorName(`${accessToken}`))
 		}
 
 		loadTitle()
 	}, [])
+
+	useEffect(() => {
+		document.title = detectorName
+	}, [detectorName])
 
 	return (
 		<BrowserRouter>
