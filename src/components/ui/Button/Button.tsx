@@ -1,12 +1,27 @@
 import { FC, ReactNode } from 'react'
 import styles from './Button.module.scss'
 
-const Button: FC<{ children: ReactNode; onClick?: () => void }> = ({
+interface IButton {
+	children: ReactNode
+	onClick?: () => void
+	type?: 'primary' | 'secondary' | 'danger' | 'transparent'
+	size?: 'small' | 'normal' | 'big' | 'rounded'
+	disabled?: boolean
+}
+
+const Button: FC<IButton> = ({
 	children,
 	onClick,
+	type = 'primary',
+	size = 'normal',
+	disabled = false,
 }) => {
 	return (
-		<button className={styles.button} onClick={onClick} type='submit'>
+		<button
+			className={`${styles.button} ${styles[type]} ${styles[size]}`}
+			onClick={onClick}
+			disabled={disabled}
+		>
 			{children}
 		</button>
 	)

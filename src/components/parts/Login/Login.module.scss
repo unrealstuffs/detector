@@ -31,9 +31,12 @@
 		}
 	}
 	.loader {
-		@apply text-center mb-4;
+		@apply flex justify-center mt-8;
 	}
 	.error {
 		@apply text-center mb-4 text-sm;
+	}
+	.loginActions {
+		@apply text-center;
 	}
 }

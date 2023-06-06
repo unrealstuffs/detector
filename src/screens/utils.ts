@@ -2,33 +2,6 @@ const sleep = (ms: number) => {
 	return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-export const fetchZoneConfig = async (
-	setConfiguration: (conf: any) => void,
-	accessToken: string | null,
-	n: number
-) => {
-	try {
-		const response = await fetch(`${process.env.REACT_APP_EDIT_ZONE_URL}`, {
-			method: 'GET',
-			headers: {
-				Authorization: `${accessToken}`,
-			},
-		})
-		const resData = await response.json()
-
-		if (resData.result === 'success') {
-			const tempArr = JSON.parse(resData.data)
-			setConfiguration(tempArr.zone.r_00.s)
-		} else {
-			console.log('Error')
-		}
-	} catch (err) {
-		if (n <= 1) throw err
-		await sleep(1000)
-		fetchZoneConfig(setConfiguration, accessToken, n - 1)
-	}
-}
-
 export const fetchCameraConfig = async (
 	setCameraConfig: (conf: any) => void,
 	accessToken: string | null

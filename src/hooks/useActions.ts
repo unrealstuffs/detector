@@ -4,14 +4,14 @@ import { cameraActions } from '../store/slices/cameraSlice'
 import { databaseActions } from '../store/slices/databaseSlice'
 import { searchActions } from '../store/slices/searchSlice'
 import { detectorActions } from '../store/slices/detectorSlice'
-import { modalActions } from '../store/slices/modalSlice'
 import { tabsActions } from '../store/slices/tabsSlice'
 import { userActions } from '../store/slices/userSlice'
+import { configurationActions } from '../store/slices/configurationSlice'
 
 const allActions = {
 	...detectorActions,
 	...userActions,
-	...modalActions,
+	...configurationActions,
 	...cameraActions,
 	...databaseActions,
 	...searchActions,

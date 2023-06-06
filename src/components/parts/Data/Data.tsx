@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 import { useTypedSelector } from '../../../hooks/useTypedSelector'
 import styles from './Data.module.scss'
-import DataBlock from '../DataBlock/DataBlock'
+import DataBlock from './components/DataBlock/DataBlock'
 import { DataState } from '../../../types/Data'
 import {
 	fetchComposition,
@@ -14,7 +14,7 @@ import {
 } from './utils'
 
 const Data = () => {
-	const { configuration } = useTypedSelector(state => state.detector)
+	const { configuration } = useTypedSelector(state => state.configuration)
 	const { accessToken } = useTypedSelector(state => state.user)
 	const { searchFor } = useTypedSelector(state => state.search)
 

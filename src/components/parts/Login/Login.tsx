@@ -44,22 +44,26 @@ const Login: FC<{
 							required
 							onChange={e => setPassword(e.target.value)}
 						/>
-						{/* <span>Забыли пароль?</span> */}
 					</div>
 					{loginError && (
 						<div className={styles.error}>{loginError}</div>
 					)}
 				</div>
-				<div className={styles.loader}>
+
+				<div className={styles.loginActions}>
+					<Button type='primary' size='big'>
+						Войти
+					</Button>
 					{loading && (
-						<img
-							src='/assets/loader_bold.gif'
-							alt='Loading...'
-							width={30}
-						/>
+						<div className={styles.loader}>
+							<img
+								src='/assets/loader_bold.gif'
+								alt='Loading...'
+								width={30}
+							/>
+						</div>
 					)}
 				</div>
-				<Button>Войти</Button>
 			</form>
 		</div>
 	)

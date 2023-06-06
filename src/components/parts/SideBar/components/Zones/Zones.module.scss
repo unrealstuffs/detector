@@ -1,0 +1,49 @@
+.zoneConfig {
+	.zoneActions {
+		@apply mb-4 flex items-center gap-x-3;
+	}
+	.zoneBlock {
+		@apply mb-4;
+	}
+	.zoneHeader {
+		@apply text-dark text-lg font-bold pb-4 border-b border-dashed border-light mb-4;
+	}
+	.zoneBody {
+		@apply mb-6;
+
+		.inputGroup {
+			@apply mb-4 gap-2 grid grid-cols-3;
+
+			@screen 2xl {
+				@apply grid-cols-2;
+			}
+
+			.inputLine {
+				@apply flex items-center gap-x-2;
+
+				span {
+					@apply inline-block w-full bg-white border border-light rounded-lg py-1 px-4 cursor-pointer;
+
+					&.selected {
+						@apply border-accent;
+					}
+				}
+				input {
+					@apply w-1/2 outline-none bg-white border border-light rounded-lg py-1 px-4;
+				}
+			}
+
+			label {
+				@apply text-sm font-bold;
+			}
+
+			.zoneCheck {
+				@apply flex items-center my-2 font-normal cursor-pointer;
+
+				input {
+					@apply mr-2;
+				}
+			}
+		}
+	}
+}
