@@ -36,7 +36,7 @@ const LoginScreen = () => {
 
 	return (
 		<>
-			{accessToken && <Navigate to='/' replace={true} />}
+			{/* {accessToken && <Navigate to='/' replace={true} />} */}
 			<Background>
 				<Login submit={submit} loginError={error} />
 			</Background>

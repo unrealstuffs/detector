@@ -27,14 +27,17 @@ const DetectorScreen = () => {
 			{!accessToken && <Navigate to='/login' replace={true} />}
 			<Header />
 			<Layout>
-				<Video videoSrc='/assets/videoplayback.mp4' />
-				{/* <Video
-					videoSrc={`http://${
-						window.location.host
-					}/pipeline-stream?reset=${Math.round(
-						Math.random() * 1000
-					)}`}
-				/> */}
+				{process.env.NODE_ENV === 'development' ? (
+					<Video videoSrc='/assets/videoplayback.mp4' />
+				) : (
+					<Video
+						videoSrc={`http://${
+							window.location.host
+						}/pipeline-stream?reset=${Math.round(
+							Math.random() * 1000
+						)}`}
+					/>
+				)}
 				<SideBar />
 			</Layout>
 		</>

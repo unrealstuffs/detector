@@ -66,18 +66,6 @@ const Video: React.FC<VideoProps> = ({ videoSrc }) => {
 		}
 	}, [tab])
 
-	const isPointInPoly = (poly: number[][], pt: { x: number; y: number }) => {
-		for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
-			((poly[i][1] <= pt.y && pt.y < poly[j][1]) ||
-				(poly[j][1] <= pt.y && pt.y < poly[i][1])) &&
-				pt.x <
-					((poly[j][0] - poly[i][0]) * (pt.y - poly[i][1])) /
-						(poly[j][1] - poly[i][1]) +
-						poly[i][0] &&
-				(c = !c)
-		return c
-	}
-
 	return (
 		<div className={styles.video}>
 			<div className={styles.videoContainer}>
@@ -133,31 +121,7 @@ const Video: React.FC<VideoProps> = ({ videoSrc }) => {
 									closed
 									stroke={colors.zoneColor}
 								/>
-								{configuration[zone].pl.length >= 2 && (
-									<Text
-										text={`d-${zoneIndex + 1} ${
-											configuration[zone].reverseDirection
-												? '(Обратное)'
-												: ''
-										}`}
-										fontSize={labelFontSize / scale}
-										x={
-											configuration[zone].pl[0][0] +
-											(configuration[zone].pl[1][0] -
-												configuration[zone].pl[0][0]) *
-												0.5
-										}
-										y={
-											configuration[zone].pl[0][1] +
-											(configuration[zone].pl[1][1] -
-												configuration[zone].pl[0][1]) *
-												0.5 -
-											15
-										}
-										fill={colors.zoneColor}
-										align='center'
-									/>
-								)}
+
 								{configuration[zone].pl.map((point, index) => (
 									<Circle
 										key={index}
@@ -183,6 +147,31 @@ const Video: React.FC<VideoProps> = ({ videoSrc }) => {
 										}}
 									/>
 								))}
+								{configuration[zone].pl.length >= 2 && (
+									<Text
+										text={`d-${zoneIndex + 1} ${
+											configuration[zone].reverseDirection
+												? '(Обратное)'
+												: ''
+										}`}
+										fontSize={labelFontSize / scale}
+										x={
+											configuration[zone].pl[0][0] +
+											(configuration[zone].pl[1][0] -
+												configuration[zone].pl[0][0]) *
+												0.5
+										}
+										y={
+											configuration[zone].pl[0][1] +
+											(configuration[zone].pl[1][1] -
+												configuration[zone].pl[0][1]) *
+												0.5 -
+											15
+										}
+										fill={colors.zoneColor}
+										align='center'
+									/>
+								)}
 							</Fragment>
 						))}
 						{Object.keys(configuration).map((zone, zoneIndex) =>
@@ -196,37 +185,7 @@ const Video: React.FC<VideoProps> = ({ videoSrc }) => {
 											closed
 											stroke={colors.lineColor}
 										/>
-										{configuration[zone].s[line].pl
-											.length >= 2 && (
-											<Text
-												text={`d-${
-													zoneIndex + 1
-												} l-${++lineIndex}`}
-												fontSize={labelFontSize / scale}
-												x={
-													configuration[zone].s[line]
-														.pl[0][0] +
-													(configuration[zone].s[line]
-														.pl[1][0] -
-														configuration[zone].s[
-															line
-														].pl[0][0]) *
-														0.5
-												}
-												y={
-													configuration[zone].s[line]
-														.pl[0][1] +
-													(configuration[zone].s[line]
-														.pl[1][1] -
-														configuration[zone].s[
-															line
-														].pl[0][1]) *
-														0.5 -
-													20
-												}
-												fill={colors.lineColor}
-											/>
-										)}
+
 										{configuration[zone].s[line].pl.map(
 											(point, index) => (
 												<Circle
@@ -262,6 +221,37 @@ const Video: React.FC<VideoProps> = ({ videoSrc }) => {
 												/>
 											)
 										)}
+										{configuration[zone].s[line].pl
+											.length >= 2 && (
+											<Text
+												text={`d-${
+													zoneIndex + 1
+												} l-${++lineIndex}`}
+												fontSize={labelFontSize / scale}
+												x={
+													configuration[zone].s[line]
+														.pl[0][0] +
+													(configuration[zone].s[line]
+														.pl[1][0] -
+														configuration[zone].s[
+															line
+														].pl[0][0]) *
+														0.5
+												}
+												y={
+													configuration[zone].s[line]
+														.pl[0][1] +
+													(configuration[zone].s[line]
+														.pl[1][1] -
+														configuration[zone].s[
+															line
+														].pl[0][1]) *
+														0.5 -
+													20
+												}
+												fill={colors.lineColor}
+											/>
+										)}
 									</Fragment>
 								)
 							)
@@ -280,6 +270,40 @@ const Video: React.FC<VideoProps> = ({ videoSrc }) => {
 												closed
 												stroke={colors.conterColor}
 											/>
+
+											{configuration[zone].s[line].s[
+												counter
+											].pl.map((point, index) => (
+												<Circle
+													key={index}
+													x={point[0]}
+													y={point[1]}
+													fill={colors.pointColor}
+													radius={pointSize / scale}
+													draggable={tab === 'shot'}
+													onDragEnd={e => {
+														e.evt.stopPropagation()
+														editCounter({
+															x: e.target.x(),
+															y: e.target.y(),
+															zone,
+															line,
+															counter,
+															index,
+														})
+													}}
+													onContextMenu={e => {
+														e.evt.preventDefault()
+														e.evt.stopPropagation()
+														if (tab !== 'shot')
+															return
+														deletePoint([
+															point[0],
+															point[1],
+														])
+													}}
+												/>
+											))}
 											{configuration[zone].s[line].s[
 												counter
 											].pl.length >= 2 && (
@@ -322,39 +346,6 @@ const Video: React.FC<VideoProps> = ({ videoSrc }) => {
 													fill={colors.conterColor}
 												/>
 											)}
-											{configuration[zone].s[line].s[
-												counter
-											].pl.map((point, index) => (
-												<Circle
-													key={index}
-													x={point[0]}
-													y={point[1]}
-													fill={colors.pointColor}
-													radius={pointSize / scale}
-													draggable={tab === 'shot'}
-													onDragEnd={e => {
-														e.evt.stopPropagation()
-														editCounter({
-															x: e.target.x(),
-															y: e.target.y(),
-															zone,
-															line,
-															counter,
-															index,
-														})
-													}}
-													onContextMenu={e => {
-														e.evt.preventDefault()
-														e.evt.stopPropagation()
-														if (tab !== 'shot')
-															return
-														deletePoint([
-															point[0],
-															point[1],
-														])
-													}}
-												/>
-											))}
 										</Fragment>
 									))
 							)
