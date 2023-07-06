@@ -1,6 +1,10 @@
 .video {
 	@apply col-span-3;
 
+	.title {
+		@apply mb-4 text-3xl font-bold;
+	}
+
 	.videoContainer {
 		@apply bg-dark relative;
 	}

@@ -39,7 +39,7 @@ const detectorSlice = createSlice({
 			state.detectorName = action.payload
 		})
 		builder.addCase(getDetectorName.rejected, state => {
-			state.detectorName = 'Device Name not detected'
+			state.detectorName = 'не определен'
 		})
 	},
 })

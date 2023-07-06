@@ -37,6 +37,7 @@ export const sendCameraConfig = createAsyncThunk<
 		camera: { cameraConfig },
 		user: { accessToken },
 	} = getState()
+	console.log(cameraConfig)
 	const [zoom, focus, servoX, servoY, filter] = await Promise.all([
 		fetch(`${process.env.REACT_APP_INTERACTION_CAMERA_URL}`, {
 			method: 'PUT',
@@ -131,10 +132,10 @@ export const getCameraConfig = createAsyncThunk(
 
 		return {
 			dryCont: true,
-			zoom: dataZoom.data.ZOOM,
-			focus: dataFocus.data.FOCUS,
-			servoX: dataServoX.data.SERVO_X,
-			servoY: dataServoY.data.SERVO_Y,
+			zoom: dataZoom.data.ZOOM || 0,
+			focus: dataFocus.data.FOCUS || 0,
+			servoX: dataServoX.data.SERVO_X || 0,
+			servoY: dataServoY.data.SERVO_Y || 0,
 			filter: dataFilter.data.IR_CUT === 'on' ? true : false,
 		}
 	}

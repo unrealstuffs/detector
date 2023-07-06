@@ -21,7 +21,7 @@ const App = () => {
 	}, [])
 
 	useEffect(() => {
-		document.title = detectorName
+		document.title = `Детектор ID ${detectorName}`
 	}, [detectorName])
 
 	return (

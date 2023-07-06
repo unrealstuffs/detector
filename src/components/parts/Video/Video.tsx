@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect, Fragment } from 'react'
+import pointInPolygon from 'point-in-polygon'
 import { Stage, Layer, Line, Circle, Text } from 'react-konva'
 import { useTypedSelector } from '../../../hooks/useTypedSelector'
 import { useActions } from '../../../hooks/useActions'
@@ -24,6 +25,7 @@ const Video: React.FC<VideoProps> = ({ videoSrc }) => {
 		state => state.configuration
 	)
 	const { tab } = useTypedSelector(state => state.tabs)
+	const { detectorName } = useTypedSelector(state => state.detector)
 	const {
 		addPoint,
 		deletePoint,
@@ -66,8 +68,19 @@ const Video: React.FC<VideoProps> = ({ videoSrc }) => {
 		}
 	}, [tab])
 
+	const getParentPolygon = () => {
+		if (selectedPolygon.length === 3) {
+			return configuration[selectedPolygon[0]].pl
+		}
+		if (selectedPolygon.length === 5) {
+			return configuration[selectedPolygon[0]].s[selectedPolygon[2]].pl
+		}
+		return []
+	}
+
 	return (
 		<div className={styles.video}>
+			<h1 className={styles.title}>Детектор ID {detectorName}</h1>
 			<div className={styles.videoContainer}>
 				{videoLoading && (
 					<img
@@ -101,8 +114,15 @@ const Video: React.FC<VideoProps> = ({ videoSrc }) => {
 						if (tab !== 'shot') return
 
 						const pos = e.target.getStage()?.getPointerPosition()
+						if (!pos) return
 
-						if (pos)
+						if (
+							selectedPolygon.length === 1 ||
+							pointInPolygon(
+								[pos?.x / scale, pos?.y / scale],
+								getParentPolygon()
+							)
+						)
 							addPoint({
 								keys: selectedPolygon,
 								value: [pos?.x / scale, pos?.y / scale],
@@ -130,7 +150,7 @@ const Video: React.FC<VideoProps> = ({ videoSrc }) => {
 										fill={colors.pointColor}
 										radius={pointSize / scale}
 										draggable={tab === 'shot'}
-										onDragEnd={e => {
+										onDragMove={e => {
 											e.evt.stopPropagation()
 											editZone({
 												x: e.target.x(),
@@ -198,15 +218,26 @@ const Video: React.FC<VideoProps> = ({ videoSrc }) => {
 													onClick={e =>
 														e.evt.stopPropagation()
 													}
-													onDragEnd={e => {
+													onDragMove={e => {
 														e.evt.stopPropagation()
-														editLine({
-															x: e.target.x(),
-															y: e.target.y(),
-															zone,
-															line,
-															index,
-														})
+														if (
+															pointInPolygon(
+																[
+																	e.target.x(),
+																	e.target.y(),
+																],
+																configuration[
+																	zone
+																].pl
+															)
+														)
+															editLine({
+																x: e.target.x(),
+																y: e.target.y(),
+																zone,
+																line,
+																index,
+															})
 													}}
 													onContextMenu={e => {
 														e.evt.stopPropagation()
@@ -281,7 +312,7 @@ const Video: React.FC<VideoProps> = ({ videoSrc }) => {
 													fill={colors.pointColor}
 													radius={pointSize / scale}
 													draggable={tab === 'shot'}
-													onDragEnd={e => {
+													onDragMove={e => {
 														e.evt.stopPropagation()
 														editCounter({
 															x: e.target.x(),

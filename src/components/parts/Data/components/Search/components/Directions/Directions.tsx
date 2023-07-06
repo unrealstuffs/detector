@@ -1,4 +1,4 @@
-import { useEffect, FC } from 'react'
+import { FC } from 'react'
 import SearchData from '../../types/SearchData.interface'
 import { useTypedSelector } from '../../../../../../../hooks/useTypedSelector'
 import Select from '../../../../../../ui/Select/Select'
@@ -8,19 +8,14 @@ const Directions: FC<{
 }> = ({ setSearchData }) => {
 	const { configuration } = useTypedSelector(state => state.configuration)
 
-	useEffect(() => {
-		for (const key in configuration) {
-			if (key.startsWith('d_')) {
-			}
-		}
-	}, [])
-
 	const options = [{ title: 'Все направления', value: '' }]
 
-	Object.keys(configuration).map(val => {
+	Object.keys(configuration).forEach((val, index) => {
 		options.push({
 			value: val,
-			title: configuration[val].reverseDirection ? 'Обратное' : 'Прямое',
+			title: configuration[val].reverseDirection
+				? `d-${index + 1} (Обратное)`
+				: `d-${index + 1} (Прямое)`,
 		})
 	})
 
