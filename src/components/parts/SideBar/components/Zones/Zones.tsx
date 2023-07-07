@@ -7,6 +7,7 @@ import Button from '../../../../ui/Button/Button'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../../../../store'
 import { sendConfiguration } from '../../../../../store/slices/configurationSlice'
+import { useState } from 'react'
 
 const Zones = () => {
 	const { configuration, selectedPolygon, status, videoSize } =
@@ -26,6 +27,7 @@ const Zones = () => {
 		setStatus,
 	} = useActions()
 	const dispatch = useDispatch<AppDispatch>()
+	const [showConfig, setShowConfig] = useState(false)
 
 	const sendConfigurationHandler = async () => {
 		const data = {
@@ -301,6 +303,25 @@ const Zones = () => {
 										</div>
 									))
 							)
+						)}
+					</div>
+				</div>
+			</div>
+			<div className={styles.zoneBlock}>
+				<div className={styles.zoneHeader}>Конфигурация</div>
+				<div className={styles.zoneBody}>
+					<div className={styles.zoneActions}>
+						<Button
+							size='small'
+							type='primary'
+							onClick={() => setShowConfig(!showConfig)}
+						>
+							Конфигурация
+						</Button>
+					</div>
+					<div>
+						{showConfig && (
+							<pre>{JSON.stringify(configuration, null, 2)}</pre>
 						)}
 					</div>
 				</div>

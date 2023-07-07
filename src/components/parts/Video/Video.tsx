@@ -5,6 +5,7 @@ import { useTypedSelector } from '../../../hooks/useTypedSelector'
 import { useActions } from '../../../hooks/useActions'
 
 import styles from './Video.module.scss'
+import { handleDragMove } from './utils/utils'
 
 interface VideoProps {
 	videoSrc: string
@@ -151,7 +152,28 @@ const Video: React.FC<VideoProps> = ({ videoSrc }) => {
 										radius={pointSize / scale}
 										draggable={tab === 'shot'}
 										onDragMove={e => {
-											e.evt.stopPropagation()
+											const pos =
+												e.target.getAbsolutePosition()
+											const box = e.target.getStage()
+											if (!box) return
+
+											const { x, y } = pos
+											const newPos = { ...pos }
+
+											if (x < 0) {
+												newPos.x = 0
+											}
+											if (y < 0) {
+												newPos.y = 0
+											}
+											if (x > box?.width()) {
+												newPos.x = box.width()
+											}
+											if (y > box?.height()) {
+												newPos.y = box.height()
+											}
+											e.target.setAbsolutePosition(newPos)
+
 											editZone({
 												x: e.target.x(),
 												y: e.target.y(),
@@ -215,29 +237,19 @@ const Video: React.FC<VideoProps> = ({ videoSrc }) => {
 													fill={colors.pointColor}
 													radius={pointSize / scale}
 													draggable={tab === 'shot'}
-													onClick={e =>
-														e.evt.stopPropagation()
-													}
 													onDragMove={e => {
-														e.evt.stopPropagation()
-														if (
-															pointInPolygon(
-																[
-																	e.target.x(),
-																	e.target.y(),
-																],
-																configuration[
-																	zone
-																].pl
-															)
+														handleDragMove(
+															e,
+															configuration[zone]
+																.pl
 														)
-															editLine({
-																x: e.target.x(),
-																y: e.target.y(),
-																zone,
-																line,
-																index,
-															})
+														editLine({
+															x: e.target.x(),
+															y: e.target.y(),
+															zone,
+															line,
+															index,
+														})
 													}}
 													onContextMenu={e => {
 														e.evt.stopPropagation()
@@ -313,7 +325,11 @@ const Video: React.FC<VideoProps> = ({ videoSrc }) => {
 													radius={pointSize / scale}
 													draggable={tab === 'shot'}
 													onDragMove={e => {
-														e.evt.stopPropagation()
+														handleDragMove(
+															e,
+															configuration[zone]
+																.s[line].pl
+														)
 														editCounter({
 															x: e.target.x(),
 															y: e.target.y(),
