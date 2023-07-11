@@ -5,7 +5,7 @@ import { useTypedSelector } from '../../../hooks/useTypedSelector'
 import { useActions } from '../../../hooks/useActions'
 
 import styles from './Video.module.scss'
-import { handleDragMove } from './utils/utils'
+import { getMiddleOfPolygon, handleDragMove } from './utils/utils'
 
 interface VideoProps {
 	videoSrc: string
@@ -20,6 +20,7 @@ const colors = {
 
 const pointSize = 8
 const labelFontSize = 20
+const lineWidth = 2
 
 const Video: React.FC<VideoProps> = ({ videoSrc }) => {
 	const { configuration, selectedPolygon, videoSize } = useTypedSelector(
@@ -110,7 +111,7 @@ const Video: React.FC<VideoProps> = ({ videoSrc }) => {
 						width: '100%',
 					}}
 					onClick={e => {
-						e.evt.preventDefault()
+						if (e.evt.button === 2) return
 						if (!selectedPolygon.length) return
 						if (tab !== 'shot') return
 
@@ -135,101 +136,105 @@ const Video: React.FC<VideoProps> = ({ videoSrc }) => {
 					scale={{ x: scale, y: scale }}
 				>
 					<Layer>
-						{Object.keys(configuration).map((zone, zoneIndex) => (
-							<Fragment key={zoneIndex}>
-								<Line
-									points={configuration[zone].pl.flat()}
-									closed
-									stroke={colors.zoneColor}
-								/>
+						{Object.keys(configuration).map((zone, zoneIndex) => {
+							const zonePolygon = configuration[zone].pl
 
-								{configuration[zone].pl.map((point, index) => (
-									<Circle
-										key={index}
-										x={point[0]}
-										y={point[1]}
-										fill={colors.pointColor}
-										radius={pointSize / scale}
-										draggable={tab === 'shot'}
-										onDragMove={e => {
-											const pos =
-												e.target.getAbsolutePosition()
-											const box = e.target.getStage()
-											if (!box) return
-
-											const { x, y } = pos
-											const newPos = { ...pos }
-
-											if (x < 0) {
-												newPos.x = 0
-											}
-											if (y < 0) {
-												newPos.y = 0
-											}
-											if (x > box?.width()) {
-												newPos.x = box.width()
-											}
-											if (y > box?.height()) {
-												newPos.y = box.height()
-											}
-											e.target.setAbsolutePosition(newPos)
-
-											editZone({
-												x: e.target.x(),
-												y: e.target.y(),
-												zone,
-												index,
-											})
-										}}
-										onContextMenu={e => {
-											e.evt.preventDefault()
-											e.evt.stopPropagation()
-											if (tab !== 'shot') return
-											deletePoint([point[0], point[1]])
-										}}
+							const { centerX, centerY } =
+								getMiddleOfPolygon(zonePolygon)
+							return (
+								<Fragment key={zoneIndex}>
+									<Line
+										points={configuration[zone].pl.flat()}
+										closed
+										stroke={colors.zoneColor}
+										strokeWidth={lineWidth / scale}
 									/>
-								))}
-								{configuration[zone].pl.length >= 2 && (
-									<Text
-										text={`d-${zoneIndex + 1} ${
-											configuration[zone].reverseDirection
-												? '(Обратное)'
-												: ''
-										}`}
-										fontSize={labelFontSize / scale}
-										x={
-											configuration[zone].pl[0][0] +
-											(configuration[zone].pl[1][0] -
-												configuration[zone].pl[0][0]) *
-												0.5
-										}
-										y={
-											configuration[zone].pl[0][1] +
-											(configuration[zone].pl[1][1] -
-												configuration[zone].pl[0][1]) *
-												0.5 -
-											15
-										}
-										fill={colors.zoneColor}
-										align='center'
-									/>
-								)}
-							</Fragment>
-						))}
+
+									{zonePolygon.map((point, index) => (
+										<Circle
+											key={index}
+											x={point[0]}
+											y={point[1]}
+											fill={colors.pointColor}
+											radius={pointSize / scale}
+											draggable={tab === 'shot'}
+											onDragMove={e => {
+												const pos =
+													e.target.getAbsolutePosition()
+												const box = e.target.getStage()
+												if (!box) return
+
+												const { x, y } = pos
+												const newPos = { ...pos }
+
+												if (x < 0) {
+													newPos.x = 0
+												}
+												if (y < 0) {
+													newPos.y = 0
+												}
+												if (x > box?.width()) {
+													newPos.x = box.width()
+												}
+												if (y > box?.height()) {
+													newPos.y = box.height()
+												}
+												e.target.setAbsolutePosition(
+													newPos
+												)
+
+												editZone({
+													x: e.target.x(),
+													y: e.target.y(),
+													zone,
+													index,
+												})
+											}}
+											onContextMenu={e => {
+												if (tab !== 'shot') return
+												deletePoint([
+													point[0],
+													point[1],
+												])
+											}}
+										/>
+									))}
+									{zonePolygon.length >= 2 && (
+										<Text
+											text={`d-${zoneIndex + 1} ${
+												configuration[zone]
+													.reverseDirection
+													? '(Обратное)'
+													: ''
+											}`}
+											fontSize={labelFontSize / scale}
+											x={centerX - labelFontSize / scale}
+											y={centerY - labelFontSize / scale}
+											fill={colors.zoneColor}
+										/>
+									)}
+								</Fragment>
+							)
+						})}
 						{Object.keys(configuration).map((zone, zoneIndex) =>
 							Object.keys(configuration[zone].s).map(
-								(line, lineIndex) => (
-									<Fragment key={lineIndex}>
-										<Line
-											points={configuration[zone].s[
-												line
-											].pl.flat()}
-											closed
-											stroke={colors.lineColor}
-										/>
+								(line, lineIndex) => {
+									const linePolygon =
+										configuration[zone].s[line].pl
 
-										{configuration[zone].s[line].pl.map(
-											(point, index) => (
+									const { centerX, centerY } =
+										getMiddleOfPolygon(linePolygon)
+
+									return (
+										<Fragment key={lineIndex}>
+											<Line
+												points={linePolygon.flat()}
+												closed
+												stroke={colors.lineColor}
+												strokeWidth={lineWidth / scale}
+											/>
+
+											{linePolygon.map((point, index) => (
 												<Circle
 													key={index}
 													x={point[0]}
@@ -252,96 +257,6 @@ const Video: React.FC<VideoProps> = ({ videoSrc }) => {
 														})
 													}}
 													onContextMenu={e => {
-														e.evt.stopPropagation()
-														e.evt.preventDefault()
-														if (tab !== 'shot')
-															return
-														deletePoint([
-															point[0],
-															point[1],
-														])
-													}}
-												/>
-											)
-										)}
-										{configuration[zone].s[line].pl
-											.length >= 2 && (
-											<Text
-												text={`d-${
-													zoneIndex + 1
-												} l-${++lineIndex}`}
-												fontSize={labelFontSize / scale}
-												x={
-													configuration[zone].s[line]
-														.pl[0][0] +
-													(configuration[zone].s[line]
-														.pl[1][0] -
-														configuration[zone].s[
-															line
-														].pl[0][0]) *
-														0.5
-												}
-												y={
-													configuration[zone].s[line]
-														.pl[0][1] +
-													(configuration[zone].s[line]
-														.pl[1][1] -
-														configuration[zone].s[
-															line
-														].pl[0][1]) *
-														0.5 -
-													20
-												}
-												fill={colors.lineColor}
-											/>
-										)}
-									</Fragment>
-								)
-							)
-						)}
-						{Object.keys(configuration).map((zone, zoneIndex) =>
-							Object.keys(configuration[zone].s).map(
-								(line, lineIndex) =>
-									Object.keys(
-										configuration[zone].s[line].s
-									).map((counter, counterIndex) => (
-										<Fragment key={counterIndex}>
-											<Line
-												points={configuration[zone].s[
-													line
-												].s[counter].pl.flat()}
-												closed
-												stroke={colors.conterColor}
-											/>
-
-											{configuration[zone].s[line].s[
-												counter
-											].pl.map((point, index) => (
-												<Circle
-													key={index}
-													x={point[0]}
-													y={point[1]}
-													fill={colors.pointColor}
-													radius={pointSize / scale}
-													draggable={tab === 'shot'}
-													onDragMove={e => {
-														handleDragMove(
-															e,
-															configuration[zone]
-																.s[line].pl
-														)
-														editCounter({
-															x: e.target.x(),
-															y: e.target.y(),
-															zone,
-															line,
-															counter,
-															index,
-														})
-													}}
-													onContextMenu={e => {
-														e.evt.preventDefault()
-														e.evt.stopPropagation()
 														if (tab !== 'shot')
 															return
 														deletePoint([
@@ -351,50 +266,138 @@ const Video: React.FC<VideoProps> = ({ videoSrc }) => {
 													}}
 												/>
 											))}
-											{configuration[zone].s[line].s[
-												counter
-											].pl.length >= 2 && (
+											{linePolygon.length >= 2 && (
 												<Text
 													text={`d-${
 														zoneIndex + 1
-													} l-${lineIndex + 1} s-${
-														counterIndex + 1
-													}`}
+													} l-${++lineIndex}`}
 													fontSize={
 														labelFontSize / scale
 													}
 													x={
-														configuration[zone].s[
-															line
-														].s[counter].pl[0][0] +
-														(configuration[zone].s[
-															line
-														].s[counter].pl[1][0] -
-															configuration[zone]
-																.s[line].s[
-																counter
-															].pl[0][0]) *
-															0.5
+														centerX -
+														labelFontSize / scale
 													}
 													y={
-														configuration[zone].s[
-															line
-														].s[counter].pl[0][1] +
-														(configuration[zone].s[
-															line
-														].s[counter].pl[1][1] -
-															configuration[zone]
-																.s[line].s[
-																counter
-															].pl[0][1]) *
-															0.5 -
-														20
+														centerY -
+														labelFontSize / scale
 													}
-													fill={colors.conterColor}
+													fill={colors.lineColor}
 												/>
 											)}
 										</Fragment>
-									))
+									)
+								}
+							)
+						)}
+						{Object.keys(configuration).map((zone, zoneIndex) =>
+							Object.keys(configuration[zone].s).map(
+								(line, lineIndex) =>
+									Object.keys(
+										configuration[zone].s[line].s
+									).map((counter, counterIndex) => {
+										const counterPolygon =
+											configuration[zone].s[line].s[
+												counter
+											].pl
+
+										const { centerX, centerY } =
+											getMiddleOfPolygon(counterPolygon)
+
+										return (
+											<Fragment key={counterIndex}>
+												<Line
+													points={configuration[
+														zone
+													].s[line].s[
+														counter
+													].pl.flat()}
+													closed
+													stroke={colors.conterColor}
+													strokeWidth={
+														lineWidth / scale
+													}
+												/>
+
+												{counterPolygon.map(
+													(point, index) => (
+														<Circle
+															key={index}
+															x={point[0]}
+															y={point[1]}
+															fill={
+																colors.pointColor
+															}
+															radius={
+																pointSize /
+																scale
+															}
+															draggable={
+																tab === 'shot'
+															}
+															onDragMove={e => {
+																handleDragMove(
+																	e,
+																	configuration[
+																		zone
+																	].s[line].pl
+																)
+																editCounter({
+																	x: e.target.x(),
+																	y: e.target.y(),
+																	zone,
+																	line,
+																	counter,
+																	index,
+																})
+															}}
+															onContextMenu={e => {
+																if (
+																	tab !==
+																	'shot'
+																)
+																	return
+																deletePoint([
+																	point[0],
+																	point[1],
+																])
+															}}
+														/>
+													)
+												)}
+												{counterPolygon.length >= 2 && (
+													<Text
+														align='center'
+														verticalAlign='center'
+														text={`d-${
+															zoneIndex + 1
+														} l-${
+															lineIndex + 1
+														} s-${
+															counterIndex + 1
+														}`}
+														fontSize={
+															labelFontSize /
+															scale
+														}
+														x={
+															centerX -
+															labelFontSize /
+																scale
+														}
+														y={
+															centerY -
+															labelFontSize /
+																scale
+														}
+														fill={
+															colors.conterColor
+														}
+													/>
+												)}
+											</Fragment>
+										)
+									})
 							)
 						)}
 					</Layer>

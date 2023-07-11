@@ -101,13 +101,15 @@ const Zones = () => {
 												? styles.selected
 												: ''
 										}
-										onClick={() =>
-											setSelectedPolygon(
+										onClick={() => {
+											const isCurrentZone =
+												selectedPolygon.length === 1 &&
 												selectedPolygon[0] === zone
-													? []
-													: [zone]
+
+											setSelectedPolygon(
+												isCurrentZone ? [] : [zone]
 											)
-										}
+										}}
 									>{`d-${index + 1}`}</span>
 									<Button
 										size='rounded'
@@ -171,13 +173,19 @@ const Zones = () => {
 													? styles.selected
 													: ''
 											}
-											onClick={() =>
+											onClick={() => {
+												const isCurrentZone =
+													selectedPolygon.length ===
+														3 &&
+													selectedPolygon[0] ===
+														zone &&
+													selectedPolygon[2] === line
 												setSelectedPolygon(
-													selectedPolygon.length === 3
+													isCurrentZone
 														? []
 														: [zone, 's', line]
 												)
-											}
+											}}
 										>
 											{`d-${index + 1} l-${
 												lineIndex + 1
@@ -265,10 +273,18 @@ const Zones = () => {
 														? styles.selected
 														: ''
 												}
-												onClick={() =>
-													setSelectedPolygon(
+												onClick={() => {
+													const isCurrentZone =
 														selectedPolygon.length ===
-															5
+															5 &&
+														selectedPolygon[0] ===
+															zone &&
+														selectedPolygon[2] ===
+															line &&
+														selectedPolygon[4] ===
+															counter
+													setSelectedPolygon(
+														isCurrentZone
 															? []
 															: [
 																	zone,
@@ -278,7 +294,7 @@ const Zones = () => {
 																	counter,
 															  ]
 													)
-												}
+												}}
 											>
 												{`d-${index + 1} l-${
 													lineIndex + 1
@@ -319,9 +335,9 @@ const Zones = () => {
 							Конфигурация
 						</Button>
 					</div>
-					<div>
+					<div className={styles.config}>
 						{showConfig && (
-							<pre>{JSON.stringify(configuration, null, 2)}</pre>
+							<pre>{JSON.stringify(configuration, null, 4)}</pre>
 						)}
 					</div>
 				</div>

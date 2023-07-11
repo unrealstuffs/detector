@@ -100,3 +100,15 @@ const getDistanceSquared = (pointA: number[], pointB: number[]) => {
 	const dy = pointA[1] - pointB[1]
 	return dx * dx + dy * dy
 }
+
+export const getMiddleOfPolygon = (polygon: number[][]) => {
+	const minX = Math.min(...polygon.map(([x]) => x))
+	const maxX = Math.max(...polygon.map(([x]) => x))
+	const minY = Math.min(...polygon.map(([, y]) => y))
+	const maxY = Math.max(...polygon.map(([, y]) => y))
+
+	const centerX = minX + (maxX - minX) / 2
+	const centerY = minY + (maxY - minY) / 2
+
+	return { centerX, centerY }
+}
