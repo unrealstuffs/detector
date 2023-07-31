@@ -18,7 +18,7 @@ const App = () => {
 		}
 
 		loadTitle()
-	}, [])
+	}, [dispatch, accessToken])
 
 	useEffect(() => {
 		document.title = `Детектор ID ${detectorName}`

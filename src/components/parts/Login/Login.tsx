@@ -1,18 +1,42 @@
-import { FC, useState, useEffect } from 'react'
+import { useState } from 'react'
 import Button from '../../ui/Button/Button'
 import styles from './Login.module.scss'
+import { Fetch } from '../../../types/Fetch'
+import { useActions } from '../../../hooks/useActions'
+import { useNavigate } from 'react-router-dom'
 
-const Login: FC<{
-	submit: (login: string, password: string) => void
-	loginError: string
-}> = ({ submit, loginError }) => {
+const Login = () => {
 	const [login, setLogin] = useState('')
 	const [password, setPassword] = useState('')
-	const [loading, setLoading] = useState(false)
+	const [status, setStatus] = useState<Fetch>('init')
+	const navigate = useNavigate()
 
-	useEffect(() => {
-		loginError && setLoading(false)
-	}, [loginError])
+	const { setUser } = useActions()
+
+	const submit = async (login: string, password: string) => {
+		setStatus('loading')
+		try {
+			const response = await fetch(`${process.env.REACT_APP_AUTH_URL}`, {
+				method: 'PUT',
+				body: JSON.stringify({ login, password }),
+			})
+			const data = await response.json()
+
+			if (data.result === 'success') {
+				setUser({
+					user: data.user,
+					accessToken: response.headers.get('Authorization'),
+				})
+				setStatus('success')
+				navigate('/')
+			}
+		} catch {
+			setStatus('error')
+			setTimeout(() => {
+				setStatus('init')
+			}, 2000)
+		}
+	}
 
 	return (
 		<div className={styles.loginForm}>
@@ -20,7 +44,6 @@ const Login: FC<{
 			<form
 				onSubmit={e => {
 					e.preventDefault()
-					setLoading(true)
 					submit(login, password)
 				}}
 			>
@@ -45,24 +68,19 @@ const Login: FC<{
 							onChange={e => setPassword(e.target.value)}
 						/>
 					</div>
-					{loginError && (
-						<div className={styles.error}>{loginError}</div>
-					)}
 				</div>
 
 				<div className={styles.loginActions}>
-					<Button type='primary' size='big'>
-						Войти
+					<Button
+						type='primary'
+						size='big'
+						disabled={status === 'loading' || status === 'error'}
+					>
+						{status === 'init' && 'Войти'}
+						{status === 'error' && 'Ошибка'}
+						{status === 'loading' && 'Загрузка...'}
+						{status === 'success' && 'Отправлено!'}
 					</Button>
-					{loading && (
-						<div className={styles.loader}>
-							<img
-								src='/assets/loader_bold.gif'
-								alt='Loading...'
-								width={30}
-							/>
-						</div>
-					)}
 				</div>
 			</form>
 		</div>
