@@ -1,26 +1,38 @@
-import { FC, ReactNode } from 'react'
-import styles from './Button.module.scss'
+import { ButtonHTMLAttributes, FC, ReactNode } from 'react'
+import cls from './Button.module.scss'
+import { classNames } from 'shared/lib/classNames'
 
-interface IButton {
-	children: ReactNode
-	onClick?: () => void
-	type?: 'primary' | 'secondary' | 'danger' | 'transparent'
-	size?: 'small' | 'normal' | 'big' | 'rounded'
+export type ButtonColor = 'primary' | 'danger'
+export type ButtonSize = 's' | 'm' | 'l'
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+	className?: string
+	size?: ButtonSize
 	disabled?: boolean
+	children?: ReactNode
+	color?: ButtonColor
 }
 
-const Button: FC<IButton> = ({
-	children,
-	onClick,
-	type = 'primary',
-	size = 'normal',
-	disabled = false,
-}) => {
+const Button: FC<ButtonProps> = props => {
+	const {
+		className,
+		size = 'm',
+		disabled,
+		children,
+		color = 'primary',
+		...otherProps
+	} = props
+
 	return (
 		<button
-			className={`${styles.button} ${styles[type]} ${styles[size]}`}
-			onClick={onClick}
+			type='button'
+			className={classNames(cls.Button, {}, [
+				className,
+				cls[size],
+				cls[color],
+			])}
 			disabled={disabled}
+			{...otherProps}
 		>
 			{children}
 		</button>

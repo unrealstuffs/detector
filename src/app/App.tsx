@@ -1,37 +1,20 @@
+import AppRouter from './providers/RouterProvider/AppRouter'
+import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 import { useEffect } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { AppDispatch } from './store'
-import { getDetectorName } from './store/slices/detectorSlice'
-import { useTypedSelector } from '../shared/hooks/useTypedSelector'
-import { MainPage } from '../pages/MainPage'
-import { LoginPage } from '../pages/LoginPage'
+import { getDetectorName } from 'entities/FetchTitle/model/services/fetchDetectorName'
 
 const App = () => {
-	const { accessToken } = useTypedSelector(state => state.user)
-	const { detectorName } = useTypedSelector(state => state.detector)
+	const dispatch = useAppDispatch()
 
-	const dispatch = useDispatch<AppDispatch>()
 	useEffect(() => {
 		const loadTitle = async () => {
-			await dispatch(getDetectorName(`${accessToken}`))
+			await dispatch(getDetectorName())
 		}
 
 		loadTitle()
-	}, [dispatch, accessToken])
+	}, [dispatch])
 
-	useEffect(() => {
-		document.title = `Детектор ID ${detectorName}`
-	}, [detectorName])
-
-	return (
-		<BrowserRouter>
-			<Routes>
-				<Route path='/' element={<MainPage />} />
-				<Route path='/login' element={<LoginPage />} />
-			</Routes>
-		</BrowserRouter>
-	)
+	return <AppRouter />
 }
 
 export default App

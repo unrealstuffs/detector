@@ -1,0 +1,23 @@
+.s {
+	@apply px-2 py-1;
+}
+
+.m {
+	@apply px-3 py-3;
+}
+
+.Input {
+	@apply border border-light outline-none w-full text-dark bg-white rounded-lg;
+
+	&::placeholder {
+		@apply text-light;
+	}
+}
+
+.focused {
+	@apply border-accent;
+}
+
+.readonly {
+	@apply opacity-70;
+}

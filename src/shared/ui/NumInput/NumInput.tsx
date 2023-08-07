@@ -4,41 +4,57 @@ import {
 	AiOutlineLeft,
 	AiOutlineRight,
 } from 'react-icons/ai'
+import { InputHTMLAttributes } from 'react'
 
-import styles from './styles.module.scss'
+import cls from './NumInput.module.scss'
+import { classNames } from 'shared/lib/classNames'
+import { HStack } from '../Stack/HStack/HStack'
+import { Text } from '../Text/Text'
 
-const NumInput = ({
-	value,
-	max,
-	min,
-	increment,
-	bigIncrement,
-	changeValue,
-}: {
+type HTMLInputProps = Omit<
+	InputHTMLAttributes<HTMLInputElement>,
+	'value' | 'onChange' | 'readOnly' | 'size'
+>
+
+interface NumInputProps extends HTMLInputProps {
+	className?: string
+	label?: string
 	value: number
 	max: number
 	min: number
 	increment: number
 	bigIncrement: number
-	changeValue: (value: number) => void
-}) => {
+	onChange: (value: number) => void
+}
+
+const NumInput = (props: NumInputProps) => {
+	const {
+		value,
+		max,
+		min,
+		increment,
+		bigIncrement,
+		onChange,
+		className,
+		label,
+	} = props
 	const handleIncrement = () => {
-		if (value <= max - increment) changeValue((value += increment))
+		if (value <= max - increment) onChange(value + increment)
 	}
 
 	const handleBigIncrement = () => {
-		if (value <= max - bigIncrement) changeValue((value += bigIncrement))
+		if (value <= max - bigIncrement) onChange(value + bigIncrement)
 	}
 
 	const handleDecrement = () => {
-		if (value >= min + increment) changeValue((value -= increment))
+		if (value >= min + increment) onChange(value - increment)
 	}
 	const handleBigDecrement = () => {
-		if (value >= min + bigIncrement) changeValue((value -= bigIncrement))
+		if (value >= min + bigIncrement) onChange(value - bigIncrement)
 	}
 
-	return (
-		<div className={styles.numInput}>
+	const input = (
+		<div className={classNames(cls.numInput, {}, [className])}>
 			<button onClick={handleBigDecrement}>
 				<AiOutlineDoubleLeft />
 			</button>
@@ -52,18 +68,18 @@ const NumInput = ({
 				value={value}
 				onChange={e => {
 					if (isNaN(+e.target.value)) {
-						changeValue(0)
+						onChange(0)
 						return
 					}
 					if (+e.target.value < min) {
-						changeValue(min)
+						onChange(min)
 						return
 					}
 					if (+e.target.value > max) {
-						changeValue(max)
+						onChange(max)
 						return
 					}
-					changeValue(+e.target.value)
+					onChange(+e.target.value)
 				}}
 			/>
 			<button onClick={handleIncrement}>
@@ -74,6 +90,17 @@ const NumInput = ({
 			</button>
 		</div>
 	)
+
+	if (label) {
+		return (
+			<HStack max gap='8'>
+				<Text text={label} />
+				{input}
+			</HStack>
+		)
+	}
+
+	return input
 }
 
 export default NumInput

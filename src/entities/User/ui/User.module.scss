@@ -1,0 +1,19 @@
+.user {
+	@apply relative flex items-center gap-x-7;
+
+	img {
+		@apply cursor-pointer w-10;
+	}
+
+	button {
+		@apply border-0 cursor-pointer rounded-full;
+	}
+}
+
+.userMenu {
+	@apply absolute z-50 top-[50px] right-0 bg-white flex flex-col shadow-theme rounded-lg;
+
+	a {
+		@apply text-dark p-3 decoration-0;
+	}
+}

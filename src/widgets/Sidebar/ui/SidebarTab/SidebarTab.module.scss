@@ -1,0 +1,6 @@
+.SidebarTab {
+	@apply cursor-pointer px-4 py-2;
+	&.active {
+		@apply border-b-2 border-accent;
+	}
+}

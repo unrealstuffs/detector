@@ -1,67 +1,33 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import {
-	persistStore,
-	persistReducer,
-	FLUSH,
-	REHYDRATE,
-	PAUSE,
-	PERSIST,
-	PURGE,
-	REGISTER,
-} from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
-import { cameraReducer } from './slices/cameraSlice'
-import { databaseReducer } from './slices/databaseSlice'
-import { searchReducer } from './slices/searchSlice'
-import { detectorReducer } from './slices/detectorSlice'
-import { tabsReducer } from './slices/tabsSlice'
-import { userReducer } from './slices/userSlice'
-import { configurationReducer } from './slices/configurationSlice'
+import { tabsReducer } from '../../widgets/Sidebar/model/slices/tabsSlice'
+import { userReducer } from '../../entities/User/model/slices/userSlice'
+import { dataReducer } from 'widgets/DataList/model/slices/dataSlice'
+import { detectorNameReducer } from 'entities/FetchTitle/model/slices/detectorNameSlice'
+import { markupReducer } from 'features/SendMarkupConfig/model/slices/markupSlice'
+import { cameraReducer } from 'features/SendCameraConfig/model/slices/cameraSlice'
+import { databaseReducer } from 'features/SendDbConfig/model/slices/databaseSlice'
+import { videoReducer } from 'entities/Video/model/slices/videoSlice'
+import { searchReducer } from 'features/SearchData'
 
 const rootReducer = combineReducers({
 	user: userReducer,
-	detector: detectorReducer,
-	configuration: configurationReducer,
+	data: dataReducer,
+	detectorName: detectorNameReducer,
+	markup: markupReducer,
 	camera: cameraReducer,
 	database: databaseReducer,
 	search: searchReducer,
 	tabs: tabsReducer,
+	video: videoReducer,
 })
-
-const persistConfig = {
-	key: 'root',
-	storage,
-	blacklist: [
-		'detector',
-		'modal',
-		'camera',
-		'database',
-		'search',
-		'tabs',
-		'configuration',
-	],
-}
-
-const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({
-	reducer: persistedReducer,
-	middleware: getDefaultMiddleware =>
-		getDefaultMiddleware({
-			serializableCheck: {
-				ignoredActions: [
-					FLUSH,
-					REHYDRATE,
-					PAUSE,
-					PERSIST,
-					PURGE,
-					REGISTER,
-				],
-			},
-		}),
+	reducer: rootReducer,
 })
-
-export const persistor = persistStore(store)
 
 export type TypeRootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
+export interface ThunkConfig<T> {
+	rejectValue: T
+	state: TypeRootState
+}

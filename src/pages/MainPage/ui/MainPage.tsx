@@ -1,14 +1,13 @@
 import { useEffect } from 'react'
-import { Navigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { useTypedSelector } from '../../../shared/hooks/useTypedSelector'
 import { AppDispatch } from '../../../app/store'
-import { getConfiguration } from '../../../app/store/slices/configurationSlice'
-import { getCameraConfig } from '../../../app/store/slices/cameraSlice'
-import Header from '../../../widgets/Header/Header'
-import Layout from '../../../shared/ui/Layout/Layout'
-import Video from '../../../widgets/Video/Video'
-import SideBar from '../../../widgets/Sidebar/SideBar'
+import { Header } from '../../../widgets/Header'
+import { getConfiguration } from 'features/SendMarkupConfig/model/services/getConfiguration'
+import { getCameraConfig } from 'features/SendCameraConfig'
+import MainLayout from 'shared/layouts/MainLayout/MainLayout'
+import { Sidebar } from 'widgets/Sidebar'
+import { VideoMarkup } from 'widgets/VideoMarkup'
 
 const MainPage = () => {
 	const { accessToken } = useTypedSelector(state => state.user)
@@ -16,31 +15,18 @@ const MainPage = () => {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			await dispatch(getConfiguration(`${accessToken}`))
-			await dispatch(getCameraConfig(`${accessToken}`))
+			await dispatch(getConfiguration())
+			await dispatch(getCameraConfig())
 		}
 		fetchData()
 	}, [accessToken, dispatch])
 
 	return (
-		<>
-			{!accessToken && <Navigate to='/login' replace={true} />}
-			<Header />
-			<Layout>
-				{process.env.NODE_ENV === 'development' ? (
-					<Video videoSrc='/assets/videoplayback.mp4' />
-				) : (
-					<Video
-						videoSrc={`http://${
-							window.location.host
-						}/pipeline-stream?reset=${Math.round(
-							Math.random() * 1000
-						)}`}
-					/>
-				)}
-				<SideBar />
-			</Layout>
-		</>
+		<MainLayout
+			header={<Header />}
+			sidebar={<Sidebar />}
+			video={<VideoMarkup />}
+		/>
 	)
 }
 

@@ -1,28 +1,22 @@
-.button {
-	@apply inline-block outline-none rounded-lg text-white cursor-pointer transition-colors disabled:cursor-not-allowed  disabled:hover:bg-white;
+.Button {
+	@apply inline-block outline-none rounded-lg text-white cursor-pointer transition-colors;
 
 	&.primary {
-		@apply bg-accent hover:bg-opacity-80 disabled:bg-light disabled:text-white;
-	}
-	&.secondary {
-		@apply bg-light hover:bg-opacity-90 disabled:bg-white disabled:text-light;
+		@apply bg-accent hover:bg-opacity-80;
 	}
 	&.danger {
-		@apply bg-danger hover:bg-opacity-90 disabled:bg-white disabled:text-light;
+		@apply bg-danger hover:bg-opacity-90;
 	}
-	&.transparent {
-		@apply bg-transparent text-dark;
-	}
-	&.small {
+	&.s {
 		@apply text-sm px-2 py-1;
 	}
-	&.normal {
+	&.m {
 		@apply text-base px-4 py-2;
 	}
-	&.big {
+	&.l {
 		@apply text-lg px-6 py-2;
 	}
-	&.rounded {
-		@apply text-lg;
+	&:disabled {
+		@apply bg-light cursor-not-allowed;
 	}
 }

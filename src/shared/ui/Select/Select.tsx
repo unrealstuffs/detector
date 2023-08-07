@@ -1,18 +1,35 @@
-import styles from './Select.module.scss'
+import { SelectHTMLAttributes, ChangeEvent, memo } from 'react'
+import cls from './Select.module.scss'
+import { classNames } from 'shared/lib/classNames'
 
-interface IOptions {
+type HTMLSelectProps = Omit<
+	SelectHTMLAttributes<HTMLSelectElement>,
+	'value' | 'onChange' | 'size'
+>
+
+interface SelectProps extends HTMLSelectProps {
+	className?: string
 	options: { value: string; title: string }[]
-	onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+	onChange?: (value: string) => void
 }
 
-const Select = ({ options, onChange }: IOptions) => {
+const Select = memo((props: SelectProps) => {
+	const { onChange, options, className } = props
+
+	const onChangeHandler = (e: ChangeEvent<HTMLSelectElement>) => {
+		onChange?.(e.target.value)
+	}
+
 	return (
-		<select className={styles.select} onChange={onChange}>
+		<select
+			className={classNames(cls.Select, {}, [className])}
+			onChange={onChangeHandler}
+		>
 			{options.map(item => (
 				<option value={item.value}>{item.title}</option>
 			))}
 		</select>
 	)
-}
+})
 
 export default Select

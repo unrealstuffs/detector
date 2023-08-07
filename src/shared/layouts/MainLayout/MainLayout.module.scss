@@ -1,0 +1,19 @@
+.MainLayout {
+	@apply h-screen;
+}
+
+.page {
+	@apply grid grid-cols-5 px-4 gap-x-5 justify-between mb-6;
+}
+
+.header {
+	@apply w-full mb-6;
+}
+
+.sidebar {
+	@apply col-span-2;
+}
+
+.video {
+	@apply col-span-3;
+}

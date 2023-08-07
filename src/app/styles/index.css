@@ -10,11 +10,7 @@ body {
 	font-family: 'Vela Sans', 'Roboto', sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	@apply m-0 overflow-y-hidden h-screen;
-}
-
-#root {
-	@apply h-full;
+	@apply m-0 overflow-y-hidden;
 }
 
 code {
