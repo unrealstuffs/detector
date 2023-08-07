@@ -1,5 +1,5 @@
 .SidebarPage {
-	@apply pt-6 px-4 pb-3 bg-white hidden overflow-y-scroll;
+	@apply py-6 px-4 bg-white hidden overflow-y-auto h-full;
 
 	&::-webkit-scrollbar {
 		@apply w-1.5;

@@ -12,6 +12,12 @@ module.exports = {
 			boxShadow: {
 				theme: '0px 24px 32px rgba(19, 23, 35, 0.03), 0px 16px 24px rgba(19, 23, 35, 0.02), 0px 4px 8px rgba(19, 23, 35, 0.02), 0px 0px 1px rgba(19, 23, 35, 0.04)',
 			},
+			gridTemplateColumns: {
+				app: 'repeat(5, 1fr)',
+			},
+			gridTemplateRows: {
+				app: '10vh 90vh',
+			},
 		},
 		screens: {
 			'2xl': { max: '1535px' },

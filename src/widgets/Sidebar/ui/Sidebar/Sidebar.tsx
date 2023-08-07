@@ -7,6 +7,7 @@ import SidebarBlock from '../SidebarBlock/SidebarBlock'
 import { classNames } from 'shared/lib/classNames'
 import SidebarPage from '../SidebarPage/SidebarPage'
 import { sidebarPages } from 'widgets/Sidebar/model/consts/sidebarPages'
+import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 
 interface SidebarProps {
 	className?: string
@@ -15,6 +16,7 @@ interface SidebarProps {
 export const Sidebar = (props: SidebarProps) => {
 	const { className } = props
 	const { tab } = useTypedSelector(state => state.tabs)
+	const dispatch = useAppDispatch()
 
 	return (
 		<div className={classNames(cls.Sidebar, {}, [className])}>
@@ -22,7 +24,7 @@ export const Sidebar = (props: SidebarProps) => {
 				{sidebarPages.map(({ tabName, title }) => (
 					<SidebarTab
 						active={tab === tabName}
-						onClick={() => tabsActions.setTab(tabName)}
+						onClick={() => dispatch(tabsActions.setTab(tabName))}
 					>
 						{title}
 					</SidebarTab>

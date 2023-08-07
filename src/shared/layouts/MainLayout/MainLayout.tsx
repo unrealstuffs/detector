@@ -14,10 +14,8 @@ const MainLayout = memo((props: MainLayoutProps) => {
 	return (
 		<div className={classNames(cls.MainLayout, {}, [className])}>
 			<div className={cls.header}>{header}</div>
-			<div className={cls.page}>
-				<div className={cls.video}>{video}</div>
-				<div className={cls.sidebar}>{sidebar}</div>
-			</div>
+			<div className={cls.video}>{video}</div>
+			<div className={cls.sidebar}>{sidebar}</div>
 		</div>
 	)
 })
