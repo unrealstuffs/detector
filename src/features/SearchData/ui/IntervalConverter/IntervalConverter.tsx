@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import styles from './IntervalConverter.module.scss'
 import SearchData from '../../model/types/SearchData'
+import { Input } from 'shared/ui/Input/Input'
+import Select from 'shared/ui/Select/Select'
 
 type UnitsType = 'seconds' | 'minutes' | 'hours' | 'days'
 
@@ -40,37 +42,38 @@ const IntervalConverter = ({
 		return seconds
 	}
 
-	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const newValue = parseInt(e.target.value)
-		setValue(e.target.value)
+	const handleInputChange = (value: string) => {
+		const newValue = parseInt(value)
+		setValue(value)
 		setConvertedValue(convertToSeconds(newValue, unit))
 	}
 
-	const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		const newUnit = e.target.value as UnitsType
+	const handleSelectChange = (value: string) => {
+		const newUnit = value as UnitsType
 		setUnit(newUnit)
 		setConvertedValue(convertToSeconds(+value, newUnit))
 	}
 
 	return (
 		<>
-			<input
+			<Input
 				type='number'
 				placeholder='Интервал...'
 				className={styles.input}
 				value={value}
 				onChange={handleInputChange}
 			/>
-			<select
-				value={unit}
+			<Select
+				defaultValue={unit}
+				options={[
+					{ title: 'Секунд', value: 'seconds' },
+					{ title: 'Минут', value: 'minutes' },
+					{ title: 'Часов', value: 'hours' },
+					{ title: 'Дней', value: 'days' },
+				]}
 				onChange={handleSelectChange}
 				className={styles.select}
-			>
-				<option value='seconds'>Секунд</option>
-				<option value='minutes'>Минут</option>
-				<option value='hours'>Часов</option>
-				<option value='days'>Дней</option>
-			</select>
+			/>
 		</>
 	)
 }

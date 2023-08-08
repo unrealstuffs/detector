@@ -20,7 +20,7 @@ export const Sidebar = (props: SidebarProps) => {
 
 	return (
 		<div className={classNames(cls.Sidebar, {}, [className])}>
-			<HStack justify='start' className={cls.tabList}>
+			<HStack justify='start' className={cls.tabList} gap='20'>
 				{sidebarPages.map(({ tabName, title }) => (
 					<SidebarTab
 						active={tab === tabName}

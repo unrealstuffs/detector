@@ -7,31 +7,19 @@
 }
 
 .datePicker {
-	@apply flex items-center justify-between gap-x-2 mb-2;
+	@apply mb-2;
 
 	.deleteIcon {
 		@apply text-light cursor-pointer;
 	}
 }
 
-.dateFields {
-	@apply w-full flex items-center justify-between gap-x-2;
-
-	.dateInput {
-		@apply w-full;
-	}
+.dateInput {
+	@apply w-full;
 }
 
 .searchFields {
 	@apply grid grid-cols-2 gap-2 mb-2;
-
-	.numField {
-		@apply flex gap-x-2;
-
-		input {
-			@apply w-full;
-		}
-	}
 }
 
 .searchIcon {

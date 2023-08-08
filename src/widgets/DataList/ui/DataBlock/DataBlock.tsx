@@ -14,6 +14,8 @@ import Select from 'shared/ui/Select/Select'
 import { options } from 'widgets/DataList/model/consts/options'
 import { Table } from 'entities/Table'
 import { SearchData } from 'features/SearchData'
+import { HStack } from 'shared/ui/Stack/HStack/HStack'
+import { Text } from 'shared/ui/Text/Text'
 
 interface DataBlockProps {
 	data: any
@@ -33,7 +35,9 @@ const DataBlock = (props: DataBlockProps) => {
 
 	return (
 		<div className={classNames(cls.DataBlock, {}, [className])}>
-			<div
+			<HStack
+				align='center'
+				gap='8'
 				className={cls.dataHeader}
 				onClick={() => {
 					setShowTable(!showTable)
@@ -45,13 +49,13 @@ const DataBlock = (props: DataBlockProps) => {
 				) : (
 					<AiOutlineCaretRight size={20} />
 				)}
-				{header}{' '}
+				<Text title={header} size='s' bold />
 				<AiOutlineQuestionCircle
 					className={cls.icon}
 					size={23}
 					id={`tooltip-${tableName}`}
 				/>
-			</div>
+			</HStack>
 			<Tooltip
 				anchorSelect={`#tooltip-${tableName}`}
 				place='bottom'
@@ -60,7 +64,12 @@ const DataBlock = (props: DataBlockProps) => {
 			/>
 			{showTable && (
 				<>
-					<div className={cls.searchIcon}>
+					<HStack
+						align='center'
+						justify='between'
+						gap='8'
+						className={cls.searchIcon}
+					>
 						<Select
 							options={options}
 							defaultValue='30'
@@ -69,11 +78,15 @@ const DataBlock = (props: DataBlockProps) => {
 						/>
 						<AiOutlineSearch
 							size={20}
-							className={showForm ? 'text-accent' : 'text-dark'}
+							className={classNames(
+								cls.searchIcon,
+								{ [cls.active]: showForm },
+								[]
+							)}
 							onClick={() => setShowForm(!showForm)}
 							style={{ cursor: 'pointer' }}
 						/>
-					</div>
+					</HStack>
 					{showForm && (
 						<SearchData
 							tableName={tableName}

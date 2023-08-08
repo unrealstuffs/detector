@@ -2,6 +2,7 @@ import { ReactNode } from 'react'
 
 import cls from './SidebarBlock.module.scss'
 import { classNames } from 'shared/lib/classNames'
+import { Text } from 'shared/ui/Text/Text'
 
 interface SidebarBlockProps {
 	className?: string
@@ -13,7 +14,7 @@ const SidebarBlock = (props: SidebarBlockProps) => {
 	const { children, className, header } = props
 	return (
 		<div className={classNames(cls.SidebarBlock, {}, [className])}>
-			<div className={cls.header}>{header}</div>
+			<Text title={header} bold size='m' className={cls.heading} />
 			<div className={cls.body}>{children}</div>
 		</div>
 	)
