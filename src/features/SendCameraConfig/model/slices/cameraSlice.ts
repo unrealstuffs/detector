@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { CameraSchema } from '../types/CameraSchema'
 import { getCameraConfig } from '../services/getCameraConfig'
 import { sendCameraConfig } from '../services/sendCameraConfig'
@@ -19,11 +19,23 @@ const cameraSlice = createSlice({
 	name: 'camera',
 	initialState,
 	reducers: {
-		setCameraConfig(state, action) {
-			state.cameraConfig = action.payload
+		setDryCont: (state, action: PayloadAction<boolean>) => {
+			state.cameraConfig.dryCont = action.payload
 		},
-		setCameraConfigStatus(state, action) {
-			state.status = action.payload
+		setFilter: (state, action: PayloadAction<boolean>) => {
+			state.cameraConfig.filter = action.payload
+		},
+		setZoom: (state, action) => {
+			state.cameraConfig.zoom = action.payload
+		},
+		setServoX: (state, action) => {
+			state.cameraConfig.servoX = action.payload
+		},
+		setServoY: (state, action) => {
+			state.cameraConfig.servoY = action.payload
+		},
+		setFocus: (state, action) => {
+			state.cameraConfig.focus = action.payload
 		},
 	},
 	extraReducers: builder => {

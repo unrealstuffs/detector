@@ -1,33 +1,3 @@
-.cameraConfig {
-	.configBody {
-		@apply grid grid-cols-2 gap-x-14;
-	}
-}
-
-.configActions {
-	@apply mt-4;
-}
-
-.config {
-	.checkboxGroup {
-		@apply mb-10 flex justify-between items-center;
-
-		label {
-			@apply text-dark text-xs leading-4 font-bold;
-		}
-	}
-
-	.inputGroup,
-	.numGroup {
-		@apply inline-flex flex-col mb-4;
-
-		label {
-			@apply text-dark text-xs leading-4 font-bold mb-2;
-		}
-
-		input,
-		select {
-			@apply bg-white border border-light rounded-md py-3 px-4 outline-none;
-		}
-	}
+.configBody {
+	@apply grid grid-cols-2 gap-y-8 gap-x-10 mb-6;
 }

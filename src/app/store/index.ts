@@ -1,24 +1,34 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { tabsReducer } from '../../widgets/Sidebar/model/slices/tabsSlice'
 import { userReducer } from '../../entities/User/model/slices/userSlice'
-import { dataReducer } from 'widgets/DataList/model/slices/dataSlice'
 import { detectorNameReducer } from 'entities/FetchTitle/model/slices/detectorNameSlice'
 import { markupReducer } from 'features/SendMarkupConfig/model/slices/markupSlice'
 import { cameraReducer } from 'features/SendCameraConfig/model/slices/cameraSlice'
 import { databaseReducer } from 'features/SendDbConfig/model/slices/databaseSlice'
 import { videoReducer } from 'entities/Video/model/slices/videoSlice'
-import { searchReducer } from 'features/SearchData'
+import {
+	avgDelayReducer,
+	avgSpeedReducer,
+	compositionReducer,
+	densityReducer,
+	intensityReducer,
+	typesReducer,
+} from 'widgets/Data'
 
 const rootReducer = combineReducers({
 	user: userReducer,
-	data: dataReducer,
 	detectorName: detectorNameReducer,
 	markup: markupReducer,
 	camera: cameraReducer,
 	database: databaseReducer,
-	search: searchReducer,
 	tabs: tabsReducer,
 	video: videoReducer,
+	types: typesReducer,
+	composition: compositionReducer,
+	intensity: intensityReducer,
+	avgSpeed: avgSpeedReducer,
+	avgDelay: avgDelayReducer,
+	density: densityReducer,
 })
 
 export const store = configureStore({

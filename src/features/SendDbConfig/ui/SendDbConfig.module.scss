@@ -1,27 +1,23 @@
-.configActions {
-	@apply mt-4;
+.dbFields {
+	@apply grid grid-cols-4 mb-6 gap-3;
 }
 
-.config {
-	.checkboxGroup {
-		@apply mb-10 flex justify-between items-center;
+.dbName {
+	@apply col-span-4;
+}
 
-		label {
-			@apply text-dark text-xs leading-4 font-bold;
-		}
-	}
+.dbAddress {
+	@apply col-span-3;
+}
 
-	.inputGroup,
-	.numGroup {
-		@apply inline-flex flex-col mb-4;
+.dbPort {
+	@apply col-span-1;
+}
 
-		label {
-			@apply text-dark text-xs leading-4 font-bold mb-2;
-		}
+.dbUser {
+	@apply col-span-2;
+}
 
-		input,
-		select {
-			@apply bg-white border border-light rounded-md py-3 px-4 outline-none;
-		}
-	}
+.dbPassword {
+	@apply col-span-2;
 }

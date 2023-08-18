@@ -12,6 +12,7 @@ import { markupActions } from 'features/SendMarkupConfig/model/slices/markupSlic
 import { KonvaEventObject } from 'konva/lib/Node'
 import { Fragment } from 'react'
 import { Circle, Line, Text } from 'react-konva'
+import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 import { MarkupConfig } from 'shared/types/MarkupConfig'
 
 interface CountersMarkupProps {
@@ -22,6 +23,7 @@ interface CountersMarkupProps {
 
 const CountersMarkup = (props: CountersMarkupProps) => {
 	const { configuration, scale, tab } = props
+	const dispatch = useAppDispatch()
 
 	const onDragMove = (
 		e: KonvaEventObject<DragEvent>,
@@ -31,19 +33,21 @@ const CountersMarkup = (props: CountersMarkupProps) => {
 		index: number
 	) => {
 		handleDragMove(e, configuration[zone].s[line].pl)
-		markupActions.editCounter({
-			x: e.target.x(),
-			y: e.target.y(),
-			zone,
-			line,
-			counter,
-			index,
-		})
+		dispatch(
+			markupActions.editCounter({
+				x: e.target.x(),
+				y: e.target.y(),
+				zone,
+				line,
+				counter,
+				index,
+			})
+		)
 	}
 
 	const onContextMenu = (point: number[]) => {
 		if (tab !== 'shot') return
-		markupActions.deletePoint([point[0], point[1]])
+		dispatch(markupActions.deletePoint([point[0], point[1]]))
 	}
 
 	return (

@@ -8,8 +8,10 @@ import { InputHTMLAttributes } from 'react'
 
 import cls from './NumInput.module.scss'
 import { classNames } from 'shared/lib/classNames'
-import { HStack } from '../Stack/HStack/HStack'
 import { Text } from '../Text/Text'
+import { Input } from '../Input/Input'
+import { VStack } from '../Stack/VStack/VStack'
+import { HStack } from '../Stack/HStack/HStack'
 
 type HTMLInputProps = Omit<
 	InputHTMLAttributes<HTMLInputElement>,
@@ -54,49 +56,51 @@ const NumInput = (props: NumInputProps) => {
 	}
 
 	const input = (
-		<div className={classNames(cls.numInput, {}, [className])}>
-			<button onClick={handleBigDecrement}>
-				<AiOutlineDoubleLeft />
-			</button>
-			<button onClick={handleDecrement}>
-				<AiOutlineLeft />
-			</button>
-			<input
+		<HStack
+			align='center'
+			gap='8'
+			className={classNames(cls.numInput, {}, [className])}
+		>
+			<AiOutlineDoubleLeft
+				onClick={handleBigDecrement}
+				className={cls.icon}
+			/>
+			<AiOutlineLeft onClick={handleDecrement} className={cls.icon} />
+			<Input
 				type='text'
 				max={max}
 				min={min}
 				value={value}
-				onChange={e => {
-					if (isNaN(+e.target.value)) {
+				onChange={value => {
+					if (isNaN(+value)) {
 						onChange(0)
 						return
 					}
-					if (+e.target.value < min) {
+					if (+value < min) {
 						onChange(min)
 						return
 					}
-					if (+e.target.value > max) {
+					if (+value > max) {
 						onChange(max)
 						return
 					}
-					onChange(+e.target.value)
+					onChange(+value)
 				}}
 			/>
-			<button onClick={handleIncrement}>
-				<AiOutlineRight />
-			</button>
-			<button onClick={handleBigIncrement}>
-				<AiOutlineDoubleRight />
-			</button>
-		</div>
+			<AiOutlineRight onClick={handleIncrement} className={cls.icon} />
+			<AiOutlineDoubleRight
+				onClick={handleBigIncrement}
+				className={cls.icon}
+			/>
+		</HStack>
 	)
 
 	if (label) {
 		return (
-			<HStack max gap='8'>
-				<Text text={label} />
+			<VStack max gap='8'>
+				<Text text={label} bold size='s' />
 				{input}
-			</HStack>
+			</VStack>
 		)
 	}
 

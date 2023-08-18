@@ -22,8 +22,8 @@ export const SendDbConfig = (props: SendDbConfigProps) => {
 	}
 	return (
 		<div className={classNames(cls.config, {}, [className])}>
-			<div className={cls.configBody}>
-				<div className={cls.inputGroup} style={{ width: '100%' }}>
+			<div className={cls.dbFields}>
+				<div className={cls.dbName}>
 					<Input
 						label='Database'
 						type='text'
@@ -36,10 +36,7 @@ export const SendDbConfig = (props: SendDbConfigProps) => {
 						}}
 					/>
 				</div>
-				<div
-					className={cls.inputGroup}
-					style={{ width: '73%', marginRight: '2%' }}
-				>
+				<div className={cls.dbAddress}>
 					<Input
 						label='Host'
 						type='text'
@@ -52,7 +49,7 @@ export const SendDbConfig = (props: SendDbConfigProps) => {
 						}}
 					/>
 				</div>
-				<div className={cls.inputGroup} style={{ width: '25%' }}>
+				<div className={cls.dbPort}>
 					<Input
 						label='Port'
 						type='number'
@@ -65,10 +62,7 @@ export const SendDbConfig = (props: SendDbConfigProps) => {
 						}}
 					/>
 				</div>
-				<div
-					className={cls.inputGroup}
-					style={{ width: '49%', marginRight: '2%' }}
-				>
+				<div className={cls.dbUser}>
 					<Input
 						label='User'
 						type='text'
@@ -81,8 +75,9 @@ export const SendDbConfig = (props: SendDbConfigProps) => {
 						}}
 					/>
 				</div>
-				<div className={cls.inputGroup} style={{ width: '49%' }}>
+				<div className={cls.dbPassword}>
 					<Input
+						className={cls.dbPassword}
 						label='Password'
 						type='password'
 						value={databaseConfig.password}
@@ -95,18 +90,16 @@ export const SendDbConfig = (props: SendDbConfigProps) => {
 					/>
 				</div>
 			</div>
-			<div className={cls.configActions}>
-				<Button
-					disabled={status !== 'init'}
-					onClick={sendDatabaseConfigHandler}
-					size='l'
-				>
-					{status === 'init' && 'Сохранить'}
-					{status === 'error' && 'Ошибка'}
-					{status === 'loading' && 'Загрузка...'}
-					{status === 'success' && 'Подключено!'}
-				</Button>
-			</div>
+			<Button
+				disabled={status !== 'init'}
+				onClick={sendDatabaseConfigHandler}
+				size='l'
+			>
+				{status === 'init' && 'Сохранить'}
+				{status === 'error' && 'Ошибка'}
+				{status === 'loading' && 'Загрузка...'}
+				{status === 'success' && 'Подключено!'}
+			</Button>
 		</div>
 	)
 }

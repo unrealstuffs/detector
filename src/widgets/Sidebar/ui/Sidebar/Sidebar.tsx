@@ -23,6 +23,7 @@ export const Sidebar = (props: SidebarProps) => {
 			<HStack justify='start' className={cls.tabList} gap='20'>
 				{sidebarPages.map(({ tabName, title }) => (
 					<SidebarTab
+						key={tabName}
 						active={tab === tabName}
 						onClick={() => dispatch(tabsActions.setTab(tabName))}
 					>
@@ -31,9 +32,11 @@ export const Sidebar = (props: SidebarProps) => {
 				))}
 			</HStack>
 			{sidebarPages.map(({ blocks, tabName }) => (
-				<SidebarPage show={tab === tabName}>
+				<SidebarPage key={tabName} show={tab === tabName}>
 					{blocks.map(({ element, header }) => (
-						<SidebarBlock header={header}>{element}</SidebarBlock>
+						<SidebarBlock key={header} header={header}>
+							{element}
+						</SidebarBlock>
 					))}
 				</SidebarPage>
 			))}

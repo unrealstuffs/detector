@@ -1,13 +1,13 @@
 .s {
-	@apply px-2 py-1;
+	@apply px-3 py-1;
 }
 
 .m {
-	@apply px-3 py-3;
+	@apply px-3 py-2;
 }
 
 .Input {
-	@apply border border-light outline-none w-full text-dark bg-white rounded-lg;
+	@apply border border-light outline-none w-full text-dark bg-white rounded-md;
 
 	&::placeholder {
 		@apply text-light;

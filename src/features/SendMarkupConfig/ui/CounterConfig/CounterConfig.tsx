@@ -3,15 +3,17 @@ import cls from './CounterConfig.module.scss'
 import { AiOutlineClose } from 'react-icons/ai'
 import { markupActions } from 'features/SendMarkupConfig/model/slices/markupSlice'
 import { classNames } from 'shared/lib/classNames'
+import { HStack } from 'shared/ui/Stack/HStack/HStack'
+import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 
 interface CounterConfigProps {
-	className?: string
 	configuration: MarkupConfig
 	selectedPolygon: string[]
 }
 
 const CounterConfig = (props: CounterConfigProps) => {
-	const { configuration, selectedPolygon, className } = props
+	const { configuration, selectedPolygon } = props
+	const dispatch = useAppDispatch()
 
 	const onSelectHandler = (zone: string, line: string, counter: string) => {
 		const isCurrentZone =
@@ -19,13 +21,15 @@ const CounterConfig = (props: CounterConfigProps) => {
 			selectedPolygon[0] === zone &&
 			selectedPolygon[2] === line &&
 			selectedPolygon[4] === counter
-		markupActions.setSelectedPolygon(
-			isCurrentZone ? [] : [zone, 's', line, 's', counter]
+		dispatch(
+			markupActions.setSelectedPolygon(
+				isCurrentZone ? [] : [zone, 's', line, 's', counter]
+			)
 		)
 	}
 
 	return (
-		<div className={classNames(cls.CounterConfig, {}, [className])}>
+		<>
 			{Object.keys(configuration).map((zone, index) =>
 				Object.keys(configuration[zone]['s']).map((line, lineIndex) =>
 					Object.keys(configuration[zone]['s'][line]['s']).map(
@@ -36,13 +40,14 @@ const CounterConfig = (props: CounterConfigProps) => {
 									selectedPolygon.includes(value)
 								)
 							return (
-								<div
+								<HStack
 									key={counterIndex}
-									className={cls.inputLine}
+									align='center'
+									gap='8'
 								>
 									<span
 										className={classNames(
-											cls.input,
+											cls.polygonTitle,
 											{ [cls.selected]: isSelected },
 											[]
 										)}
@@ -56,18 +61,20 @@ const CounterConfig = (props: CounterConfigProps) => {
 									</span>
 									<AiOutlineClose
 										onClick={() =>
-											markupActions.removeCounter({
-												keys: [zone, line, counter],
-											})
+											dispatch(
+												markupActions.removeCounter({
+													keys: [zone, line, counter],
+												})
+											)
 										}
 									/>
-								</div>
+								</HStack>
 							)
 						}
 					)
 				)
 			)}
-		</div>
+		</>
 	)
 }
 

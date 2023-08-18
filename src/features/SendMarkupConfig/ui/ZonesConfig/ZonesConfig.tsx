@@ -3,6 +3,9 @@ import cls from './ZonesConfig.module.scss'
 import { classNames } from 'shared/lib/classNames'
 import { AiOutlineClose } from 'react-icons/ai'
 import { markupActions } from 'features/SendMarkupConfig/model/slices/markupSlice'
+import Checkbox from 'shared/ui/Checkbox/Checkbox'
+import { useAppDispatch } from 'shared/hooks/useAppDispatch'
+import { HStack } from 'shared/ui/Stack/HStack/HStack'
 
 interface ZonesConfigProps {
 	className?: string
@@ -12,12 +15,13 @@ interface ZonesConfigProps {
 
 const ZonesConfig = (props: ZonesConfigProps) => {
 	const { configuration, className, selectedPolygon } = props
+	const dispatch = useAppDispatch()
 
 	const selectPolygon = (zone: string) => {
 		const isCurrentZone =
 			selectedPolygon.length === 1 && selectedPolygon[0] === zone
 
-		markupActions.setSelectedPolygon(isCurrentZone ? [] : [zone])
+		dispatch(markupActions.setSelectedPolygon(isCurrentZone ? [] : [zone]))
 	}
 
 	return (
@@ -31,10 +35,10 @@ const ZonesConfig = (props: ZonesConfigProps) => {
 						key={index}
 						className={classNames(cls.ZonesConfig, {}, [className])}
 					>
-						<div className={cls.inputLine}>
+						<HStack align='center' gap='8' className={cls.polygon}>
 							<span
 								className={classNames(
-									cls.input,
+									cls.polygonTitle,
 									{ [cls.selected]: isSelected },
 									[]
 								)}
@@ -42,25 +46,26 @@ const ZonesConfig = (props: ZonesConfigProps) => {
 							>{`d-${index + 1}`}</span>
 							<AiOutlineClose
 								onClick={() =>
-									markupActions.removeZone({
-										key: zone,
-									})
+									dispatch(
+										markupActions.removeZone({
+											key: zone,
+										})
+									)
 								}
 							/>
-						</div>
-						<label className={cls.zoneCheck}>
-							<input
-								type='checkbox'
-								checked={configuration[zone].reverseDirection}
-								onChange={e =>
+						</HStack>
+						<Checkbox
+							label='Обратное движение'
+							checked={configuration[zone].reverseDirection}
+							onChange={checked =>
+								dispatch(
 									markupActions.setDirection({
 										zone,
-										checked: e.target.checked,
+										checked,
 									})
-								}
-							/>
-							Обратное движение
-						</label>
+								)
+							}
+						/>
 					</div>
 				)
 			})}

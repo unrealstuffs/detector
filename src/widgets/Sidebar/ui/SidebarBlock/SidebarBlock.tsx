@@ -15,7 +15,7 @@ const SidebarBlock = (props: SidebarBlockProps) => {
 	return (
 		<div className={classNames(cls.SidebarBlock, {}, [className])}>
 			<Text title={header} bold size='m' className={cls.heading} />
-			<div className={cls.body}>{children}</div>
+			{children}
 		</div>
 	)
 }

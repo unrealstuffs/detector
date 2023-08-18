@@ -30,6 +30,10 @@
 	@apply items-end;
 }
 
+.alignStretch {
+	@apply items-stretch;
+}
+
 .directionRow {
 	@apply flex-row;
 }

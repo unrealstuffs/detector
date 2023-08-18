@@ -6,6 +6,7 @@ import ZonesMarkup from '../ZonesMarkup/ZonesMarkup'
 import LinesMarkup from '../LinesMarkup/LinesMarkup'
 import CountersMarkup from '../CountersMarkup/CountersMarkup'
 import { KonvaEventObject } from 'konva/lib/Node'
+import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 
 export const EditMarkup = () => {
 	const { configuration, selectedPolygon } = useTypedSelector(
@@ -13,6 +14,7 @@ export const EditMarkup = () => {
 	)
 	const { videoSize, scale } = useTypedSelector(state => state.video)
 	const { tab } = useTypedSelector(state => state.tabs)
+	const dispatch = useAppDispatch()
 
 	const getParentPolygon = () => {
 		if (selectedPolygon.length === 3) {
@@ -27,19 +29,22 @@ export const EditMarkup = () => {
 	const onClickHandler = (e: KonvaEventObject<MouseEvent>) => {
 		if (e.evt.button === 2) return
 		if (!selectedPolygon.length) return
-		if (tab !== 'shot') return
 
+		if (tab !== 'shot') return
 		const pos = e.target.getStage()?.getPointerPosition()
 		if (!pos) return
 
 		if (
 			selectedPolygon.length === 1 ||
 			pointInPolygon([pos?.x / scale, pos?.y / scale], getParentPolygon())
-		)
-			markupActions.addPoint({
-				keys: selectedPolygon,
-				value: [pos?.x / scale, pos?.y / scale],
-			})
+		) {
+			dispatch(
+				markupActions.addPoint({
+					keys: selectedPolygon,
+					value: [pos?.x / scale, pos?.y / scale],
+				})
+			)
+		}
 	}
 
 	return (

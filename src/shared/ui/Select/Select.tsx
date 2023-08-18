@@ -26,7 +26,9 @@ const Select = memo((props: SelectProps) => {
 			onChange={onChangeHandler}
 		>
 			{options.map(item => (
-				<option value={item.value}>{item.title}</option>
+				<option key={item.value} value={item.value}>
+					{item.title}
+				</option>
 			))}
 		</select>
 	)

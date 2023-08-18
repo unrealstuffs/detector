@@ -8,10 +8,10 @@
 		@apply bg-danger hover:bg-opacity-90;
 	}
 	&.s {
-		@apply text-sm px-2 py-1;
+		@apply text-sm px-2 py-1 rounded-md;
 	}
 	&.m {
-		@apply text-base px-4 py-2;
+		@apply text-base px-4 py-2 rounded-md;
 	}
 	&.l {
 		@apply text-lg px-6 py-2;

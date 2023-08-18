@@ -4,6 +4,7 @@ import Loader from 'shared/ui/Loader/Loader'
 import { classNames } from 'shared/lib/classNames'
 import cls from './Video.module.scss'
 import { useTypedSelector } from 'shared/hooks/useTypedSelector'
+import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 
 interface VideoProps {
 	src: string
@@ -15,23 +16,29 @@ export const Video = (props: VideoProps) => {
 	const videoRef = useRef<HTMLVideoElement>(null)
 	const [videoLoading, setVideoLoading] = useState(true)
 	const { tab } = useTypedSelector(state => state.tabs)
+	const dispatch = useAppDispatch()
 
 	useEffect(() => {
 		const video = videoRef.current
 
 		video?.addEventListener('loadedmetadata', () => {
 			setVideoLoading(false)
-			videoActions.setVideoSize({
-				width: video.videoWidth,
-				height: video.videoHeight,
-			})
-			videoActions.setScale(video?.offsetWidth / video?.videoWidth)
+			dispatch(
+				videoActions.setVideoSize({
+					width: video.videoWidth,
+					height: video.videoHeight,
+				})
+			)
+			dispatch(
+				videoActions.setScale(video?.offsetWidth / video?.videoWidth)
+			)
 		})
 
 		return () => {
 			video?.removeEventListener('loadedmetadata', () => {})
 		}
-	}, [])
+	}, [dispatch])
+
 	useEffect(() => {
 		const video = videoRef.current
 		if (tab === 'shot') {

@@ -1,0 +1,15 @@
+.polygonTitle {
+	@apply inline-block w-full bg-white border border-light rounded-lg py-1 px-4 cursor-pointer;
+
+	&.selected {
+		@apply border-accent;
+	}
+}
+
+.input {
+	@apply w-auto;
+}
+
+.polygon {
+	@apply mb-2;
+}

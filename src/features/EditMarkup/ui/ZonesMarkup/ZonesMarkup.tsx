@@ -10,6 +10,7 @@ import {
 import { markupActions } from 'features/SendMarkupConfig/model/slices/markupSlice'
 import { MarkupConfig } from 'shared/types/MarkupConfig'
 import { KonvaEventObject } from 'konva/lib/Node'
+import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 
 interface ZonesMarkupProps {
 	configuration: MarkupConfig
@@ -19,6 +20,7 @@ interface ZonesMarkupProps {
 
 const ZonesMarkup = (props: ZonesMarkupProps) => {
 	const { configuration, scale, tab } = props
+	const dispatch = useAppDispatch()
 
 	const onDragMove = (
 		e: KonvaEventObject<DragEvent>,
@@ -46,17 +48,19 @@ const ZonesMarkup = (props: ZonesMarkupProps) => {
 		}
 		e.target.setAbsolutePosition(newPos)
 
-		markupActions.editZone({
-			x: e.target.x(),
-			y: e.target.y(),
-			zone,
-			index,
-		})
+		dispatch(
+			markupActions.editZone({
+				x: e.target.x(),
+				y: e.target.y(),
+				zone,
+				index,
+			})
+		)
 	}
 
 	const onContextMenuHandler = (points: number[]) => {
 		if (tab !== 'shot') return
-		markupActions.deletePoint([points[0], points[1]])
+		dispatch(markupActions.deletePoint([points[0], points[1]]))
 	}
 
 	return (

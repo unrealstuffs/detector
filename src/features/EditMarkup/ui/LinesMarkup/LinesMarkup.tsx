@@ -12,6 +12,7 @@ import { markupActions } from 'features/SendMarkupConfig/model/slices/markupSlic
 import { KonvaEventObject } from 'konva/lib/Node'
 import { Fragment } from 'react'
 import { Circle, Line, Text } from 'react-konva'
+import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 import { MarkupConfig } from 'shared/types/MarkupConfig'
 
 interface LinesMarkupProps {
@@ -22,6 +23,7 @@ interface LinesMarkupProps {
 
 const LinesMarkup = (props: LinesMarkupProps) => {
 	const { configuration, scale, tab } = props
+	const dispatch = useAppDispatch()
 
 	const onDragMove = (
 		e: KonvaEventObject<DragEvent>,
@@ -30,18 +32,20 @@ const LinesMarkup = (props: LinesMarkupProps) => {
 		index: number
 	) => {
 		handleDragMove(e, configuration[zone].pl)
-		markupActions.editLine({
-			x: e.target.x(),
-			y: e.target.y(),
-			zone,
-			line,
-			index,
-		})
+		dispatch(
+			markupActions.editLine({
+				x: e.target.x(),
+				y: e.target.y(),
+				zone,
+				line,
+				index,
+			})
+		)
 	}
 
 	const onContextMenu = (point: number[]) => {
 		if (tab !== 'shot') return
-		markupActions.deletePoint([point[0], point[1]])
+		dispatch(markupActions.deletePoint([point[0], point[1]]))
 	}
 
 	return (
