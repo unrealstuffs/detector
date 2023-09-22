@@ -22,4 +22,5 @@ export interface AvgSpeedSchema {
 	status: FetchStatus
 	tableRows: number
 	searchObject: AvgSpeedSearch
+	blockFetching: boolean
 }

@@ -6,6 +6,7 @@ import { databaseActions } from '../model/slices/databaseSlice'
 import cls from './SendDbConfig.module.scss'
 import { Input } from 'shared/ui/Input/Input'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
+import { toast } from 'react-hot-toast'
 
 interface SendDbConfigProps {
 	className?: string
@@ -18,8 +19,15 @@ export const SendDbConfig = (props: SendDbConfigProps) => {
 	const dispatch = useAppDispatch()
 
 	const sendDatabaseConfigHandler = async () => {
-		await dispatch(sendDatabaseConfig())
+		const resultAction = await dispatch(sendDatabaseConfig())
+
+		if (sendDatabaseConfig.fulfilled.match(resultAction)) {
+			toast.success('Подключено!')
+		} else {
+			toast.error(`Ошибка подключения: ${resultAction.payload}`)
+		}
 	}
+
 	return (
 		<div className={classNames(cls.config, {}, [className])}>
 			<div className={cls.dbFields}>
@@ -29,10 +37,7 @@ export const SendDbConfig = (props: SendDbConfigProps) => {
 						type='text'
 						value={databaseConfig.dbname}
 						onChange={value => {
-							databaseActions.setDatabaseConfig({
-								...databaseConfig,
-								dbname: value,
-							})
+							dispatch(databaseActions.setDbName(value))
 						}}
 					/>
 				</div>
@@ -42,10 +47,7 @@ export const SendDbConfig = (props: SendDbConfigProps) => {
 						type='text'
 						value={databaseConfig.address}
 						onChange={value => {
-							databaseActions.setDatabaseConfig({
-								...databaseConfig,
-								address: value,
-							})
+							dispatch(databaseActions.setAddress(value))
 						}}
 					/>
 				</div>
@@ -55,10 +57,7 @@ export const SendDbConfig = (props: SendDbConfigProps) => {
 						type='number'
 						value={databaseConfig.port}
 						onChange={value => {
-							databaseActions.setDatabaseConfig({
-								...databaseConfig,
-								port: value,
-							})
+							dispatch(databaseActions.setPort(value))
 						}}
 					/>
 				</div>
@@ -68,10 +67,7 @@ export const SendDbConfig = (props: SendDbConfigProps) => {
 						type='text'
 						value={databaseConfig.username}
 						onChange={value => {
-							databaseActions.setDatabaseConfig({
-								...databaseConfig,
-								username: value,
-							})
+							dispatch(databaseActions.setUsername(value))
 						}}
 					/>
 				</div>
@@ -82,23 +78,17 @@ export const SendDbConfig = (props: SendDbConfigProps) => {
 						type='password'
 						value={databaseConfig.password}
 						onChange={value => {
-							databaseActions.setDatabaseConfig({
-								...databaseConfig,
-								password: value,
-							})
+							dispatch(databaseActions.setPassword(value))
 						}}
 					/>
 				</div>
 			</div>
 			<Button
-				disabled={status !== 'init'}
+				disabled={status === 'loading'}
 				onClick={sendDatabaseConfigHandler}
 				size='l'
 			>
-				{status === 'init' && 'Сохранить'}
-				{status === 'error' && 'Ошибка'}
-				{status === 'loading' && 'Загрузка...'}
-				{status === 'success' && 'Подключено!'}
+				Сохранить
 			</Button>
 		</div>
 	)

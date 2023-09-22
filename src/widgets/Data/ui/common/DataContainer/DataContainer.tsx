@@ -6,7 +6,7 @@ import { Text } from 'shared/ui/Text/Text'
 import { AiOutlineQuestionCircle, AiOutlineSearch } from 'react-icons/ai'
 import { Tooltip } from 'react-tooltip'
 import Select from 'shared/ui/Select/Select'
-import { rowsCountOptions } from 'widgets/Data/model/consts/rowsCountOptions'
+import { rowsCountOptions } from '../../../model/consts/rowsCountOptions'
 
 interface DataContainerProps {
 	className?: string

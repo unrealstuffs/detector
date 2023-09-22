@@ -25,4 +25,5 @@ export interface CompositionSchema {
 	status: FetchStatus
 	tableRows: number
 	searchObject: CompositionSearch
+	blockFetching: boolean
 }

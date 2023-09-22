@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Table } from 'entities/Table'
 import { useTypedSelector } from 'shared/hooks/useTypedSelector'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
@@ -5,13 +6,26 @@ import dayjs from 'dayjs'
 import DataContainer from '../common/DataContainer/DataContainer'
 import { avgDelayActions } from '../../model/slices/avgDelaySlice'
 import { SearchAvgDelay } from 'features/Search'
+import { fetchAvgDelay } from '../../model/api/fetchAvgDelay'
 
 export const DataAvgDelay = () => {
-	const { data, status, tableRows } = useTypedSelector(
+	const { data, status, tableRows, blockFetching } = useTypedSelector(
 		state => state.avgDelay
 	)
 	const { configuration } = useTypedSelector(state => state.markup)
 	const dispatch = useAppDispatch()
+
+	useEffect(() => {
+		if (blockFetching) {
+			return
+		}
+		dispatch(fetchAvgDelay())
+		const interval = setInterval(() => {
+			dispatch(fetchAvgDelay())
+		}, 15 * 60 * 1000)
+
+		return () => clearInterval(interval)
+	}, [dispatch, blockFetching])
 
 	return (
 		<DataContainer

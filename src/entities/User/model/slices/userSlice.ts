@@ -9,7 +9,7 @@ export interface UserSchema extends User {
 
 const initialState: UserSchema = {
 	user: null,
-	accessToken: localStorage.getItem('accessToken') || null,
+	accessToken: JSON.parse(localStorage.getItem('accessToken') || 'null'),
 	status: 'init',
 }
 

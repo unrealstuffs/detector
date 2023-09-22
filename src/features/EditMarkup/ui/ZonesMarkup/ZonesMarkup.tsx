@@ -1,12 +1,8 @@
 import { Fragment } from 'react'
 import { getMiddleOfPolygon } from '../../model/services/editMarkupHelpers'
 import { Circle, Line, Text } from 'react-konva'
-import { colors } from 'features/EditMarkup/model/consts/colors'
-import {
-	labelFontSize,
-	lineWidth,
-	pointSize,
-} from 'features/EditMarkup/model/consts/sizes'
+import { colors } from '../../model/consts/colors'
+import { labelFontSize, lineWidth, pointSize } from '../../model/consts/sizes'
 import { markupActions } from 'features/SendMarkupConfig/model/slices/markupSlice'
 import { MarkupConfig } from 'shared/types/MarkupConfig'
 import { KonvaEventObject } from 'konva/lib/Node'

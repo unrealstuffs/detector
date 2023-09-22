@@ -1,17 +1,31 @@
+import { useEffect } from 'react'
 import { Table } from 'entities/Table'
 import { useTypedSelector } from 'shared/hooks/useTypedSelector'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 import dayjs from 'dayjs'
 import DataContainer from '../common/DataContainer/DataContainer'
-import { avgSpeedActions } from 'widgets/Data/model/slices/avgSpeedSlice'
+import { avgSpeedActions } from '../../model/slices/avgSpeedSlice'
 import { SearchAvgSpeed } from 'features/Search'
+import { fetchAvgSpeed } from '../../model/api/fetchAvgSpeed'
 
 export const DataAvgSpeed = () => {
-	const { data, status, tableRows } = useTypedSelector(
+	const { data, status, tableRows, blockFetching } = useTypedSelector(
 		state => state.avgSpeed
 	)
 	const { configuration } = useTypedSelector(state => state.markup)
 	const dispatch = useAppDispatch()
+
+	useEffect(() => {
+		if (blockFetching) {
+			return
+		}
+		dispatch(fetchAvgSpeed())
+		const interval = setInterval(() => {
+			dispatch(fetchAvgSpeed())
+		}, 15 * 60 * 1000)
+
+		return () => clearInterval(interval)
+	}, [dispatch, blockFetching])
 
 	return (
 		<DataContainer

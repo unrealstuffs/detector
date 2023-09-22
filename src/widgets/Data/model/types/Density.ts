@@ -22,4 +22,5 @@ export interface DensitySchema {
 	status: FetchStatus
 	tableRows: number
 	searchObject: DensitySearch
+	blockFetching: boolean
 }

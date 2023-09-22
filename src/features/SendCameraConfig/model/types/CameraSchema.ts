@@ -1,4 +1,4 @@
-import { FetchStatus } from '../../../../shared/types/FetchStatus'
+import { FetchStatus } from 'shared/types/FetchStatus'
 
 export interface CameraSettings {
 	dryCont: boolean

@@ -24,4 +24,5 @@ export interface TypesSchema {
 	status: FetchStatus
 	tableRows: number
 	searchObject: TypesSearch
+	blockFetching: boolean
 }

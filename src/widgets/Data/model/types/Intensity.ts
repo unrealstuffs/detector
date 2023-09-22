@@ -22,4 +22,5 @@ export interface IntensitySchema {
 	status: FetchStatus
 	tableRows: number
 	searchObject: IntensitySearch
+	blockFetching: boolean
 }

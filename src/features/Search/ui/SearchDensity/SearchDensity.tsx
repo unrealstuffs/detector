@@ -14,7 +14,7 @@ import { densityActions } from 'widgets/Data/model/slices/densitySlice'
 
 export const SearchDensity = () => {
 	const datePickersRef = useRef<{ clear: () => void }>()
-	const { searchObject } = useTypedSelector(state => state.density)
+	const { searchObject, status } = useTypedSelector(state => state.density)
 	const { configuration } = useTypedSelector(state => state.markup)
 
 	const dispatch = useAppDispatch()
@@ -24,6 +24,8 @@ export const SearchDensity = () => {
 			datePickersRef.current.clear()
 		}
 		dispatch(densityActions.resetData())
+		dispatch(densityActions.resetStatus())
+		dispatch(densityActions.resetBlockFetching())
 		dispatch(densityActions.resetSearchData())
 	}
 
@@ -34,6 +36,7 @@ export const SearchDensity = () => {
 	return (
 		<SearchContainer>
 			<DatePickers
+				disabled={status === 'loading'}
 				ref={datePickersRef}
 				defaultDateFrom={searchObject.timestampRange.from}
 				defaultDateTo={searchObject.timestampRange.to}

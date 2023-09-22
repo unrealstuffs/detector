@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { FetchStatus } from 'shared/types/FetchStatus'
 
 interface VideoSchema {
@@ -23,7 +23,7 @@ const videoSlice = createSlice({
 		setVideoSize(state, action) {
 			state.videoSize = action.payload
 		},
-		setStatus(state, action) {
+		setStatus(state, action: PayloadAction<FetchStatus>) {
 			state.status = action.payload
 		},
 		setScale(state, action) {

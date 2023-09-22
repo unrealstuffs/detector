@@ -1,5 +1,5 @@
 import { Navigate, useLocation } from 'react-router-dom'
-import { useTypedSelector } from '../../../shared/hooks/useTypedSelector'
+import { useTypedSelector } from 'shared/hooks/useTypedSelector'
 
 interface RequireAuthProps {
 	children: JSX.Element

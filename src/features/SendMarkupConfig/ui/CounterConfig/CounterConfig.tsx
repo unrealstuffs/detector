@@ -1,7 +1,7 @@
 import { MarkupConfig } from 'shared/types/MarkupConfig'
 import cls from './CounterConfig.module.scss'
 import { AiOutlineClose } from 'react-icons/ai'
-import { markupActions } from 'features/SendMarkupConfig/model/slices/markupSlice'
+import { markupActions } from '../../model/slices/markupSlice'
 import { classNames } from 'shared/lib/classNames'
 import { HStack } from 'shared/ui/Stack/HStack/HStack'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'

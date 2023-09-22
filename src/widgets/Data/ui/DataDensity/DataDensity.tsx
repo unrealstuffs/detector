@@ -1,15 +1,31 @@
+import { useEffect } from 'react'
 import { Table } from 'entities/Table'
 import { useTypedSelector } from 'shared/hooks/useTypedSelector'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 import dayjs from 'dayjs'
 import DataContainer from '../common/DataContainer/DataContainer'
-import { densityActions } from 'widgets/Data/model/slices/densitySlice'
+import { densityActions } from '../../model/slices/densitySlice'
 import { SearchDensity } from 'features/Search'
+import { fetchDensity } from '../../model/api/fetchDensity'
 
 export const DataDensity = () => {
-	const { data, status, tableRows } = useTypedSelector(state => state.density)
+	const { data, status, tableRows, blockFetching } = useTypedSelector(
+		state => state.density
+	)
 	const { configuration } = useTypedSelector(state => state.markup)
 	const dispatch = useAppDispatch()
+
+	useEffect(() => {
+		if (blockFetching) {
+			return
+		}
+		dispatch(fetchDensity())
+		const interval = setInterval(() => {
+			dispatch(fetchDensity())
+		}, 15 * 60 * 1000)
+
+		return () => clearInterval(interval)
+	}, [dispatch, blockFetching])
 
 	return (
 		<DataContainer

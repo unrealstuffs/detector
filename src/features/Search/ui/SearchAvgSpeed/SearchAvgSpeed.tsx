@@ -14,7 +14,7 @@ import { Input } from 'shared/ui/Input/Input'
 
 export const SearchAvgSpeed = () => {
 	const datePickersRef = useRef<{ clear: () => void }>()
-	const { searchObject } = useTypedSelector(state => state.avgSpeed)
+	const { searchObject, status } = useTypedSelector(state => state.avgSpeed)
 	const { configuration } = useTypedSelector(state => state.markup)
 
 	const dispatch = useAppDispatch()
@@ -24,6 +24,8 @@ export const SearchAvgSpeed = () => {
 			datePickersRef.current.clear()
 		}
 		dispatch(avgSpeedActions.resetData())
+		dispatch(avgSpeedActions.resetStatus())
+		dispatch(avgSpeedActions.resetBlockFetching())
 		dispatch(avgSpeedActions.resetSearchData())
 	}
 
@@ -34,6 +36,7 @@ export const SearchAvgSpeed = () => {
 	return (
 		<SearchContainer>
 			<DatePickers
+				disabled={status === 'loading'}
 				ref={datePickersRef}
 				defaultDateFrom={searchObject.timestampRange.from}
 				defaultDateTo={searchObject.timestampRange.to}

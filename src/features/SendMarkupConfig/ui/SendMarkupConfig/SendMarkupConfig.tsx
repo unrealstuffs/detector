@@ -1,5 +1,6 @@
 import cls from './SendMarkupConfig.module.scss'
 import { useMemo } from 'react'
+import { toast } from 'react-hot-toast'
 import { useTypedSelector } from 'shared/hooks/useTypedSelector'
 import Button from 'shared/ui/Button/Button'
 import { sendConfiguration } from '../../model/services/sendConfiguration'
@@ -17,8 +18,15 @@ export const SendMarkupConfig = () => {
 	)
 	const dispatch = useAppDispatch()
 
-	const sendConfigurationHandler = () => {
-		dispatch(sendConfiguration())
+	const sendConfigurationHandler = async () => {
+		const result = await dispatch(sendConfiguration())
+		if (sendConfiguration.fulfilled.match(result)) {
+			toast.success('Отправлено!')
+		} else {
+			if (result.payload) {
+				toast.error(`Ошибка отправки данных: ${result.payload}`)
+			}
+		}
 	}
 
 	const markupConfigBlocks = useMemo(
@@ -69,12 +77,9 @@ export const SendMarkupConfig = () => {
 				<Button
 					size='m'
 					onClick={sendConfigurationHandler}
-					disabled={status !== 'init'}
+					disabled={status === 'loading'}
 				>
-					{status === 'init' && 'Сохранить'}
-					{status === 'error' && 'Ошибка'}
-					{status === 'loading' && 'Загрузка...'}
-					{status === 'success' && 'Отправлено!'}
+					Сохранить
 				</Button>
 				<Button
 					size='m'

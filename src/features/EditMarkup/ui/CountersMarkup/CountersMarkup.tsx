@@ -1,13 +1,9 @@
-import { colors } from 'features/EditMarkup/model/consts/colors'
-import {
-	labelFontSize,
-	lineWidth,
-	pointSize,
-} from 'features/EditMarkup/model/consts/sizes'
+import { colors } from '../../model/consts/colors'
+import { labelFontSize, lineWidth, pointSize } from '../../model/consts/sizes'
 import {
 	getMiddleOfPolygon,
 	handleDragMove,
-} from 'features/EditMarkup/model/services/editMarkupHelpers'
+} from '../../model/services/editMarkupHelpers'
 import { markupActions } from 'features/SendMarkupConfig/model/slices/markupSlice'
 import { KonvaEventObject } from 'konva/lib/Node'
 import { Fragment } from 'react'

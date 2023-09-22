@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom/client'
-import 'app/styles/index.css'
+import 'app/styles/index.scss'
 import App from 'app/App'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'

@@ -1,7 +1,7 @@
 import { MarkupConfig } from 'shared/types/MarkupConfig'
 import cls from './LinesConfig.module.scss'
 import { classNames } from 'shared/lib/classNames'
-import { markupActions } from 'features/SendMarkupConfig/model/slices/markupSlice'
+import { markupActions } from '../../model/slices/markupSlice'
 import { AiOutlineClose } from 'react-icons/ai'
 import { Input } from 'shared/ui/Input/Input'
 import { HStack } from 'shared/ui/Stack/HStack/HStack'

@@ -1,17 +1,31 @@
+import { useEffect } from 'react'
 import { Table } from 'entities/Table'
 import { useTypedSelector } from 'shared/hooks/useTypedSelector'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 import dayjs from 'dayjs'
 import DataContainer from '../common/DataContainer/DataContainer'
-import { intensityActions } from 'widgets/Data/model/slices/intensitySlice'
+import { intensityActions } from '../../model/slices/intensitySlice'
 import { SearchIntensity } from 'features/Search/ui/SearchIntensity/SearchIntensity'
+import { fetchIntensity } from '../../model/api/fetchIntensity'
 
 export const DataIntensity = () => {
-	const { data, status, tableRows } = useTypedSelector(
+	const { data, status, tableRows, blockFetching } = useTypedSelector(
 		state => state.intensity
 	)
 	const { configuration } = useTypedSelector(state => state.markup)
 	const dispatch = useAppDispatch()
+
+	useEffect(() => {
+		if (blockFetching) {
+			return
+		}
+		dispatch(fetchIntensity())
+		const interval = setInterval(() => {
+			dispatch(fetchIntensity())
+		}, 15 * 60 * 1000)
+
+		return () => clearInterval(interval)
+	}, [dispatch, blockFetching])
 
 	return (
 		<DataContainer

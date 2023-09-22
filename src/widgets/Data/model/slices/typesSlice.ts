@@ -19,6 +19,7 @@ const initialState: TypesSchema = {
 	status: 'init',
 	tableRows: 30,
 	searchObject: initialSearchObject,
+	blockFetching: false,
 }
 
 const typesSlice = createSlice({
@@ -34,8 +35,17 @@ const typesSlice = createSlice({
 		resetSearchData: state => {
 			state.searchObject = initialSearchObject
 		},
+		resetStatus: state => {
+			state.status = 'init'
+		},
 		setLicensePlates: (state, action: PayloadAction<string>) => {
 			state.searchObject.licensePlates = [action.payload]
+		},
+		setLicenseNumber: (state, action: PayloadAction<string>) => {
+			state.searchObject.licensePlates = [action.payload + '!']
+		},
+		setLicenseRegion: (state, action: PayloadAction<string>) => {
+			state.searchObject.licensePlates = ['!' + action.payload]
 		},
 		setVehicleTypes: (state, action: PayloadAction<string>) => {
 			state.searchObject.vehicleTypes = [action.payload]
@@ -55,6 +65,9 @@ const typesSlice = createSlice({
 		setTimestampRangeTo: (state, action: PayloadAction<string | Date>) => {
 			state.searchObject.timestampRange.to = action.payload
 		},
+		resetBlockFetching: state => {
+			state.blockFetching = false
+		},
 	},
 	extraReducers: builder => {
 		builder.addCase(
@@ -64,6 +77,7 @@ const typesSlice = createSlice({
 			}
 		)
 		builder.addCase(searchTypes.pending, state => {
+			state.blockFetching = true
 			state.status = 'loading'
 		})
 		builder.addCase(

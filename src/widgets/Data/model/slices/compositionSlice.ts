@@ -24,6 +24,7 @@ const initialState: CompositionSchema = {
 	status: 'init',
 	tableRows: 30,
 	searchObject: initialSearchObject,
+	blockFetching: false,
 }
 
 const compositionSlice = createSlice({
@@ -38,6 +39,9 @@ const compositionSlice = createSlice({
 		},
 		resetSearchData: state => {
 			state.searchObject = initialSearchObject
+		},
+		resetStatus: state => {
+			state.status = 'init'
 		},
 		setVehicleTypes: (state, action: PayloadAction<string>) => {
 			state.searchObject.vehicleTypes = [action.payload]
@@ -66,6 +70,9 @@ const compositionSlice = createSlice({
 		setTimestampRangeTo: (state, action: PayloadAction<string | Date>) => {
 			state.searchObject.timestampRange.to = action.payload
 		},
+		resetBlockFetching: state => {
+			state.blockFetching = false
+		},
 	},
 	extraReducers: builder => {
 		builder.addCase(
@@ -75,6 +82,7 @@ const compositionSlice = createSlice({
 			}
 		)
 		builder.addCase(searchComposition.pending, state => {
+			state.blockFetching = true
 			state.status = 'loading'
 		})
 		builder.addCase(

@@ -1,3 +1,4 @@
+import { toast } from 'react-hot-toast'
 import { useTypedSelector } from 'shared/hooks/useTypedSelector'
 import Button from 'shared/ui/Button/Button'
 import NumInput from 'shared/ui/NumInput/NumInput'
@@ -13,8 +14,15 @@ export const SendCameraConfig = () => {
 
 	const dispatch = useAppDispatch()
 
-	const sendCameraConfigHandler = () => {
-		dispatch(sendCameraConfig())
+	const sendCameraConfigHandler = async () => {
+		const result = await dispatch(sendCameraConfig())
+		if (sendCameraConfig.fulfilled.match(result)) {
+			toast.success('Отправлено!')
+		} else {
+			if (result.payload) {
+				toast.error(`Ошибка отправки данных: ${result.payload}`)
+			}
+		}
 	}
 
 	return (
@@ -69,14 +77,11 @@ export const SendCameraConfig = () => {
 				/>
 			</div>
 			<Button
-				disabled={status !== 'init'}
+				disabled={status === 'loading'}
 				onClick={sendCameraConfigHandler}
 				size='l'
 			>
-				{status === 'init' && 'Сохранить'}
-				{status === 'error' && 'Ошибка'}
-				{status === 'loading' && 'Загрузка...'}
-				{status === 'success' && 'Отправлено!'}
+				Сохранить
 			</Button>
 		</div>
 	)

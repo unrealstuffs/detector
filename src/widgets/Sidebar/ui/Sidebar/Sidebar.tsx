@@ -6,7 +6,7 @@ import SidebarTab from '../SidebarTab/SidebarTab'
 import SidebarBlock from '../SidebarBlock/SidebarBlock'
 import { classNames } from 'shared/lib/classNames'
 import SidebarPage from '../SidebarPage/SidebarPage'
-import { sidebarPages } from 'widgets/Sidebar/model/consts/sidebarPages'
+import { sidebarPages } from '../../model/consts/sidebarPages'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 
 interface SidebarProps {

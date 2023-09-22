@@ -18,6 +18,7 @@ const initialState: AvgSpeedSchema = {
 	status: 'init',
 	tableRows: 30,
 	searchObject: initialSearchObject,
+	blockFetching: false,
 }
 
 const avgSpeedSlice = createSlice({
@@ -32,6 +33,9 @@ const avgSpeedSlice = createSlice({
 		},
 		resetSearchData: state => {
 			state.searchObject = initialSearchObject
+		},
+		resetStatus: state => {
+			state.status = 'init'
 		},
 		setDirections: (state, action: PayloadAction<string>) => {
 			state.searchObject.directions = [action.payload]
@@ -54,6 +58,9 @@ const avgSpeedSlice = createSlice({
 		setTimestampRangeTo: (state, action: PayloadAction<string | Date>) => {
 			state.searchObject.timestampRange.to = action.payload
 		},
+		resetBlockFetching: state => {
+			state.blockFetching = false
+		},
 	},
 	extraReducers: builder => {
 		builder.addCase(
@@ -63,6 +70,7 @@ const avgSpeedSlice = createSlice({
 			}
 		)
 		builder.addCase(searchAvgSpeed.pending, state => {
+			state.blockFetching = true
 			state.status = 'loading'
 		})
 		builder.addCase(

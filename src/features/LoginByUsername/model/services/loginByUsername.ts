@@ -16,7 +16,8 @@ export const loginByUsername = createAsyncThunk<
 	if (isDev) {
 		return {
 			user: 'user',
-			accessToken: 'test_token',
+			accessToken:
+				'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6ImR0bSJ9.yFubHXiWPxNy-NwozAgjprns4YQ250kucjtwZhO7EXE',
 		}
 	}
 	try {
@@ -24,20 +25,25 @@ export const loginByUsername = createAsyncThunk<
 			method: 'PUT',
 			body: JSON.stringify({ login, password }),
 		})
-		const data = await response.json()
+		const {
+			data,
+			result,
+			meta: { message },
+		} = await response.json()
 
-		if (data.result === 'success') {
-			return {
-				user: data.data || '',
-				accessToken: response.headers.get('Authorization') || '',
-			}
+		if (result === 'error') {
+			return rejectWithValue(message)
 		}
 
 		return {
-			user: null,
-			accessToken: null,
+			user: data.data || '',
+			accessToken: response.headers.get('Authorization') || '',
 		}
-	} catch {
-		return rejectWithValue('error')
+	} catch (error) {
+		if (error instanceof Error) {
+			return rejectWithValue(error.message)
+		} else {
+			return rejectWithValue('Unknown Error')
+		}
 	}
 })

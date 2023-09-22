@@ -47,15 +47,9 @@ const cameraSlice = createSlice({
 		})
 		builder.addCase(sendCameraConfig.fulfilled, state => {
 			state.status = 'success'
-			setTimeout(() => {
-				state.status = 'init'
-			}, 1000)
 		})
 		builder.addCase(sendCameraConfig.rejected, state => {
 			state.status = 'error'
-			setTimeout(() => {
-				state.status = 'init'
-			}, 1000)
 		})
 	},
 })

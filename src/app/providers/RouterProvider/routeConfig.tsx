@@ -1,5 +1,6 @@
-import { LoginPage } from '../../../pages/LoginPage'
-import { MainPage } from '../../../pages/MainPage'
+import { Navigate } from 'react-router-dom'
+import { LoginPage } from 'pages/LoginPage'
+import { MainPage } from 'pages/MainPage'
 
 export const routeConfig = {
 	main: {
@@ -13,5 +14,6 @@ export const routeConfig = {
 	},
 	not_found: {
 		path: '*',
+		element: <Navigate to='/' replace />,
 	},
 }

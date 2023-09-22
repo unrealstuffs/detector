@@ -20,15 +20,23 @@ export const sendDatabaseConfig = createAsyncThunk<any, void, ThunkConfig<any>>(
 					},
 				}
 			)
-			const { result } = await response.json()
+			const {
+				result,
+				meta: { message },
+				data,
+			} = await response.json()
 
-			if (result === 'success') {
-				return ''
-			} else {
-				rejectWithValue('error')
+			if (result === 'error') {
+				return rejectWithValue(message)
 			}
-		} catch {
-			throw new Error('Unable to connect to database')
+
+			return data
+		} catch (error) {
+			if (error instanceof Error) {
+				return rejectWithValue(error.message)
+			} else {
+				return rejectWithValue('Unknown Error')
+			}
 		}
 	}
 )

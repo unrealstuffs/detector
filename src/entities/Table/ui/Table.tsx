@@ -1,7 +1,6 @@
 import cls from './Table.module.scss'
 import { useTable, useSortBy, Column } from 'react-table'
 import { AiOutlineCaretDown, AiOutlineCaretUp } from 'react-icons/ai'
-import 'flatpickr/dist/themes/material_blue.css'
 import { FetchStatus } from 'shared/types/FetchStatus'
 import { classNames } from 'shared/lib/classNames'
 

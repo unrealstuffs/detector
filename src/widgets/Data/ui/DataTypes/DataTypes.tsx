@@ -5,11 +5,27 @@ import { typesActions } from '../../model/slices/typesSlice'
 import dayjs from 'dayjs'
 import { SearchTypes } from 'features/Search'
 import DataContainer from '../common/DataContainer/DataContainer'
+import { useEffect } from 'react'
+import { fetchTypes } from '../../model/api/fetchTypes'
 
 export const DataTypes = () => {
-	const { data, status, tableRows } = useTypedSelector(state => state.types)
+	const { data, status, tableRows, blockFetching } = useTypedSelector(
+		state => state.types
+	)
 	const { configuration } = useTypedSelector(state => state.markup)
 	const dispatch = useAppDispatch()
+
+	useEffect(() => {
+		if (blockFetching) {
+			return
+		}
+		dispatch(fetchTypes())
+		const interval = setInterval(() => {
+			dispatch(fetchTypes())
+		}, 15 * 1000)
+
+		return () => clearInterval(interval)
+	}, [dispatch, blockFetching])
 
 	return (
 		<DataContainer

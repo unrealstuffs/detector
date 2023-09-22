@@ -1,17 +1,16 @@
 import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
-import { useTypedSelector } from '../../../shared/hooks/useTypedSelector'
-import { AppDispatch } from '../../../app/store'
-import { Header } from '../../../widgets/Header'
-import { getConfiguration } from 'features/SendMarkupConfig/model/services/getConfiguration'
+import { useTypedSelector } from 'shared/hooks/useTypedSelector'
+import { Header } from 'widgets/Header'
+import { getConfiguration } from 'features/SendMarkupConfig'
 import { getCameraConfig } from 'features/SendCameraConfig'
 import MainLayout from 'shared/layouts/MainLayout/MainLayout'
 import { Sidebar } from 'widgets/Sidebar'
 import { VideoMarkup } from 'widgets/VideoMarkup'
+import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 
 const MainPage = () => {
 	const { accessToken } = useTypedSelector(state => state.user)
-	const dispatch = useDispatch<AppDispatch>()
+	const dispatch = useAppDispatch()
 
 	useEffect(() => {
 		const fetchData = async () => {

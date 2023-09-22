@@ -28,8 +28,20 @@ const databaseSlice = createSlice({
 	name: 'database',
 	initialState,
 	reducers: {
-		setDatabaseConfig(state, action) {
-			state.databaseConfig = action.payload
+		setDbName(state, action) {
+			state.databaseConfig.dbname = action.payload
+		},
+		setAddress(state, action) {
+			state.databaseConfig.address = action.payload
+		},
+		setPort(state, action) {
+			state.databaseConfig.port = action.payload
+		},
+		setUsername(state, action) {
+			state.databaseConfig.username = action.payload
+		},
+		setPassword(state, action) {
+			state.databaseConfig.password = action.payload
 		},
 		setDatabaseConfigStatus(state, action) {
 			state.status = action.payload
@@ -41,15 +53,9 @@ const databaseSlice = createSlice({
 		})
 		builder.addCase(sendDatabaseConfig.fulfilled, state => {
 			state.status = 'success'
-			setTimeout(() => {
-				state.status = 'init'
-			}, 1000)
 		})
 		builder.addCase(sendDatabaseConfig.rejected, state => {
 			state.status = 'error'
-			setTimeout(() => {
-				state.status = 'init'
-			}, 1000)
 		})
 	},
 })

@@ -5,11 +5,13 @@ import cls from './DatePickers.module.scss'
 import { flatpickrOptions } from '../../../model/consts/flatpickrOptions'
 import { forwardRef, useRef, useImperativeHandle } from 'react'
 import Button from 'shared/ui/Button/Button'
+import 'flatpickr/dist/themes/light.css'
 
 interface DatePickerProps {
 	className?: string
 	defaultDateFrom: string | Date
 	defaultDateTo: string | Date
+	disabled: boolean
 	setTimestampFrom: (date: Date | string) => void
 	setTimestampTo: (date: Date | string) => void
 	searchHandler: () => void
@@ -23,6 +25,7 @@ const DatePickers = forwardRef((props: DatePickerProps, ref) => {
 		setTimestampFrom,
 		setTimestampTo,
 		className,
+		disabled,
 		resetSearchHandler,
 		searchHandler,
 	} = props
@@ -67,7 +70,7 @@ const DatePickers = forwardRef((props: DatePickerProps, ref) => {
 			<Button size='m' color='danger' onClick={resetSearchHandler}>
 				Сброс
 			</Button>
-			<Button size='m' onClick={searchHandler}>
+			<Button disabled={disabled} size='m' onClick={searchHandler}>
 				Поиск
 			</Button>
 		</HStack>

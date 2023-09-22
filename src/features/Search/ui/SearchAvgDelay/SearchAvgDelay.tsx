@@ -14,7 +14,7 @@ import { searchAvgDelay } from 'widgets/Data/model/api/searchAvgDelay'
 
 export const SearchAvgDelay = () => {
 	const datePickersRef = useRef<{ clear: () => void }>()
-	const { searchObject } = useTypedSelector(state => state.avgDelay)
+	const { searchObject, status } = useTypedSelector(state => state.avgDelay)
 	const { configuration } = useTypedSelector(state => state.markup)
 
 	const dispatch = useAppDispatch()
@@ -24,6 +24,8 @@ export const SearchAvgDelay = () => {
 			datePickersRef.current.clear()
 		}
 		dispatch(avgDelayActions.resetData())
+		dispatch(avgDelayActions.resetStatus())
+		dispatch(avgDelayActions.resetBlockFetching())
 		dispatch(avgDelayActions.resetSearchData())
 	}
 
@@ -34,6 +36,7 @@ export const SearchAvgDelay = () => {
 	return (
 		<SearchContainer>
 			<DatePickers
+				disabled={status === 'loading'}
 				ref={datePickersRef}
 				defaultDateFrom={searchObject.timestampRange.from}
 				defaultDateTo={searchObject.timestampRange.to}

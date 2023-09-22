@@ -22,4 +22,5 @@ export interface AvgDelaySchema {
 	status: FetchStatus
 	tableRows: number
 	searchObject: AvgDelaySearch
+	blockFetching: boolean
 }

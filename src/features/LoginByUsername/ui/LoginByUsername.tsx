@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 import cls from './LoginByUsername.module.scss'
 import Button from 'shared/ui/Button/Button'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
@@ -8,6 +8,7 @@ import { Text } from 'shared/ui/Text/Text'
 import { Input } from 'shared/ui/Input/Input'
 import { classNames } from 'shared/lib/classNames'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-hot-toast'
 
 interface LoginByUsernameProps {
 	className?: string
@@ -21,17 +22,25 @@ export const LoginByUsername = (props: LoginByUsernameProps) => {
 	const dispatch = useAppDispatch()
 	const navigate = useNavigate()
 
+	const loginByUsernameHandler = async (
+		event: FormEvent<HTMLFormElement>
+	) => {
+		event.preventDefault()
+
+		const result = await dispatch(loginByUsername({ login, password }))
+		if (loginByUsername.fulfilled.match(result)) {
+			navigate('/')
+		} else {
+			if (result.payload) {
+				toast.error(`Ошибка входа: ${result.payload}`)
+			}
+		}
+	}
+
 	return (
 		<div className={classNames(cls.loginForm, {}, [className])}>
 			<Text title='Вход' bold size='l' className={cls.heading} />
-			<form
-				onSubmit={e => {
-					e.preventDefault()
-					dispatch(loginByUsername({ login, password })).then(() => {
-						navigate('/')
-					})
-				}}
-			>
+			<form onSubmit={loginByUsernameHandler}>
 				<Input
 					autoFocus
 					label='Логин'
@@ -49,24 +58,13 @@ export const LoginByUsername = (props: LoginByUsernameProps) => {
 					onChange={value => setPassword(value)}
 				/>
 
-				{status === 'error' && (
-					<Text
-						text='Неверный логин или пароль'
-						align='center'
-						variant='danger'
-						bold
-						className={cls.errorMessage}
-					/>
-				)}
-
 				<div className={cls.loginActions}>
 					<Button
 						size='l'
 						disabled={status === 'loading'}
 						type='submit'
 					>
-						{(status === 'init' || status === 'error') && 'Войти'}
-						{status === 'loading' && 'Загрузка...'}
+						Войти
 					</Button>
 				</div>
 			</form>

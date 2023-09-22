@@ -1,17 +1,31 @@
+import { useEffect } from 'react'
 import { Table } from 'entities/Table'
 import { useTypedSelector } from 'shared/hooks/useTypedSelector'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 import dayjs from 'dayjs'
-import { compositionActions } from 'widgets/Data/model/slices/compositionSlice'
+import { compositionActions } from '../../model/slices/compositionSlice'
 import { SearchComposition } from 'features/Search/ui/SearchComposition/SearchComposition'
 import DataContainer from '../common/DataContainer/DataContainer'
+import { fetchComposition } from '../../model/api/fetchComposition'
 
 export const DataComposition = () => {
-	const { data, status, tableRows } = useTypedSelector(
+	const { data, status, tableRows, blockFetching } = useTypedSelector(
 		state => state.composition
 	)
 	const { configuration } = useTypedSelector(state => state.markup)
 	const dispatch = useAppDispatch()
+
+	useEffect(() => {
+		if (blockFetching) {
+			return
+		}
+		dispatch(fetchComposition())
+		const interval = setInterval(() => {
+			dispatch(fetchComposition())
+		}, 15 * 60 * 1000)
+
+		return () => clearInterval(interval)
+	}, [dispatch, blockFetching])
 
 	return (
 		<DataContainer

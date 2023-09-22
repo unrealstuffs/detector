@@ -1,5 +1,4 @@
 import { useRef } from 'react'
-import 'react-tooltip/dist/react-tooltip.css'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 import { HStack } from 'shared/ui/Stack/HStack/HStack'
 import { useTypedSelector } from 'shared/hooks/useTypedSelector'
@@ -16,7 +15,9 @@ import SearchFields from '../common/SearchFields/SearchFields'
 
 export const SearchComposition = () => {
 	const datePickersRef = useRef<{ clear: () => void }>()
-	const { searchObject } = useTypedSelector(state => state.composition)
+	const { searchObject, status } = useTypedSelector(
+		state => state.composition
+	)
 	const { configuration } = useTypedSelector(state => state.markup)
 
 	const dispatch = useAppDispatch()
@@ -26,6 +27,8 @@ export const SearchComposition = () => {
 			datePickersRef.current.clear()
 		}
 		dispatch(compositionActions.resetData())
+		dispatch(compositionActions.resetStatus())
+		dispatch(compositionActions.resetBlockFetching())
 		dispatch(compositionActions.resetSearchData())
 	}
 
@@ -36,6 +39,7 @@ export const SearchComposition = () => {
 	return (
 		<SearchContainer>
 			<DatePickers
+				disabled={status === 'loading'}
 				ref={datePickersRef}
 				defaultDateFrom={searchObject.timestampRange.from}
 				defaultDateTo={searchObject.timestampRange.to}

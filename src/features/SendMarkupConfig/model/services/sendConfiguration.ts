@@ -3,7 +3,7 @@ import { ThunkConfig } from 'app/store'
 
 export const sendConfiguration = createAsyncThunk<any, void, ThunkConfig<any>>(
 	'configuration/sendConfiguration',
-	async (_, { getState }) => {
+	async (_, { getState, rejectWithValue }) => {
 		const {
 			markup: { configuration },
 			video: { videoSize },
@@ -27,15 +27,34 @@ export const sendConfiguration = createAsyncThunk<any, void, ThunkConfig<any>>(
 			},
 		}
 
-		const response = await fetch(`${process.env.REACT_APP_EDIT_ZONE_URL}`, {
-			method: 'PUT',
-			body: JSON.stringify(finalConfig),
-			headers: {
-				Authorization: accessToken || '',
-			},
-		})
-		const data = await response.json()
+		try {
+			const response = await fetch(
+				`${process.env.REACT_APP_EDIT_ZONE_URL}`,
+				{
+					method: 'PUT',
+					body: JSON.stringify(finalConfig),
+					headers: {
+						Authorization: accessToken || '',
+					},
+				}
+			)
+			const {
+				result,
+				meta: { message },
+				data,
+			} = await response.json()
 
-		return data
+			if (result === 'error') {
+				return rejectWithValue(message)
+			}
+
+			return data
+		} catch (error) {
+			if (error instanceof Error) {
+				return rejectWithValue(error.message)
+			} else {
+				return rejectWithValue('Unknown Error')
+			}
+		}
 	}
 )

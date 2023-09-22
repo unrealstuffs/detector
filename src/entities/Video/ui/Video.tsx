@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { videoActions } from '../model/slices/videoSlice'
 import Loader from 'shared/ui/Loader/Loader'
 import { classNames } from 'shared/lib/classNames'
@@ -14,15 +14,15 @@ interface VideoProps {
 export const Video = (props: VideoProps) => {
 	const { src, className } = props
 	const videoRef = useRef<HTMLVideoElement>(null)
-	const [videoLoading, setVideoLoading] = useState(true)
 	const { tab } = useTypedSelector(state => state.tabs)
+	const { status } = useTypedSelector(state => state.video)
 	const dispatch = useAppDispatch()
 
 	useEffect(() => {
 		const video = videoRef.current
 
 		video?.addEventListener('loadedmetadata', () => {
-			setVideoLoading(false)
+			dispatch(videoActions.setStatus('success'))
 			dispatch(
 				videoActions.setVideoSize({
 					width: video.videoWidth,
@@ -45,15 +45,15 @@ export const Video = (props: VideoProps) => {
 			video?.pause()
 		}
 		if (tab !== 'shot' && video?.paused) {
-			setVideoLoading(true)
+			dispatch(videoActions.setStatus('loading'))
 			video.load()
 			video.play()
 		}
-	}, [tab])
+	}, [tab, dispatch])
 
 	return (
 		<div className={classNames(cls.Video, {}, [className])}>
-			{videoLoading && <Loader className={cls.loader} />}
+			{status === 'loading' && <Loader className={cls.loader} />}
 
 			<video ref={videoRef} src={src} autoPlay width='100%' loop muted />
 		</div>

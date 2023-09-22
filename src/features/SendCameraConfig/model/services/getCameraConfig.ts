@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { CameraSettings } from '../types/CameraSchema'
-import { ThunkConfig } from '../../../../app/store'
+import { ThunkConfig } from 'app/store'
 
 export const getCameraConfig = createAsyncThunk<
 	CameraSettings,
