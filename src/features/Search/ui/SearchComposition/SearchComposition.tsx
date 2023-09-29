@@ -12,6 +12,7 @@ import { searchComposition } from "widgets/Data/model/api/searchComposition"
 import SearchContainer from "../common/SearchContainer/SearchContainer"
 import DatePickers from "../common/DatePickers/DatePickers"
 import SearchFields from "../common/SearchFields/SearchFields"
+import IntervalConverter from "./IntervalConverter"
 
 export const SearchComposition = () => {
     const datePickersRef = useRef<{ clear: () => void }>()
@@ -53,6 +54,7 @@ export const SearchComposition = () => {
                 }
             />
             <SearchFields>
+                <IntervalConverter />
                 <Select
                     max
                     options={getLineOptions(configuration)}
