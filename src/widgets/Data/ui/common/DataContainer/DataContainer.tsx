@@ -5,6 +5,7 @@ import { HStack } from 'shared/ui/Stack/HStack/HStack'
 import { Text } from 'shared/ui/Text/Text'
 import { AiOutlineQuestionCircle, AiOutlineSearch } from 'react-icons/ai'
 import { Tooltip } from 'react-tooltip'
+import 'react-tooltip/dist/react-tooltip.css'
 import Select from 'shared/ui/Select/Select'
 import { rowsCountOptions } from '../../../model/consts/rowsCountOptions'
 

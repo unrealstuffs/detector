@@ -43,7 +43,7 @@ export const sidebarPages: SidebarPages[] = [
 		title: 'Настройки',
 		blocks: [
 			{ header: 'Настройки камеры', element: <SendCameraConfig /> },
-			{ header: 'Настройки базы данных', element: <SendDbConfig /> },
+			{ header: 'Параметры репликации на удаленную базу данных', element: <SendDbConfig /> },
 		],
 	},
 	{

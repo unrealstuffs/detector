@@ -4,23 +4,29 @@ import { sendDatabaseConfig } from '../services/sendDatabaseConfig'
 
 interface DatabaseState {
 	databaseConfig: {
-		dbname: string
-		address: string
-		port: string
-		username: string
-		password: string
+		remote_db_name: string
+		local_db_address: string
+		local_db_port: string
+		remote_db_address: string
+		remote_db_port: string
+		remote_db_username: string
+		remote_db_password: string
 	}
 	status: FetchStatus
 }
 
+const emptyDatabaseObject = {
+	remote_db_name: '',
+		local_db_address: '',
+		local_db_port: '5432',
+		remote_db_address: '',
+		remote_db_port: '',
+		remote_db_username: '',
+		remote_db_password: '',
+}
+
 const initialState: DatabaseState = {
-	databaseConfig: {
-		dbname: '',
-		address: '',
-		port: '',
-		username: '',
-		password: '',
-	},
+	databaseConfig: JSON.parse(localStorage.getItem('db_connection') || 'null') || emptyDatabaseObject,
 	status: 'init',
 }
 
@@ -29,19 +35,25 @@ const databaseSlice = createSlice({
 	initialState,
 	reducers: {
 		setDbName(state, action) {
-			state.databaseConfig.dbname = action.payload
+			state.databaseConfig.remote_db_name = action.payload
 		},
-		setAddress(state, action) {
-			state.databaseConfig.address = action.payload
+		setLocalAddress(state, action) {
+			state.databaseConfig.local_db_address = action.payload
 		},
-		setPort(state, action) {
-			state.databaseConfig.port = action.payload
+		setRemoteAddress(state, action) {
+			state.databaseConfig.remote_db_address = action.payload
+		},
+		setLocalPort(state, action) {
+			state.databaseConfig.local_db_port = action.payload
+		},
+		setRemotePort(state, action) {
+			state.databaseConfig.remote_db_port = action.payload
 		},
 		setUsername(state, action) {
-			state.databaseConfig.username = action.payload
+			state.databaseConfig.remote_db_username = action.payload
 		},
 		setPassword(state, action) {
-			state.databaseConfig.password = action.payload
+			state.databaseConfig.remote_db_password = action.payload
 		},
 		setDatabaseConfigStatus(state, action) {
 			state.status = action.payload
@@ -53,9 +65,11 @@ const databaseSlice = createSlice({
 		})
 		builder.addCase(sendDatabaseConfig.fulfilled, state => {
 			state.status = 'success'
+			localStorage.setItem('db_connection', JSON.stringify(state.databaseConfig))
 		})
 		builder.addCase(sendDatabaseConfig.rejected, state => {
 			state.status = 'error'
+			localStorage.setItem('db_connection', JSON.stringify(state.databaseConfig))
 		})
 	},
 })

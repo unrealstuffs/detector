@@ -18,7 +18,9 @@ export const SendDbConfig = (props: SendDbConfigProps) => {
 
 	const dispatch = useAppDispatch()
 
-	const sendDatabaseConfigHandler = async () => {
+	const sendDatabaseConfigHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault()
+		
 		const resultAction = await dispatch(sendDatabaseConfig())
 
 		if (sendDatabaseConfig.fulfilled.match(resultAction)) {
@@ -30,12 +32,16 @@ export const SendDbConfig = (props: SendDbConfigProps) => {
 
 	return (
 		<div className={classNames(cls.config, {}, [className])}>
+			<form onSubmit={sendDatabaseConfigHandler}>
+
+			
 			<div className={cls.dbFields}>
 				<div className={cls.dbName}>
 					<Input
-						label='Database'
+					required
+						label='Имя удаленной БД'
 						type='text'
-						value={databaseConfig.dbname}
+						value={databaseConfig.remote_db_name}
 						onChange={value => {
 							dispatch(databaseActions.setDbName(value))
 						}}
@@ -43,29 +49,54 @@ export const SendDbConfig = (props: SendDbConfigProps) => {
 				</div>
 				<div className={cls.dbAddress}>
 					<Input
-						label='Host'
+					required
+						label='Адрес локальной БД'
 						type='text'
-						value={databaseConfig.address}
+						value={databaseConfig.local_db_address}
 						onChange={value => {
-							dispatch(databaseActions.setAddress(value))
+							dispatch(databaseActions.setLocalAddress(value))
 						}}
 					/>
 				</div>
 				<div className={cls.dbPort}>
 					<Input
-						label='Port'
+					required
+						label='Порт локальной БД'
 						type='number'
-						value={databaseConfig.port}
+						value={databaseConfig.local_db_port}
 						onChange={value => {
-							dispatch(databaseActions.setPort(value))
+							dispatch(databaseActions.setLocalPort(value))
+						}}
+					/>
+				</div>
+				<div className={cls.dbAddress}>
+					<Input
+					required
+						label='Адрес удаленной БД'
+						type='text'
+						value={databaseConfig.remote_db_address}
+						onChange={value => {
+							dispatch(databaseActions.setRemoteAddress(value))
+						}}
+					/>
+				</div>
+				<div className={cls.dbPort}>
+					<Input
+					required
+						label='Порт удаленной БД'
+						type='number'
+						value={databaseConfig.remote_db_port}
+						onChange={value => {
+							dispatch(databaseActions.setRemotePort(value))
 						}}
 					/>
 				</div>
 				<div className={cls.dbUser}>
 					<Input
-						label='User'
+					required
+						label='Логин'
 						type='text'
-						value={databaseConfig.username}
+						value={databaseConfig.remote_db_username}
 						onChange={value => {
 							dispatch(databaseActions.setUsername(value))
 						}}
@@ -73,10 +104,11 @@ export const SendDbConfig = (props: SendDbConfigProps) => {
 				</div>
 				<div className={cls.dbPassword}>
 					<Input
+					required
 						className={cls.dbPassword}
-						label='Password'
+						label='Пароль'
 						type='password'
-						value={databaseConfig.password}
+						value={databaseConfig.remote_db_password}
 						onChange={value => {
 							dispatch(databaseActions.setPassword(value))
 						}}
@@ -85,11 +117,13 @@ export const SendDbConfig = (props: SendDbConfigProps) => {
 			</div>
 			<Button
 				disabled={status === 'loading'}
-				onClick={sendDatabaseConfigHandler}
+				
 				size='l'
+				type='submit'
 			>
 				Сохранить
 			</Button>
+			</form>
 		</div>
 	)
 }

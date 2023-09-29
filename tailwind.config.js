@@ -16,7 +16,7 @@ module.exports = {
 				app: 'repeat(5, 1fr)',
 			},
 			gridTemplateRows: {
-				app: '10vh 90vh',
+				app: '12vh 88vh',
 			},
 		},
 		screens: {

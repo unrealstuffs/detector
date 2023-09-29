@@ -9,12 +9,13 @@ type HTMLSelectProps = Omit<
 
 interface SelectProps extends HTMLSelectProps {
 	className?: string
+	max?: boolean
 	options: { value: string; title: string }[]
 	onChange?: (value: string) => void
 }
 
 const Select = memo((props: SelectProps) => {
-	const { onChange, options, className } = props
+	const { onChange, options, className, max } = props
 
 	const onChangeHandler = (e: ChangeEvent<HTMLSelectElement>) => {
 		onChange?.(e.target.value)
@@ -22,7 +23,7 @@ const Select = memo((props: SelectProps) => {
 
 	return (
 		<select
-			className={classNames(cls.Select, {}, [className])}
+			className={classNames(cls.Select, {[cls.max]: max}, [className])}
 			onChange={onChangeHandler}
 		>
 			{options.map(item => (
