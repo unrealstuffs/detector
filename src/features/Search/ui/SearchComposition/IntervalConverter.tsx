@@ -42,9 +42,8 @@ const IntervalConverter = () => {
         setConvertedValue(convertToSeconds(newValue, unit))
     }
 
-    const handleSelectChange = (value: string) => {
-        console.log(value)
-        const newUnit = value as UnitsType
+    const handleSelectChange = (selectedValue: string) => {
+        const newUnit = selectedValue as UnitsType
         setUnit(newUnit)
         setConvertedValue(convertToSeconds(+value, newUnit))
     }
@@ -59,6 +58,7 @@ const IntervalConverter = () => {
                 onChange={handleInputChange}
             />
             <Select
+                defaultValue={unit}
                 options={[
                     { title: "Секунд", value: "seconds" },
                     { title: "Минут", value: "minutes" },
