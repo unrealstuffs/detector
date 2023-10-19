@@ -4,13 +4,13 @@ import { useTypedSelector } from 'shared/hooks/useTypedSelector'
 import SearchContainer from '../common/SearchContainer/SearchContainer'
 import DatePickers from '../common/DatePickers/DatePickers'
 import SearchFields from '../common/SearchFields/SearchFields'
-import Select from 'shared/ui/Select/Select'
-import { getLineOptions } from 'features/Search/model/services/getLineOptions'
-import { getDirectionsOptions } from 'features/Search/model/services/getDirectionsOptions'
 import { HStack } from 'shared/ui/Stack/HStack/HStack'
 import { Input } from 'shared/ui/Input/Input'
 import { avgDelayActions } from 'widgets/Data/model/slices/avgDelaySlice'
 import { searchAvgDelay } from 'widgets/Data/model/api/searchAvgDelay'
+import AppSelect from 'shared/ui/AppSelect/AppSelect'
+import { getLineOptions } from 'features/Search/model/services/getLineOptions'
+import { getDirectionsOptions } from 'features/Search/model/services/getDirectionsOptions'
 
 export const SearchAvgDelay = () => {
 	const datePickersRef = useRef<{ clear: () => void }>()
@@ -30,6 +30,12 @@ export const SearchAvgDelay = () => {
 	}
 
 	const sendSearchHandler = () => {
+		if (
+			!searchObject.timestampRange.from ||
+			!searchObject.timestampRange.to
+		) {
+			return
+		}
 		dispatch(searchAvgDelay(searchObject))
 	}
 
@@ -50,17 +56,23 @@ export const SearchAvgDelay = () => {
 				}
 			/>
 			<SearchFields>
-				<Select
+				<AppSelect
+					isMulti
+					placeholder='Все полосы'
 					options={getLineOptions(configuration)}
-					onChange={value =>
-						dispatch(avgDelayActions.setLines(value))
-					}
+					onChange={values => {
+						const lines = values.map(val => val.value)
+						dispatch(avgDelayActions.setLines(lines))
+					}}
 				/>
-				<Select
+				<AppSelect
+					isMulti
+					placeholder='Все направления'
 					options={getDirectionsOptions(configuration)}
-					onChange={value =>
-						dispatch(avgDelayActions.setDirections(value))
-					}
+					onChange={values => {
+						const directions = values.map(val => val.value)
+						dispatch(avgDelayActions.setDirections(directions))
+					}}
 				/>
 				<HStack gap='8' align='stretch'>
 					<Input
@@ -72,17 +84,23 @@ export const SearchAvgDelay = () => {
 							dispatch(avgDelayActions.setAvgDelayValue(value))
 						}
 					/>
-					<Select
+					<AppSelect
 						options={[
-							{ title: 'Больше', value: 'more' },
-							{ title: 'Меньше', value: 'less' },
-							{ title: 'Равно', value: 'equal' },
+							{ label: 'Больше', value: 'more' },
+							{ label: 'Меньше', value: 'less' },
+							{ label: 'Равно', value: 'equal' },
 						]}
-						onChange={value =>
+						defaultValue={{ label: 'Больше', value: 'more' }}
+						onChange={value => {
+							if (!value) return
+							const { value: statement } = value
 							dispatch(
-								avgDelayActions.setAvgDelayStatement(value)
+								avgDelayActions.setAvgDelayStatement(statement)
 							)
-						}
+						}}
+						styles={{
+							container: styles => ({ ...styles, width: '100%' }),
+						}}
 					/>
 				</HStack>
 			</SearchFields>

@@ -52,14 +52,13 @@ export const DataDensity = () => {
 					{
 						Header: 'Направление',
 						accessor: (d: any) => {
-							if (
-								configuration[d.direction] &&
-								configuration[d.direction].reverseDirection
-							) {
-								return 'Обратное'
-							} else {
-								return 'Прямое'
+							if (!configuration[d.direction]) {
+								return 'Не определено'
 							}
+							if (configuration[d.direction].reverseDirection) {
+								return 'Обратное'
+							}
+							return 'Прямое'
 						},
 					},
 					{

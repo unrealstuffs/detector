@@ -7,6 +7,9 @@
 	&.danger {
 		@apply bg-danger hover:bg-opacity-90;
 	}
+	&.transparent {
+		@apply bg-transparent text-dark;
+	}
 	&.s {
 		@apply text-sm px-2 py-1 rounded-md;
 	}

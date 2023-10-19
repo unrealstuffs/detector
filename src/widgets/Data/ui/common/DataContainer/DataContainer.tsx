@@ -6,8 +6,8 @@ import { Text } from 'shared/ui/Text/Text'
 import { AiOutlineQuestionCircle, AiOutlineSearch } from 'react-icons/ai'
 import { Tooltip } from 'react-tooltip'
 import 'react-tooltip/dist/react-tooltip.css'
-import Select from 'shared/ui/Select/Select'
 import { rowsCountOptions } from '../../../model/consts/rowsCountOptions'
+import AppSelect from 'shared/ui/AppSelect/AppSelect'
 
 interface DataContainerProps {
 	className?: string
@@ -44,7 +44,7 @@ const DataContainer = (props: DataContainerProps) => {
 					anchorSelect={`#${tooltipId}`}
 					place='bottom'
 					content={tooltipText}
-					style={{ maxWidth: 400 }}
+					style={{ maxWidth: 400, zIndex: 999 }}
 				/>
 			</HStack>
 			<HStack
@@ -53,11 +53,22 @@ const DataContainer = (props: DataContainerProps) => {
 				gap='8'
 				className={cls.tools}
 			>
-				<Select
+				<AppSelect
 					options={rowsCountOptions}
-					defaultValue='30'
+					theme={theme => ({
+						...theme,
+						colors: {
+							...theme.colors,
+							primary: '#5BC4D1',
+						},
+					})}
+					placeholder='Показывать по 30 записей'
 					className={cls.select}
-					onChange={value => onChangeRowsCount(+value)}
+					onChange={value => {
+						if (!value) return
+						const { value: newValue } = value
+						onChangeRowsCount(+newValue)
+					}}
 				/>
 				<AiOutlineSearch
 					size={20}

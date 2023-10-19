@@ -58,7 +58,7 @@ export const EditMarkup = () => {
 				width: '100%',
 			}}
 			onClick={onClickHandler}
-			onContextMenu={(e) => e.evt.preventDefault()}
+			onContextMenu={e => e.evt.preventDefault()}
 			scale={{ x: scale, y: scale }}
 		>
 			<Layer>

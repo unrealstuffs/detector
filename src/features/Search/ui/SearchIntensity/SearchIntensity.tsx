@@ -2,15 +2,15 @@ import { useRef } from 'react'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 import { HStack } from 'shared/ui/Stack/HStack/HStack'
 import { useTypedSelector } from 'shared/hooks/useTypedSelector'
-import Select from 'shared/ui/Select/Select'
-import { getLineOptions } from '../../model/services/getLineOptions'
-import { getDirectionsOptions } from 'features/Search/model/services/getDirectionsOptions'
 import { Input } from 'shared/ui/Input/Input'
 import SearchContainer from '../common/SearchContainer/SearchContainer'
 import DatePickers from '../common/DatePickers/DatePickers'
 import SearchFields from '../common/SearchFields/SearchFields'
 import { intensityActions } from 'widgets/Data/model/slices/intensitySlice'
 import { searchIntensity } from 'widgets/Data/model/api/searchIntensity'
+import AppSelect from 'shared/ui/AppSelect/AppSelect'
+import { getLineOptions } from 'features/Search/model/services/getLineOptions'
+import { getDirectionsOptions } from 'features/Search/model/services/getDirectionsOptions'
 
 export const SearchIntensity = () => {
 	const datePickersRef = useRef<{ clear: () => void }>()
@@ -30,6 +30,12 @@ export const SearchIntensity = () => {
 	}
 
 	const sendSearchHandler = () => {
+		if (
+			!searchObject.timestampRange.from ||
+			!searchObject.timestampRange.to
+		) {
+			return
+		}
 		dispatch(searchIntensity(searchObject))
 	}
 
@@ -50,17 +56,23 @@ export const SearchIntensity = () => {
 				}
 			/>
 			<SearchFields>
-				<Select
+				<AppSelect
+					isMulti
+					placeholder='Все полосы'
 					options={getLineOptions(configuration)}
-					onChange={value =>
-						dispatch(intensityActions.setLines(value))
-					}
+					onChange={values => {
+						const lines = values.map(val => val.value)
+						dispatch(intensityActions.setLines(lines))
+					}}
 				/>
-				<Select
+				<AppSelect
+					isMulti
+					placeholder='Все направления'
 					options={getDirectionsOptions(configuration)}
-					onChange={value =>
-						dispatch(intensityActions.setDirections(value))
-					}
+					onChange={values => {
+						const directions = values.map(val => val.value)
+						dispatch(intensityActions.setDirections(directions))
+					}}
 				/>
 				<HStack gap='8' align='stretch'>
 					<Input
@@ -72,17 +84,25 @@ export const SearchIntensity = () => {
 							dispatch(intensityActions.setIntensityValue(value))
 						}
 					/>
-					<Select
+					<AppSelect
 						options={[
-							{ title: 'Больше', value: 'more' },
-							{ title: 'Меньше', value: 'less' },
-							{ title: 'Равно', value: 'equal' },
+							{ label: 'Больше', value: 'more' },
+							{ label: 'Меньше', value: 'less' },
+							{ label: 'Равно', value: 'equal' },
 						]}
-						onChange={value =>
+						defaultValue={{ label: 'Больше', value: 'more' }}
+						onChange={value => {
+							if (!value) return
+							const { value: statement } = value
 							dispatch(
-								intensityActions.setIntensityStatement(value)
+								intensityActions.setIntensityStatement(
+									statement
+								)
 							)
-						}
+						}}
+						styles={{
+							container: styles => ({ ...styles, width: '100%' }),
+						}}
 					/>
 				</HStack>
 			</SearchFields>

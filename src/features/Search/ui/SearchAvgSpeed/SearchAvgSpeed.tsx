@@ -6,11 +6,11 @@ import SearchContainer from '../common/SearchContainer/SearchContainer'
 import { searchAvgSpeed } from 'widgets/Data/model/api/searchAvgSpeed'
 import DatePickers from '../common/DatePickers/DatePickers'
 import SearchFields from '../common/SearchFields/SearchFields'
-import Select from 'shared/ui/Select/Select'
-import { getLineOptions } from 'features/Search/model/services/getLineOptions'
-import { getDirectionsOptions } from 'features/Search/model/services/getDirectionsOptions'
 import { HStack } from 'shared/ui/Stack/HStack/HStack'
 import { Input } from 'shared/ui/Input/Input'
+import AppSelect from 'shared/ui/AppSelect/AppSelect'
+import { getLineOptions } from 'features/Search/model/services/getLineOptions'
+import { getDirectionsOptions } from 'features/Search/model/services/getDirectionsOptions'
 
 export const SearchAvgSpeed = () => {
 	const datePickersRef = useRef<{ clear: () => void }>()
@@ -30,6 +30,12 @@ export const SearchAvgSpeed = () => {
 	}
 
 	const sendSearchHandler = () => {
+		if (
+			!searchObject.timestampRange.from ||
+			!searchObject.timestampRange.to
+		) {
+			return
+		}
 		dispatch(searchAvgSpeed(searchObject))
 	}
 
@@ -50,17 +56,23 @@ export const SearchAvgSpeed = () => {
 				}
 			/>
 			<SearchFields>
-				<Select
+				<AppSelect
+					isMulti
+					placeholder='Все полосы'
 					options={getLineOptions(configuration)}
-					onChange={value =>
-						dispatch(avgSpeedActions.setLines(value))
-					}
+					onChange={values => {
+						const lines = values.map(val => val.value)
+						dispatch(avgSpeedActions.setLines(lines))
+					}}
 				/>
-				<Select
+				<AppSelect
+					isMulti
+					placeholder='Все направления'
 					options={getDirectionsOptions(configuration)}
-					onChange={value =>
-						dispatch(avgSpeedActions.setDirections(value))
-					}
+					onChange={values => {
+						const directions = values.map(val => val.value)
+						dispatch(avgSpeedActions.setDirections(directions))
+					}}
 				/>
 				<HStack gap='8' align='stretch'>
 					<Input
@@ -72,17 +84,23 @@ export const SearchAvgSpeed = () => {
 							dispatch(avgSpeedActions.setAvgSpeedValue(value))
 						}
 					/>
-					<Select
+					<AppSelect
 						options={[
-							{ title: 'Больше', value: 'more' },
-							{ title: 'Меньше', value: 'less' },
-							{ title: 'Равно', value: 'equal' },
+							{ label: 'Больше', value: 'more' },
+							{ label: 'Меньше', value: 'less' },
+							{ label: 'Равно', value: 'equal' },
 						]}
-						onChange={value =>
+						defaultValue={{ label: 'Больше', value: 'more' }}
+						onChange={value => {
+							if (!value) return
+							const { value: statement } = value
 							dispatch(
-								avgSpeedActions.setAvgSpeedStatement(value)
+								avgSpeedActions.setAvgSpeedStatement(statement)
 							)
-						}
+						}}
+						styles={{
+							container: styles => ({ ...styles, width: '100%' }),
+						}}
 					/>
 				</HStack>
 			</SearchFields>

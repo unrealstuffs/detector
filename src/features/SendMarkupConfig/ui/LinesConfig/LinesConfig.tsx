@@ -18,11 +18,13 @@ const LinesConfig = (props: LinesConfigProps) => {
 	const dispatch = useAppDispatch()
 
 	const onChangeHandler = (value: number, zone: string, line: string) => {
-		markupActions.setLineLength({
-			zone,
-			line,
-			value: value < 1 || value >= 99 ? 1 : value,
-		})
+		dispatch(
+			markupActions.setLineLength({
+				zone,
+				line,
+				value: value < 1 || value >= 99 ? 1 : value,
+			})
+		)
 	}
 
 	const onSelectHandler = (zone: string, line: string) => {

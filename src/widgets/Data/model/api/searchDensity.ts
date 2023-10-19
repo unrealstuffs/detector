@@ -37,6 +37,10 @@ export const searchDensity = createAsyncThunk<
 
 		const { data } = await response.json()
 
+		if (!data) {
+			return thunkApi.rejectWithValue([])
+		}
+
 		return JSON.parse(data) || []
 	} catch {
 		return thunkApi.rejectWithValue([])

@@ -7,6 +7,7 @@ import MainLayout from 'shared/layouts/MainLayout/MainLayout'
 import { Sidebar } from 'widgets/Sidebar'
 import { VideoMarkup } from 'widgets/VideoMarkup'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
+import { fetchVehicleTypes } from 'entities/TypesSelect/model/services/fetchVehicleTypes'
 
 const MainPage = () => {
 	const { accessToken } = useTypedSelector(state => state.user)
@@ -16,6 +17,7 @@ const MainPage = () => {
 		const fetchData = async () => {
 			await dispatch(getConfiguration())
 			await dispatch(getCameraConfig())
+			await dispatch(fetchVehicleTypes())
 		}
 		fetchData()
 	}, [accessToken, dispatch])

@@ -14,6 +14,7 @@ import {
 	typesReducer,
 } from 'widgets/Data'
 import { detectorNameReducer } from 'entities/AppTitle'
+import { vehicleTypeReducer } from 'entities/TypesSelect'
 
 const rootReducer = combineReducers({
 	user: userReducer,
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
 	avgSpeed: avgSpeedReducer,
 	avgDelay: avgDelayReducer,
 	density: densityReducer,
+	vehicleTypes: vehicleTypeReducer,
 })
 
 export const store = configureStore({

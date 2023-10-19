@@ -6,6 +6,7 @@ import { flatpickrOptions } from '../../../model/consts/flatpickrOptions'
 import { forwardRef, useRef, useImperativeHandle } from 'react'
 import Button from 'shared/ui/Button/Button'
 import 'flatpickr/dist/themes/light.css'
+import { AiOutlineReload } from 'react-icons/ai'
 
 interface DatePickerProps {
 	className?: string
@@ -41,7 +42,7 @@ const DatePickers = forwardRef((props: DatePickerProps, ref) => {
 
 	return (
 		<HStack
-			align='center'
+			align='stretch'
 			justify='between'
 			gap='8'
 			className={classNames(cls.DatePickers, {}, [className])}
@@ -68,7 +69,7 @@ const DatePickers = forwardRef((props: DatePickerProps, ref) => {
 				onChange={selectedDate => setTimestampTo(selectedDate[0])}
 			/>
 			<Button size='m' color='danger' onClick={resetSearchHandler}>
-				Сброс
+				<AiOutlineReload className={cls.resetIcon} />
 			</Button>
 			<Button disabled={disabled} size='m' onClick={searchHandler}>
 				Поиск

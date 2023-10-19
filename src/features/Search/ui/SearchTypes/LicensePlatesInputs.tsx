@@ -11,11 +11,19 @@ const LicensePlatesInputs = () => {
 
 	const handleFirstInputChange = (value: string) => {
 		setFirstPart(value)
+		if (!value) {
+			dispatch(typesActions.resetLicensePlates())
+			return
+		}
 		dispatch(typesActions.setLicensePlates(value + '!' + secondPart + 'rf'))
 	}
 
 	const handleSecondInputChange = (value: string) => {
 		setSecondPart(value)
+		if (!value) {
+			dispatch(typesActions.resetLicensePlates())
+			return
+		}
 		dispatch(typesActions.setLicensePlates(firstPart + '!' + value + 'rf'))
 	}
 

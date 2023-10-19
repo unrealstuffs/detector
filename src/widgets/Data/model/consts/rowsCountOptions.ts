@@ -1,8 +1,7 @@
 export const rowsCountOptions = [
-	{ value: '20', title: 'Показывать по' },
-	{ value: '10', title: '10 записей' },
-	{ value: '30', title: '30 записей' },
-	{ value: '50', title: '50 записей' },
-	{ value: '70', title: '70 записей' },
-	{ value: '100', title: '100 записей' },
+	{ value: '10', label: '10 записей', title: '' },
+	{ value: '30', label: '30 записей', title: '' },
+	{ value: '50', label: '50 записей', title: '' },
+	{ value: '70', label: '70 записей', title: '' },
+	{ value: '100', label: '100 записей', title: '' },
 ]

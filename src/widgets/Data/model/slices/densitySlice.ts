@@ -2,6 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { Density, DensitySchema, DensitySearch } from '../types/Density'
 import { fetchDensity } from '../api/fetchDensity'
 import { searchDensity } from '../api/searchDensity'
+import { checkArrayLimit } from '../services/checkArrayLimit'
 
 const initialSearchObject: DensitySearch = {
 	directions: [],
@@ -37,11 +38,11 @@ const densitySlice = createSlice({
 		resetStatus: state => {
 			state.status = 'init'
 		},
-		setDirections: (state, action: PayloadAction<string>) => {
-			state.searchObject.directions = [action.payload]
+		setDirections: (state, action: PayloadAction<string[]>) => {
+			state.searchObject.directions = [...action.payload]
 		},
-		setLines: (state, action: PayloadAction<string>) => {
-			state.searchObject.lines = [action.payload]
+		setLines: (state, action: PayloadAction<string[]>) => {
+			state.searchObject.lines = [...action.payload]
 		},
 		setDensityStatement: (state, action: PayloadAction<string>) => {
 			state.searchObject.density.statement = action.payload
@@ -66,10 +67,11 @@ const densitySlice = createSlice({
 		builder.addCase(
 			fetchDensity.fulfilled,
 			(state, action: PayloadAction<Density[]>) => {
-				state.data.unshift(...action.payload)
+				state.data.unshift(...checkArrayLimit(action.payload))
 			}
 		)
 		builder.addCase(searchDensity.pending, state => {
+			state.data = []
 			state.blockFetching = true
 			state.status = 'loading'
 		})
@@ -77,7 +79,7 @@ const densitySlice = createSlice({
 			searchDensity.fulfilled,
 			(state, action: PayloadAction<Density[]>) => {
 				state.status = action.payload.length ? 'success' : 'nodata'
-				state.data = action.payload
+				state.data = checkArrayLimit(action.payload)
 			}
 		)
 		builder.addCase(searchDensity.rejected, state => {

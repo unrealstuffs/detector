@@ -2,6 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { AvgDelay, AvgDelaySchema, AvgDelaySearch } from '../types/AvgDelay'
 import { fetchAvgDelay } from '../api/fetchAvgDelay'
 import { searchAvgDelay } from '../api/searchAvgDelay'
+import { checkArrayLimit } from '../services/checkArrayLimit'
 
 const initialSearchObject: AvgDelaySearch = {
 	directions: [],
@@ -37,11 +38,11 @@ const avgDelaySlice = createSlice({
 		resetStatus: state => {
 			state.status = 'init'
 		},
-		setDirections: (state, action: PayloadAction<string>) => {
-			state.searchObject.directions = [action.payload]
+		setDirections: (state, action: PayloadAction<string[]>) => {
+			state.searchObject.directions = [...action.payload]
 		},
-		setLines: (state, action: PayloadAction<string>) => {
-			state.searchObject.lines = [action.payload]
+		setLines: (state, action: PayloadAction<string[]>) => {
+			state.searchObject.lines = [...action.payload]
 		},
 		setAvgDelayStatement: (state, action: PayloadAction<string>) => {
 			state.searchObject.avgDelay.statement = action.payload
@@ -66,10 +67,11 @@ const avgDelaySlice = createSlice({
 		builder.addCase(
 			fetchAvgDelay.fulfilled,
 			(state, action: PayloadAction<AvgDelay[]>) => {
-				state.data.unshift(...action.payload)
+				state.data.unshift(...checkArrayLimit(action.payload))
 			}
 		)
 		builder.addCase(searchAvgDelay.pending, state => {
+			state.data = []
 			state.blockFetching = true
 			state.status = 'loading'
 		})
@@ -77,7 +79,7 @@ const avgDelaySlice = createSlice({
 			searchAvgDelay.fulfilled,
 			(state, action: PayloadAction<AvgDelay[]>) => {
 				state.status = action.payload.length ? 'success' : 'nodata'
-				state.data = action.payload
+				state.data = checkArrayLimit(action.payload)
 			}
 		)
 		builder.addCase(searchAvgDelay.rejected, state => {

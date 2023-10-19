@@ -33,9 +33,9 @@ export const sendCameraConfig = createAsyncThunk<any, void, ThunkConfig<any>>(
 				fetchData({ ZOOM: cameraConfig.zoom }, `${accessToken}`),
 				fetchData({ FOCUS: cameraConfig.focus }, `${accessToken}`),
 				fetchData({ SERVO_X: cameraConfig.servoX }, `${accessToken}`),
-				fetchData({ SERVO_X: cameraConfig.servoY }, `${accessToken}`),
+				fetchData({ SERVO_Y: cameraConfig.servoY }, `${accessToken}`),
 				fetchData(
-					{ IR_CUR: cameraConfig.filter === true ? 'on' : 'off' },
+					{ IR_CUT: cameraConfig.filter === true ? 'on' : 'off' },
 					`${accessToken}`
 				),
 			])

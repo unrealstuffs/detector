@@ -2,6 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { AvgSpeed, AvgSpeedSchema, AvgSpeedSearch } from '../types/AvgSpeed'
 import { fetchAvgSpeed } from '../api/fetchAvgSpeed'
 import { searchAvgSpeed } from '../api/searchAvgSpeed'
+import { checkArrayLimit } from '../services/checkArrayLimit'
 
 const initialSearchObject: AvgSpeedSearch = {
 	directions: [],
@@ -37,11 +38,11 @@ const avgSpeedSlice = createSlice({
 		resetStatus: state => {
 			state.status = 'init'
 		},
-		setDirections: (state, action: PayloadAction<string>) => {
-			state.searchObject.directions = [action.payload]
+		setDirections: (state, action: PayloadAction<string[]>) => {
+			state.searchObject.directions = [...action.payload]
 		},
-		setLines: (state, action: PayloadAction<string>) => {
-			state.searchObject.lines = [action.payload]
+		setLines: (state, action: PayloadAction<string[]>) => {
+			state.searchObject.lines = [...action.payload]
 		},
 		setAvgSpeedStatement: (state, action: PayloadAction<string>) => {
 			state.searchObject.avgSpeed.statement = action.payload
@@ -66,10 +67,11 @@ const avgSpeedSlice = createSlice({
 		builder.addCase(
 			fetchAvgSpeed.fulfilled,
 			(state, action: PayloadAction<AvgSpeed[]>) => {
-				state.data.unshift(...action.payload)
+				state.data.unshift(...checkArrayLimit(action.payload))
 			}
 		)
 		builder.addCase(searchAvgSpeed.pending, state => {
+			state.data = []
 			state.blockFetching = true
 			state.status = 'loading'
 		})
@@ -77,7 +79,7 @@ const avgSpeedSlice = createSlice({
 			searchAvgSpeed.fulfilled,
 			(state, action: PayloadAction<AvgSpeed[]>) => {
 				state.status = action.payload.length ? 'success' : 'nodata'
-				state.data = action.payload
+				state.data = checkArrayLimit(action.payload)
 			}
 		)
 		builder.addCase(searchAvgSpeed.rejected, state => {

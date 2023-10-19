@@ -2,6 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { Intensity, IntensitySchema, IntensitySearch } from '../types/Intensity'
 import { fetchIntensity } from '../api/fetchIntensity'
 import { searchIntensity } from '../api/searchIntensity'
+import { checkArrayLimit } from '../services/checkArrayLimit'
 
 const initialSearchObject: IntensitySearch = {
 	directions: [],
@@ -37,11 +38,11 @@ const intensitySlice = createSlice({
 		resetStatus: state => {
 			state.status = 'init'
 		},
-		setDirections: (state, action: PayloadAction<string>) => {
-			state.searchObject.directions = [action.payload]
+		setDirections: (state, action: PayloadAction<string[]>) => {
+			state.searchObject.directions = [...action.payload]
 		},
-		setLines: (state, action: PayloadAction<string>) => {
-			state.searchObject.lines = [action.payload]
+		setLines: (state, action: PayloadAction<string[]>) => {
+			state.searchObject.lines = [...action.payload]
 		},
 		setIntensityStatement: (state, action: PayloadAction<string>) => {
 			state.searchObject.intensity.statement = action.payload
@@ -66,10 +67,11 @@ const intensitySlice = createSlice({
 		builder.addCase(
 			fetchIntensity.fulfilled,
 			(state, action: PayloadAction<Intensity[]>) => {
-				state.data.unshift(...action.payload)
+				state.data.unshift(...checkArrayLimit(action.payload))
 			}
 		)
 		builder.addCase(searchIntensity.pending, state => {
+			state.data = []
 			state.blockFetching = true
 			state.status = 'loading'
 		})
@@ -77,7 +79,7 @@ const intensitySlice = createSlice({
 			searchIntensity.fulfilled,
 			(state, action: PayloadAction<Intensity[]>) => {
 				state.status = action.payload.length ? 'success' : 'nodata'
-				state.data = action.payload
+				state.data = checkArrayLimit(action.payload)
 			}
 		)
 		builder.addCase(searchIntensity.rejected, state => {
