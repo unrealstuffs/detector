@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { useTypedSelector } from 'shared/hooks/useTypedSelector'
 import { Header } from 'widgets/Header'
-import { getConfiguration } from 'features/SendMarkupConfig'
 import { getCameraConfig } from 'features/SendCameraConfig'
 import MainLayout from 'shared/layouts/MainLayout/MainLayout'
 import { Sidebar } from 'widgets/Sidebar'
@@ -15,7 +14,6 @@ const MainPage = () => {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			await dispatch(getConfiguration())
 			await dispatch(getCameraConfig())
 			await dispatch(fetchVehicleTypes())
 		}

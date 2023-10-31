@@ -12,7 +12,6 @@ export const DataAvgSpeed = () => {
 	const { data, status, tableRows, blockFetching } = useTypedSelector(
 		state => state.avgSpeed
 	)
-	const { configuration } = useTypedSelector(state => state.markup)
 	const dispatch = useAppDispatch()
 
 	useEffect(() => {
@@ -52,12 +51,6 @@ export const DataAvgSpeed = () => {
 					{
 						Header: 'Направление',
 						accessor: (d: any) => {
-							if (!configuration[d.direction]) {
-								return 'Не определено'
-							}
-							if (configuration[d.direction].reverseDirection) {
-								return 'Обратное'
-							}
 							return 'Прямое'
 						},
 					},

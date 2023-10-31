@@ -1,6 +1,8 @@
 import { InputHTMLAttributes, useRef } from 'react'
 import { Text } from '../Text/Text'
 import { HStack } from '../Stack/HStack/HStack'
+import { classNames } from 'shared/lib/classNames'
+import cls from './Checkbox.module.scss'
 
 type HTMLInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'>
 
@@ -19,7 +21,7 @@ const Checkbox = (props: CheckboxProps) => {
 	}
 
 	return (
-		<HStack gap='8'>
+		<HStack gap='8' className={classNames(cls.Checkbox, {}, [className])}>
 			<input
 				ref={ref}
 				type='checkbox'

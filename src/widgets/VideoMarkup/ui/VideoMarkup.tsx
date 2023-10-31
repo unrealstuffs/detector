@@ -2,8 +2,8 @@ import { classNames } from 'shared/lib/classNames'
 import cls from './VideoMarkup.module.scss'
 import { useTypedSelector } from 'shared/hooks/useTypedSelector'
 import { Text } from 'shared/ui/Text/Text'
-import { EditMarkup } from 'features/EditMarkup'
 import { Video } from 'entities/Video'
+import { EditMarkup } from 'features/EditMarkup'
 
 interface VideoMarkupProps {
 	className?: string

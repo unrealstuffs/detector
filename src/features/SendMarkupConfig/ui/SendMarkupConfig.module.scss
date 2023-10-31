@@ -1,0 +1,23 @@
+.actions {
+	@apply mb-4;
+}
+
+.block {
+	@apply mb-6;
+}
+
+.header {
+	@apply pb-4 border-b border-dashed border-light mb-4;
+}
+
+.button {
+	@apply mb-4;
+}
+
+.input {
+	@apply w-auto;
+}
+
+.polygonTitle {
+	@apply inline-block bg-white border border-light rounded-lg py-1 px-4;
+}
