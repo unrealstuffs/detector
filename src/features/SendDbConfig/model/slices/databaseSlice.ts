@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { FetchStatus } from 'shared/types/FetchStatus'
 import { sendDatabaseConfig } from '../services/sendDatabaseConfig'
+import { deleteDbReplication } from '../services/deleteDbReplication'
 
 interface DatabaseState {
 	databaseConfig: {
@@ -17,12 +18,12 @@ interface DatabaseState {
 
 const emptyDatabaseObject = {
 	remote_db_name: '',
-		local_db_address: '',
-		local_db_port: '5432',
-		remote_db_address: '',
-		remote_db_port: '',
-		remote_db_username: '',
-		remote_db_password: '',
+	local_db_address: '',
+	local_db_port: '5432',
+	remote_db_address: '',
+	remote_db_port: '',
+	remote_db_username: '',
+	remote_db_password: '',
 }
 
 const initialState: DatabaseState = {
@@ -70,6 +71,16 @@ const databaseSlice = createSlice({
 		builder.addCase(sendDatabaseConfig.rejected, state => {
 			state.status = 'error'
 			localStorage.setItem('db_connection', JSON.stringify(state.databaseConfig))
+		})
+		builder.addCase(deleteDbReplication.pending, state => {
+			state.status = 'loading'
+		})
+		builder.addCase(deleteDbReplication.fulfilled, state => {
+			state.status = 'success'
+			localStorage.removeItem('db_connection')
+		})
+		builder.addCase(deleteDbReplication.rejected, state => {
+			state.status = 'error'
 		})
 	},
 })
