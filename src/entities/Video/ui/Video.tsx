@@ -29,13 +29,24 @@ export const Video = (props: VideoProps) => {
 					height: video.videoHeight,
 				})
 			)
-			dispatch(
-				videoActions.setScale(video?.offsetWidth / video?.videoWidth)
-			)
+			dispatch(videoActions.setScale(video?.offsetWidth / video?.videoWidth))
 		})
 
 		return () => {
 			video?.removeEventListener('loadedmetadata', () => {})
+		}
+	}, [dispatch])
+
+	useEffect(() => {
+		const video = videoRef.current
+		if (!video) return
+
+		window.addEventListener('resize', () => {
+			dispatch(videoActions.setScale(video?.offsetWidth / video?.videoWidth))
+		})
+
+		return () => {
+			window.removeEventListener('resize', () => {})
 		}
 	}, [dispatch])
 

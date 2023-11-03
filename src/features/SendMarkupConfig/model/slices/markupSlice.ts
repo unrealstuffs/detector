@@ -119,79 +119,21 @@ const markupSlice = createSlice({
 				})
 			}
 		},
-		// editLine(
-		// 	state,
-		// 	action: PayloadAction<{
-		// 		x: number
-		// 		y: number
-		// 		line: string
-		// 		index: number
-		// 	}>
-		// ) {
-		// 	const currentLine = state.markupConfig[action.payload.line]
-
-		// 	state.markupConfig[action.payload.line].cpl = [
-		// 		[(currentLine.pl[0][0] + currentLine.pl[3][0]) / 2, (currentLine.pl[0][1] + currentLine.pl[3][1]) / 2],
-		// 		[(currentLine.pl[1][0] + currentLine.pl[2][0]) / 2, (currentLine.pl[1][1] + currentLine.pl[2][1]) / 2],
-		// 	]
-
-		// 	state.markupConfig[action.payload.line].pl = currentLine.pl.map((subarray, subarrayIndex) =>
-		// 		action.payload.index === subarrayIndex ? [action.payload.x, action.payload.y] : subarray
-		// 	)
-
-		// 	state.markupConfig[action.payload.line].s = {
-		// 		s_00: {
-		// 			pl: [
-		// 				[currentLine.pl[0][0], currentLine.pl[0][1]],
-		// 				[currentLine.pl[1][0], currentLine.pl[1][1]],
-		// 				[currentLine.cpl[1][0], currentLine.cpl[1][1]],
-		// 				[currentLine.cpl[0][0], currentLine.cpl[0][1]],
-		// 			],
-		// 		},
-		// 		s_01: {
-		// 			pl: [
-		// 				[currentLine.cpl[0][0], currentLine.cpl[0][1]],
-		// 				[currentLine.cpl[1][0], currentLine.cpl[1][1]],
-		// 				[currentLine.pl[2][0], currentLine.pl[2][1]],
-		// 				[currentLine.pl[3][0], currentLine.pl[3][1]],
-		// 			],
-		// 		},
-		// 	}
-		// },
-		// editDivider(
-		// 	state,
-		// 	action: PayloadAction<{
-		// 		x: number
-		// 		y: number
-		// 		line: string
-		// 		index: number
-		// 	}>
-		// ) {
-		// 	const currentLine = state.markupConfig[action.payload.line]
-
-		// 	state.markupConfig[action.payload.line].cpl = currentLine.cpl.map((subarray, subarrayIndex) =>
-		// 		action.payload.index === subarrayIndex ? [action.payload.x, action.payload.y] : subarray
-		// 	)
-
-		// 	state.markupConfig[action.payload.line].s = {
-		// 		s_00: {
-		// 			pl: [
-		// 				[currentLine.pl[0][0], currentLine.pl[0][1]],
-		// 				[currentLine.pl[1][0], currentLine.pl[1][1]],
-		// 				[currentLine.cpl[1][0], currentLine.cpl[1][1]],
-		// 				[currentLine.cpl[0][0], currentLine.cpl[0][1]],
-		// 			],
-		// 		},
-		// 		s_01: {
-		// 			pl: [
-		// 				[currentLine.cpl[0][0], currentLine.cpl[0][1]],
-		// 				[currentLine.cpl[1][0], currentLine.cpl[1][1]],
-		// 				[currentLine.pl[2][0], currentLine.pl[2][1]],
-		// 				[currentLine.pl[3][0], currentLine.pl[3][1]],
-		// 			],
-		// 		},
-		// 	}
-		// },
+		editLine(
+			state,
+			action: PayloadAction<{
+				x: number
+				y: number
+				dirIndex: number
+				lineIndex: number
+				gateIndex: number
+				pointIndex: number
+			}>
+		) {
+			state.markupConfig.directs[action.payload.dirIndex - 1].lines[action.payload.lineIndex - 1].gates[
+				action.payload.gateIndex - 1
+			].gate[action.payload.pointIndex - 1].point = { x: action.payload.x, y: action.payload.y }
+		},
 		addDirection(state) {
 			const directsLength = state.markupConfig.directs.length
 			state.markupConfig.directs.push({

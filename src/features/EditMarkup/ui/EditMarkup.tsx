@@ -1,11 +1,10 @@
 import { markupActions } from 'features/SendMarkupConfig'
 import { KonvaEventObject } from 'konva/lib/Node'
-import { Circle, Group, Layer, Line, Stage, Text } from 'react-konva'
+import { Circle, Group, Layer, Line, Stage } from 'react-konva'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 import { useTypedSelector } from 'shared/hooks/useTypedSelector'
-import { getMiddleOfPolygon, handleDragMove } from '../model/services/editMarkupHelpers'
 import { colors } from '../model/consts/colors'
-import { labelFontSize, lineWidth, pointSize } from '../model/consts/sizes'
+import { lineWidth, pointSize } from '../model/consts/sizes'
 
 export const EditMarkup = () => {
 	const { videoSize, scale } = useTypedSelector(state => state.video)
@@ -14,42 +13,41 @@ export const EditMarkup = () => {
 
 	const dispatch = useAppDispatch()
 
-	// const onDragMove = (e: KonvaEventObject<DragEvent>, line: string, index: number) => {
-	// 	const pos = e.target.getAbsolutePosition()
-	// 	const box = e.target.getStage()
-	// 	if (!box) return
+	const onDragMove = (e: KonvaEventObject<DragEvent>, dir: number, line: number, gate: number, point: number) => {
+		const pos = e.target.getAbsolutePosition()
+		const box = e.target.getStage()
+		if (!box) return
 
-	// 	const { x, y } = pos
-	// 	const newPos = { ...pos }
+		const { x, y } = pos
+		const newPos = { ...pos }
 
-	// 	if (x < 0) {
-	// 		newPos.x = 0
-	// 	}
-	// 	if (y < 0) {
-	// 		newPos.y = 0
-	// 	}
-	// 	if (x > box?.width()) {
-	// 		newPos.x = box.width()
-	// 	}
-	// 	if (y > box?.height()) {
-	// 		newPos.y = box.height()
-	// 	}
-	// 	e.target.setAbsolutePosition(newPos)
+		if (x < 0) {
+			newPos.x = 0
+		}
+		if (y < 0) {
+			newPos.y = 0
+		}
+		if (x > box?.width()) {
+			newPos.x = box.width()
+		}
+		if (y > box?.height()) {
+			newPos.y = box.height()
+		}
+		e.target.setAbsolutePosition(newPos)
 
-	// 	dispatch(
-	// 		markupActions.editLine({
-	// 			x: e.target.x(),
-	// 			y: e.target.y(),
-	// 			line,
-	// 			index,
-	// 		})
-	// 	)
-	// }
+		console.log(e.target.x(), e.target.y())
 
-	// const onDragDividePoints = (e: KonvaEventObject<DragEvent>, line: string, index: number) => {
-	// 	handleDragMove(e, markupConfig[line].pl)
-	// 	dispatch(markupActions.editDivider({ x: e.target.x(), y: e.target.y(), index, line }))
-	// }
+		dispatch(
+			markupActions.editLine({
+				x: e.target.x(),
+				y: e.target.y(),
+				dirIndex: dir,
+				lineIndex: line,
+				gateIndex: gate,
+				pointIndex: point,
+			})
+		)
+	}
 
 	return (
 		<Stage
@@ -83,12 +81,15 @@ export const EditMarkup = () => {
 											/>
 											{gate.gate.map(point => (
 												<Circle
-													key={`${dir.index} ${line.index} ${gate.index}`}
+													key={`${dir.index} ${line.index} ${gate.index} ${point.index}`}
 													x={point.point.x}
 													y={point.point.y}
 													fill={colors.pointColor}
 													radius={pointSize / scale}
 													draggable={tab === 'shot'}
+													onDragMove={e =>
+														onDragMove(e, dir.index, line.index, gate.index, point.index)
+													}
 												/>
 											))}
 										</>
@@ -98,62 +99,6 @@ export const EditMarkup = () => {
 						)
 					})
 				)}
-				{/* {Object.keys(markupConfig).map((line, index) => {
-					const linePoints = markupConfig[line].pl
-					const lineLabel = `${markupConfig[line].d.label} l-${++index}`
-
-					const { centerX, centerY } = getMiddleOfPolygon(linePoints)
-
-					return (
-						<Group key={index} draggable>
-							<Line
-								points={linePoints.flat()}
-								closed
-								stroke={colors.lineColor}
-								strokeWidth={lineWidth / scale}
-							/>
-
-							<Line
-								points={markupConfig[line].cpl.flat()}
-								stroke={colors.conterColor}
-								strokeWidth={lineWidth / scale}
-							/>
-
-							{markupConfig[line].cpl.map((point, cplIndex) => (
-								<Circle
-									key={cplIndex}
-									x={point[0]}
-									y={point[1]}
-									fill={colors.pointColor}
-									radius={pointSize / scale}
-									draggable
-									onDragMove={e => onDragDividePoints(e, line, cplIndex)}
-								/>
-							))}
-
-							{linePoints.map((point: number[], index: number) => (
-								<Circle
-									key={index}
-									x={point[0]}
-									y={point[1]}
-									fill={colors.pointColor}
-									radius={pointSize / scale}
-									draggable={tab === 'shot'}
-									onDragMove={e => onDragMove(e, line, index)}
-								/>
-							))}
-							{linePoints.length >= 2 && (
-								<Text
-									text={lineLabel}
-									fontSize={labelFontSize / scale}
-									x={centerX - labelFontSize / scale}
-									y={centerY - labelFontSize / scale}
-									fill={colors.lineColor}
-								/>
-							)}
-						</Group>
-					)
-				})} */}
 			</Layer>
 		</Stage>
 	)
