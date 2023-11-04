@@ -17,7 +17,7 @@
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-flatpickr": "^3.10.13",
-		"react-hook-form": "^7.47.0",
+		"react-hls-player": "^3.0.7",
 		"react-hot-toast": "^2.4.1",
 		"react-icons": "^4.7.1",
 		"react-konva": "^18.2.8",

@@ -1,12 +1,14 @@
 import { FetchStatus } from 'shared/types/FetchStatus'
 
+type StepType = 'STEP_P' | 'STEP_M' | null
+
 export interface CameraSettings {
 	dryCont: boolean
 	filter: boolean
-	zoom: number
+	zoom: StepType
+	focus: StepType
 	servoX: number
 	servoY: number
-	focus: number
 }
 
 export interface CameraSchema {
