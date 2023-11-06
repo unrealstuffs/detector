@@ -1,7 +1,6 @@
 import { toast } from 'react-hot-toast'
 import { useTypedSelector } from 'shared/hooks/useTypedSelector'
 import Button from 'shared/ui/Button/Button'
-import NumInput from 'shared/ui/NumInput/NumInput'
 import { sendCameraConfig } from '../model/services/sendCameraConfig'
 import { cameraActions } from '../model/slices/cameraSlice'
 import cls from './SendCameraConfig.module.scss'
@@ -12,6 +11,7 @@ import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
 import { VStack } from 'shared/ui/Stack/VStack/VStack'
 import { HStack } from 'shared/ui/Stack/HStack/HStack'
 import { Text } from 'shared/ui/Text/Text'
+import { sendRestartCamera } from '../model/services/sendRestartCamera'
 
 export const SendCameraConfig = () => {
 	const { cameraConfig, status } = useTypedSelector(state => state.camera)
@@ -29,15 +29,25 @@ export const SendCameraConfig = () => {
 		}
 	}
 
+	const sendRestartCameraHandler = async () => {
+		const result = await dispatch(sendRestartCamera())
+		if (sendRestartCamera.fulfilled.match(result)) {
+			toast.success('Отправлено!')
+		} else {
+			if (result.payload) {
+				toast.error(`Ошибка отправки данных: ${result.payload}`)
+			}
+		}
+	}
+
 	return (
 		<div className={classNames(cls.config, {}, [cls.cameraConfig])}>
-			<div className={cls.configBody}>
+			<VStack gap='32' className={cls.configBody}>
 				<Checkbox
 					label='Инфракрасный фильтр'
 					checked={cameraConfig.filter}
 					onChange={checked => dispatch(cameraActions.setFilter(checked))}
 				/>
-				<div></div>
 				<VStack gap='8'>
 					<Text text='Параметры зума' bold size='s'></Text>
 					<HStack gap='8'>
@@ -64,16 +74,6 @@ export const SendCameraConfig = () => {
 					</HStack>
 				</VStack>
 
-				<NumInput
-					label='Параметры сервопривода Х (°)'
-					value={cameraConfig.servoX}
-					increment={1}
-					bigIncrement={5}
-					max={95}
-					min={85}
-					onChange={value => dispatch(cameraActions.setServoX(value))}
-				/>
-
 				<VStack gap='8'>
 					<Text text='Параметры фокуса' bold size='s'></Text>
 					<HStack gap='8'>
@@ -99,20 +99,15 @@ export const SendCameraConfig = () => {
 						/>
 					</HStack>
 				</VStack>
-
-				<NumInput
-					label='Параметры сервопривода Y(°)'
-					value={cameraConfig.servoY}
-					increment={1}
-					bigIncrement={5}
-					max={95}
-					min={85}
-					onChange={value => dispatch(cameraActions.setServoY(value))}
-				/>
-			</div>
-			<Button disabled={status === 'loading'} onClick={sendCameraConfigHandler} size='l'>
-				Сохранить
-			</Button>
+			</VStack>
+			<HStack gap='12'>
+				<Button disabled={status === 'loading'} onClick={sendCameraConfigHandler} size='m'>
+					Сохранить
+				</Button>
+				<Button disabled={status === 'loading'} color='light' onClick={sendRestartCameraHandler} size='m'>
+					Перезагрузить камеру
+				</Button>
+			</HStack>
 		</div>
 	)
 }

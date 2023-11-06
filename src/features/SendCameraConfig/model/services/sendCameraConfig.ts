@@ -11,6 +11,7 @@ async function fetchData(
 		body: JSON.stringify(body),
 		headers: {
 			Authorization: accessToken,
+			'Content-Type': 'application/json',
 		},
 	})
 	const responseData: ServerResponse<any> = await response.json()
@@ -38,8 +39,6 @@ export const sendCameraConfig = createAsyncThunk<any, void, ThunkConfig<any>>(
 
 			const responses: ServerResponse<any>[] = await Promise.all([
 				...dynamicRequests,
-				fetchData({ SERVO_X: cameraConfig.servoX }, `${accessToken}`),
-				fetchData({ SERVO_Y: cameraConfig.servoY }, `${accessToken}`),
 				fetchData({ IR_CUT: cameraConfig.filter === true ? 'on' : 'off' }, `${accessToken}`),
 			])
 
