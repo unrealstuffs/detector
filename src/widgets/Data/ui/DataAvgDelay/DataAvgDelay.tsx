@@ -12,7 +12,6 @@ export const DataAvgDelay = () => {
 	const { data, status, tableRows, blockFetching } = useTypedSelector(
 		state => state.avgDelay
 	)
-	const { configuration } = useTypedSelector(state => state.markup)
 	const dispatch = useAppDispatch()
 
 	useEffect(() => {
@@ -51,12 +50,6 @@ export const DataAvgDelay = () => {
 					{
 						Header: 'Направление',
 						accessor: (d: any) => {
-							if (!configuration[d.direction]) {
-								return 'Не определено'
-							}
-							if (configuration[d.direction].reverseDirection) {
-								return 'Обратное'
-							}
 							return 'Прямое'
 						},
 					},

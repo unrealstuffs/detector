@@ -10,13 +10,10 @@ import LicensePlatesInputs from './LicensePlatesInputs'
 import { HStack } from 'shared/ui/Stack/HStack/HStack'
 import { Input } from 'shared/ui/Input/Input'
 import AppSelect from 'shared/ui/AppSelect/AppSelect'
-import { getLineOptions } from 'features/Search/model/services/getLineOptions'
-import { getDirectionsOptions } from 'features/Search/model/services/getDirectionsOptions'
 
 export const SearchTypes = () => {
 	const datePickersRef = useRef<{ clear: () => void }>()
 	const { searchObject, status } = useTypedSelector(state => state.types)
-	const { configuration } = useTypedSelector(state => state.markup)
 	const { vehicleTypes } = useTypedSelector(state => state.vehicleTypes)
 
 	const dispatch = useAppDispatch()
@@ -58,24 +55,6 @@ export const SearchTypes = () => {
 				}
 			/>
 			<SearchFields>
-				<AppSelect
-					isMulti
-					placeholder='Все полосы'
-					options={getLineOptions(configuration)}
-					onChange={values => {
-						const lines = values.map(val => val.value)
-						dispatch(typesActions.setLines(lines))
-					}}
-				/>
-				<AppSelect
-					isMulti
-					placeholder='Все направления'
-					options={getDirectionsOptions(configuration)}
-					onChange={values => {
-						const directions = values.map(val => val.value)
-						dispatch(typesActions.setDirections(directions))
-					}}
-				/>
 				<HStack gap='8' align='stretch'>
 					<Input
 						size='s'

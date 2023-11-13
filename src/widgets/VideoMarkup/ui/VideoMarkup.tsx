@@ -2,8 +2,8 @@ import { classNames } from 'shared/lib/classNames'
 import cls from './VideoMarkup.module.scss'
 import { useTypedSelector } from 'shared/hooks/useTypedSelector'
 import { Text } from 'shared/ui/Text/Text'
-import { EditMarkup } from 'features/EditMarkup'
 import { Video } from 'entities/Video'
+import { EditMarkup } from 'features/EditMarkup'
 
 interface VideoMarkupProps {
 	className?: string
@@ -16,13 +16,14 @@ export const VideoMarkup = (props: VideoMarkupProps) => {
 	const isDev = process.env.NODE_ENV === 'development'
 	const devSrc = '/assets/videoplayback.mp4'
 	const randomGetParameter = Math.round(Math.random() * 1000)
-	const prodSrc = `http://${window.location.host}/hls/mq/index.m3u8?reset=${randomGetParameter}`
+	// const prodSrc = `http://${window.location.host}/pipeline-stream?reset=${randomGetParameter}`
+	const orangePiSrc = `http://${window.location.host}/src01?reset=${randomGetParameter}`
 
 	return (
 		<div className={classNames(cls.VideoMarkup, {}, [className])}>
 			<Text title={`Детектор ID ${detectorName}`} size='l' bold className={cls.heading} />
 			<div className={cls.videoContainer}>
-				<Video src={isDev ? devSrc : prodSrc} />
+				<Video src={isDev ? devSrc : orangePiSrc} />
 				<EditMarkup />
 			</div>
 		</div>

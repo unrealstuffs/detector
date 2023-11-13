@@ -1,13 +1,21 @@
 import { useEffect } from 'react'
 import { useTypedSelector } from 'shared/hooks/useTypedSelector'
 import { Header } from 'widgets/Header'
+<<<<<<< HEAD
 import { getConfiguration } from 'features/SendMarkupConfig'
+=======
+import { getCameraConfig } from 'features/SendCameraConfig'
+>>>>>>> markup
 import MainLayout from 'shared/layouts/MainLayout/MainLayout'
 import { Sidebar } from 'widgets/Sidebar'
 import { VideoMarkup } from 'widgets/VideoMarkup'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 import { fetchVehicleTypes } from 'entities/TypesSelect/model/services/fetchVehicleTypes'
+<<<<<<< HEAD
 import { getCameraConfig } from 'features/SendCameraConfig'
+=======
+import { getMarkupConfig } from 'features/SendMarkupConfig/model/services/getMarkupConfig'
+>>>>>>> markup
 
 const MainPage = () => {
 	const { accessToken } = useTypedSelector(state => state.user)
@@ -15,8 +23,8 @@ const MainPage = () => {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			await dispatch(getConfiguration())
 			await dispatch(getCameraConfig())
+			await dispatch(getMarkupConfig())
 			await dispatch(fetchVehicleTypes())
 		}
 		fetchData()

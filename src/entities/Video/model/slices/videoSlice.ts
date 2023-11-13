@@ -7,13 +7,11 @@ interface VideoSchema {
 		height: number
 	}
 	status: FetchStatus
-	scale: number
 }
 
 const initialState: VideoSchema = {
 	videoSize: { width: 0, height: 0 },
 	status: 'loading',
-	scale: 1,
 }
 
 const videoSlice = createSlice({
@@ -25,9 +23,6 @@ const videoSlice = createSlice({
 		},
 		setStatus(state, action: PayloadAction<FetchStatus>) {
 			state.status = action.payload
-		},
-		setScale(state, action) {
-			state.scale = action.payload
 		},
 	},
 })

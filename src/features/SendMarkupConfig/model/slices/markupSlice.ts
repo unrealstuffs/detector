@@ -1,277 +1,266 @@
-import { createSlice } from '@reduxjs/toolkit'
-import { MarkupConfig } from 'shared/types/MarkupConfig'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { MarkupConfig } from '../types/markupConfig'
+import { getMarkupConfig } from '../services/getMarkupConfig'
+import { sendMarkupConfig } from '../services/sendMarkupConfig'
 import { FetchStatus } from 'shared/types/FetchStatus'
-import { sendConfiguration } from '../services/sendConfiguration'
-import { getConfiguration } from '../services/getConfiguration'
 
-interface ConfigurationState {
-	configuration: MarkupConfig
-	selectedPolygon: string[]
-
+interface MarkupSchema {
+	markupConfig: MarkupConfig
 	status: FetchStatus
 }
 
-const initialState: ConfigurationState = {
-	configuration: {},
-	selectedPolygon: [],
+const initialState: MarkupSchema = {
 	status: 'init',
+	markupConfig: {
+		version: 21,
+		uid: '00000000-0000-0000-0000-000000000000',
+		base_size: { width: 0, height: 0 },
+		zone: {
+			name: 'test',
+			index: 1,
+			type: 'edge',
+			description: '',
+			directs: [
+				{
+					index: 1,
+					name: 'd-1',
+					is_reverse: false,
+					description: '',
+					lines: [],
+				},
+			],
+		},
+	},
 }
 
 const markupSlice = createSlice({
-	name: 'configuration',
+	name: 'markup',
 	initialState,
 	reducers: {
-		addPoint(state, action) {
-			const newState: any = { ...state.configuration }
-			let currentObj: any = newState
-
-			for (const key of action.payload.keys) {
-				currentObj = currentObj[key]
-			}
-			currentObj.pl.push(action.payload.value)
-			state.configuration = newState
-		},
-		deletePoint(state, action) {
-			const _deletePoint = (obj: any, value: number[]): void => {
-				for (const key in obj) {
-					if (!Array.isArray(obj[key])) {
-						_deletePoint(obj[key], value)
-					} else if (Array.isArray(obj[key])) {
-						const index = obj[key].findIndex(
-							(item: number[]) =>
-								item[0] === value[0] && item[1] === value[1]
-						)
-						if (index !== -1) {
-							obj[key].splice(index, 1)
-						}
-					}
-				}
-				state.configuration = { ...obj }
-			}
-			_deletePoint(state.configuration, action.payload)
-		},
-		editZone(state, action) {
-			state.configuration[action.payload.zone].pl = state.configuration[
-				action.payload.zone
-			].pl.map((subarray, subarrayIndex) =>
-				action.payload.index === subarrayIndex
-					? [action.payload.x, action.payload.y]
-					: subarray
-			)
-		},
-		editLine(state, action) {
-			state.configuration[action.payload.zone]['s'][
-				action.payload.line
-			].pl = state.configuration[action.payload.zone]['s'][
-				action.payload.line
-			].pl.map((subarray, subarrayIndex) =>
-				action.payload.index === subarrayIndex
-					? [action.payload.x, action.payload.y]
-					: subarray
-			)
-		},
-		editCounter(state, action) {
-			state.configuration[action.payload.zone]['s'][action.payload.line][
-				's'
-			][action.payload.counter].pl = state.configuration[
-				action.payload.zone
-			]['s'][action.payload.line]['s'][action.payload.counter].pl.map(
-				(subarray, subarrayIndex) =>
-					action.payload.index === subarrayIndex
-						? [action.payload.x, action.payload.y]
-						: subarray
-			)
-		},
-		setDirection(state, action) {
-			state.configuration[action.payload.zone].reverseDirection =
-				action.payload.checked
-		},
-		setLineLength(state, action) {
-			state.configuration[action.payload.zone]['s'][
-				action.payload.line
-			].length = action.payload.value
-		},
-		addZone(state) {
-			const zoneKeys = Object.keys(state.configuration)
-			const newKey = `d_0${zoneKeys.length}`
-
-			state.configuration[newKey] = {
-				reverseDirection: false,
-				pl: [],
-				s: {
-					l_00: {
-						length: 1,
-						pl: [],
-						s: {
-							s_00: {
-								pl: [],
-							},
-						},
-					},
-				},
-			}
-		},
 		addLine(state) {
-			const lineKeys = Object.keys(
-				state.configuration[state.selectedPolygon[0]].s
-			)
-			const newKey = `l_0${lineKeys.length}`
+			const linesLength = state.markupConfig.zone.directs[0].lines.length
 
-			state.configuration[state.selectedPolygon[0]].s[newKey] = {
-				length: 1,
-				pl: [],
-				s: {
-					s_00: {
-						pl: [],
-					},
-				},
-			}
-		},
-		addCounter(state) {
-			const counterKeys = Object.keys(
-				state.configuration[state.selectedPolygon[0]].s[
-					state.selectedPolygon[2]
-				].s
-			)
-			const newKey = `s_0${counterKeys.length}`
-
-			state.configuration[state.selectedPolygon[0]].s[
-				state.selectedPolygon[2]
-			].s[newKey] = {
-				pl: [],
-			}
-		},
-		removeZone(state, action) {
-			const updatedConfig = { ...state.configuration }
-			const zoneKeys = Object.keys(updatedConfig)
-			const keyIndex = zoneKeys.indexOf(action.payload.key)
-			if (keyIndex !== -1) {
-				const shiftedKeys = [
-					...zoneKeys.slice(0, keyIndex),
-					...zoneKeys.slice(keyIndex + 1),
-				]
-				const shiftedState: MarkupConfig = {}
-				shiftedKeys.forEach((shiftedKey, index) => {
-					const newKey = `d_0${index}`
-					shiftedState[newKey] = updatedConfig[shiftedKey]
-				})
-			}
-			delete updatedConfig[action.payload.key]
-			if (!Object.keys(updatedConfig).length) state.selectedPolygon = []
-			state.configuration = { ...updatedConfig }
-		},
-		removeLine(state, action) {
-			const updatedConfig = { ...state.configuration }
-			const lineKeys = Object.keys(
-				updatedConfig[action.payload.keys[0]].s
-			)
-			const keyIndex = lineKeys.indexOf(action.payload.keys[1])
-			if (keyIndex !== -1) {
-				const shiftedKeys = [
-					...lineKeys.slice(0, keyIndex),
-					...lineKeys.slice(keyIndex + 1),
-				]
-
-				const shiftedState: any = {
-					...updatedConfig,
-					[`${action.payload.keys[0]}`]: {
-						...updatedConfig[`${action.payload.keys[0]}`],
-						s: {},
-					},
-				}
-				shiftedKeys.forEach((shiftedKey, index) => {
-					const newKey = `l_0${index}`
-					shiftedState[action.payload.keys[0]]['s'][newKey] =
-						updatedConfig[action.payload.keys[0]].s[shiftedKey]
-				})
-			}
-			delete updatedConfig[action.payload.keys[0]].s[
-				action.payload.keys[1]
-			]
-			if (!Object.keys(updatedConfig[action.payload.keys[0]].s).length)
-				state.selectedPolygon = []
-			state.configuration = { ...updatedConfig }
-		},
-		removeCounter(state, action) {
-			const updatedConfig = { ...state.configuration }
-			const counterKeys = Object.keys(
-				updatedConfig[action.payload.keys[0]].s[action.payload.keys[1]]
-					.s
-			)
-			const keyIndex = counterKeys.indexOf(action.payload.keys[2])
-			if (keyIndex !== -1) {
-				const shiftedKeys = [
-					...counterKeys.slice(0, keyIndex),
-					...counterKeys.slice(keyIndex + 1),
-				]
-
-				const shiftedState: any = {
-					...updatedConfig,
-					[`${action.payload.keys[0]}`]: {
-						...updatedConfig[`${action.payload.keys[0]}`],
-						s: {
-							...updatedConfig[`${action.payload.keys[0]}`].s,
-							[`${action.payload.keys[1]}`]: {
-								...updatedConfig[`${action.payload.keys[0]}`].s[
-									`${action.payload.keys[1]}`
-								],
-								s: {},
+			state.markupConfig.zone.directs[0].lines.push({
+				index: linesLength + 1,
+				name: `l-${linesLength + 1}`,
+				description: '',
+				gates: [
+					{
+						index: 1,
+						type: '',
+						width_line: -1,
+						gate: [
+							{
+								index: 1,
+								point: { x: 40, y: 20 },
 							},
-						},
+							{
+								index: 2,
+								point: { x: 60, y: 20 },
+							},
+						],
 					},
+					{
+						index: 2,
+						type: '',
+						width_line: -1,
+						gate: [
+							{
+								index: 1,
+								point: { x: 40, y: 35 },
+							},
+							{
+								index: 2,
+								point: { x: 60, y: 35 },
+							},
+						],
+					},
+					{
+						index: 3,
+						type: '',
+						width_line: -1,
+						gate: [
+							{
+								index: 1,
+								point: { x: 40, y: 50 },
+							},
+							{
+								index: 2,
+								point: { x: 60, y: 50 },
+							},
+						],
+					},
+					{
+						index: 4,
+						type: '',
+						width_line: -1,
+						gate: [
+							{
+								index: 1,
+								point: { x: 40, y: 65 },
+							},
+							{
+								index: 2,
+								point: { x: 60, y: 65 },
+							},
+						],
+					},
+					{
+						index: 5,
+						type: '',
+						width_line: -1,
+						gate: [
+							{
+								index: 1,
+								point: { x: 40, y: 80 },
+							},
+							{
+								index: 2,
+								point: { x: 60, y: 80 },
+							},
+						],
+					},
+				],
+				lengths: [
+					{ index: 1, from_gate: 2, to_gate: 3, length: 1 },
+					{ index: 2, from_gate: 3, to_gate: 4, length: 1 },
+				],
+			})
+		},
+		setLength(
+			state,
+			action: PayloadAction<{ dirIndex: number; lineIndex: number; fromTo: number; length: number }>
+		) {
+			state.markupConfig.zone.directs[action.payload.dirIndex].lines[action.payload.lineIndex].lengths[
+				action.payload.fromTo
+			].length = action.payload.length
+		},
+		deleteLine(state, action: PayloadAction<{ dirIndex: number; lineIndex: number }>) {
+			state.markupConfig.zone.directs[action.payload.dirIndex - 1].lines.splice(action.payload.lineIndex - 1, 1)
+
+			state.markupConfig.zone.directs[action.payload.dirIndex - 1].lines.forEach((element, index) => {
+				element.index = index + 1
+			})
+		},
+		deleteDir(state, action: PayloadAction<{ dirIndex: number }>) {
+			if (state.markupConfig.zone.directs.length === 1) {
+				return
+			}
+			state.markupConfig.zone.directs.splice(action.payload.dirIndex - 1, 1)
+
+			state.markupConfig.zone.directs.forEach((element, index) => {
+				element.index = index + 1
+			})
+		},
+		setLineName(state, action: PayloadAction<{ dirIndex: number; lineIndex: number; name: string }>) {
+			state.markupConfig.zone.directs[action.payload.dirIndex].lines[action.payload.lineIndex].name =
+				action.payload.name
+		},
+		setDirName(state, action: PayloadAction<{ dirIndex: number; name: string }>) {
+			state.markupConfig.zone.directs[action.payload.dirIndex].name = action.payload.name
+		},
+		bindLine(state, action: PayloadAction<{ dirIndex: number; newDirIndex: number; lineIndex: number }>) {
+			const sourceDir = state.markupConfig.zone.directs[action.payload.dirIndex - 1]
+			const targetDir = state.markupConfig.zone.directs[action.payload.newDirIndex - 1]
+			const sourceArray = state.markupConfig.zone.directs[action.payload.dirIndex - 1].lines
+			const targetArray = state.markupConfig.zone.directs[action.payload.newDirIndex - 1].lines
+
+			const elementToMoveIndex = sourceArray.findIndex(element => element.index === action.payload.lineIndex)
+
+			// Check if the element exists in the source array
+			if (elementToMoveIndex !== -1) {
+				// Remove the element from the source array
+				const [elementToMove] = sourceArray.splice(elementToMoveIndex, 1)
+
+				// Update the index of the moved element
+				elementToMove.index = targetArray.length + 1
+
+				if (
+					(sourceDir.is_reverse && !targetDir.is_reverse) ||
+					(!sourceDir.is_reverse && targetDir.is_reverse)
+				) {
+					elementToMove.gates.reverse().forEach((gate, index) => {
+						gate.index = index + 1
+					})
 				}
-				shiftedKeys.forEach((shiftedKey, index) => {
-					const newKey = `s_0${index}`
-					shiftedState[action.payload.keys[0]]['s'][
-						action.payload.keys[1]
-					]['s'][newKey] =
-						updatedConfig[action.payload.keys[0]]['s'][
-							action.payload.keys[1]
-						]['s'][shiftedKey]
+
+				// Add the element to the target array
+				targetArray.push(elementToMove)
+
+				// Update the "index" fields in the source array
+				sourceArray.forEach((element, index) => {
+					element.index = index + 1
 				})
 			}
-			delete updatedConfig[action.payload.keys[0]]['s'][
-				action.payload.keys[1]
-			]['s'][action.payload.keys[2]]
-			if (
-				!Object.keys(
-					updatedConfig[action.payload.keys[0]]['s'][
-						action.payload.keys[1]
-					]['s']
-				).length
-			)
-				state.selectedPolygon = []
-			state.configuration = { ...updatedConfig }
 		},
-		setConfiguration(state, action) {
-			state.configuration = action.payload
+		editLine(
+			state,
+			action: PayloadAction<{
+				x: number
+				y: number
+				dirIndex: number
+				lineIndex: number
+				gateIndex: number
+				pointIndex: number
+			}>
+		) {
+			state.markupConfig.zone.directs[action.payload.dirIndex - 1].lines[action.payload.lineIndex - 1].gates[
+				action.payload.gateIndex - 1
+			].gate[action.payload.pointIndex - 1].point = { x: action.payload.x, y: action.payload.y }
 		},
-		removeConfiguration(state) {
-			state.configuration = {}
-			state.selectedPolygon = []
+		editGates(
+			state,
+			action: PayloadAction<{
+				x: number
+				y: number
+				dirIndex: number
+				lineIndex: number
+			}>
+		) {
+			state.markupConfig.zone.directs[action.payload.dirIndex - 1].lines[
+				action.payload.lineIndex - 1
+			].gates.forEach(gate => {
+				gate.gate.forEach(point => {
+					point.point.x += action.payload.x
+					point.point.y += action.payload.y
+				})
+			})
 		},
-		setSelectedPolygon(state, action) {
-			state.selectedPolygon = action.payload
+		addDirection(state) {
+			const directsLength = state.markupConfig.zone.directs.length
+			state.markupConfig.zone.directs.push({
+				index: directsLength + 1,
+				name: `d-${directsLength + 1}`,
+				description: '',
+				is_reverse: false,
+				lines: [],
+			})
 		},
-		setStatus(state, action) {
-			state.status = action.payload
+		setDirection(state, action: PayloadAction<{ dirIndex: number; isReverse: boolean }>) {
+			state.markupConfig.zone.directs[action.payload.dirIndex - 1].is_reverse = action.payload.isReverse
+		},
+		deleteMarkup(state) {
+			state.markupConfig = initialState.markupConfig
 		},
 	},
 	extraReducers: builder => {
-		builder.addCase(getConfiguration.fulfilled, (state, action) => {
-			state.configuration = action.payload
+		builder.addCase(getMarkupConfig.fulfilled, (state, action) => {
+			state.markupConfig = action.payload
 		})
-		builder.addCase(sendConfiguration.pending, state => {
+		builder.addCase(getMarkupConfig.rejected, state => {
+			state.markupConfig = initialState.markupConfig
+		})
+		builder.addCase(sendMarkupConfig.pending, state => {
 			state.status = 'loading'
 		})
-		builder.addCase(sendConfiguration.fulfilled, state => {
+		builder.addCase(sendMarkupConfig.fulfilled, state => {
 			state.status = 'success'
 		})
-		builder.addCase(sendConfiguration.rejected, state => {
+		builder.addCase(sendMarkupConfig.rejected, state => {
 			state.status = 'error'
 		})
 	},
 })
 
-export const markupActions = markupSlice.actions
 export const markupReducer = markupSlice.reducer
+export const markupActions = markupSlice.actions
