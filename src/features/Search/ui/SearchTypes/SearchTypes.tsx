@@ -10,11 +10,14 @@ import LicensePlatesInputs from './LicensePlatesInputs'
 import { HStack } from 'shared/ui/Stack/HStack/HStack'
 import { Input } from 'shared/ui/Input/Input'
 import AppSelect from 'shared/ui/AppSelect/AppSelect'
+import { getLineOptions } from 'features/Search/model/services/getLineOptions'
+import { getDirectionsOptions } from 'features/Search/model/services/getDirOptions'
 
 export const SearchTypes = () => {
 	const datePickersRef = useRef<{ clear: () => void }>()
 	const { searchObject, status } = useTypedSelector(state => state.types)
 	const { vehicleTypes } = useTypedSelector(state => state.vehicleTypes)
+	const { markupConfig } = useTypedSelector(state => state.markup)
 
 	const dispatch = useAppDispatch()
 
@@ -29,10 +32,7 @@ export const SearchTypes = () => {
 	}
 
 	const sendSearchHandler = () => {
-		if (
-			!searchObject.timestampRange.from ||
-			!searchObject.timestampRange.to
-		) {
+		if (!searchObject.timestampRange.from || !searchObject.timestampRange.to) {
 			return
 		}
 		dispatch(searchTypes(searchObject))
@@ -47,30 +47,41 @@ export const SearchTypes = () => {
 				defaultDateTo={searchObject.timestampRange.to}
 				resetSearchHandler={resetSearchHandler}
 				searchHandler={sendSearchHandler}
-				setTimestampFrom={date =>
-					dispatch(typesActions.setTimestampRangeFrom(date))
-				}
-				setTimestampTo={date =>
-					dispatch(typesActions.setTimestampRangeTo(date))
-				}
+				setTimestampFrom={date => dispatch(typesActions.setTimestampRangeFrom(date))}
+				setTimestampTo={date => dispatch(typesActions.setTimestampRangeTo(date))}
 			/>
 			<SearchFields>
+				<AppSelect
+					isMulti
+					placeholder='Все полосы'
+					options={getLineOptions(markupConfig)}
+					onChange={values => {
+						const lines = values.map(val => val.value)
+						dispatch(typesActions.setLines(lines))
+					}}
+				/>
+				<AppSelect
+					isMulti
+					placeholder='Все направления'
+					options={getDirectionsOptions(markupConfig)}
+					onChange={values => {
+						const directions = values.map(val => val.value)
+						dispatch(typesActions.setDirections(directions))
+					}}
+				/>
+
 				<HStack gap='8' align='stretch'>
 					<Input
 						size='s'
 						placeholder='Цвет машины'
 						value={searchObject.colors.join(', ')}
-						onChange={value =>
-							dispatch(typesActions.setColors(value))
-						}
+						onChange={value => dispatch(typesActions.setColors(value))}
 					/>
 					<Input
 						size='s'
 						placeholder='Марка машины'
 						value={searchObject.vehicle_makes.join(', ')}
-						onChange={value =>
-							dispatch(typesActions.setVehicleMakes(value))
-						}
+						onChange={value => dispatch(typesActions.setVehicleMakes(value))}
 					/>
 				</HStack>
 				<AppSelect

@@ -9,9 +9,8 @@ import DataContainer from '../common/DataContainer/DataContainer'
 import { fetchComposition } from '../../model/api/fetchComposition'
 
 export const DataComposition = () => {
-	const { data, status, tableRows, blockFetching } = useTypedSelector(
-		state => state.composition
-	)
+	const { data, status, tableRows, blockFetching } = useTypedSelector(state => state.composition)
+	const { markupConfig } = useTypedSelector(state => state.markup)
 	const dispatch = useAppDispatch()
 
 	useEffect(() => {
@@ -28,9 +27,7 @@ export const DataComposition = () => {
 
 	return (
 		<DataContainer
-			onChangeRowsCount={value =>
-				dispatch(compositionActions.setTableRows(value))
-			}
+			onChangeRowsCount={value => dispatch(compositionActions.setTableRows(value))}
 			searchForm={<SearchComposition />}
 			title='Состав транспортных средств'
 			tooltipId='composition'
@@ -43,33 +40,25 @@ export const DataComposition = () => {
 						Header: 'Время',
 						accessor: (d: any) => {
 							if (d.timestampRange) {
-								return `${dayjs(d.timestampRange.from).format(
-									'DD-MM-YY HH:mm:ss'
-								)} \n ${dayjs(d.timestampRange.to).format(
-									'DD-MM-YY HH:mm:ss'
-								)}`
+								return `${dayjs(d.timestampRange.from).format('DD-MM-YY HH:mm:ss')} \n ${dayjs(
+									d.timestampRange.to
+								).format('DD-MM-YY HH:mm:ss')}`
 							}
-							return dayjs(d.timestamp).format(
-								'DD-MM-YY HH:mm:ss'
-							)
+							return dayjs(d.timestamp).format('DD-MM-YY HH:mm:ss')
 						},
 					},
 					{
 						Header: 'Направление',
 						accessor: (d: any) => {
-							return 'Прямое'
+							return markupConfig?.zone.directs[d.direction - 1]?.name || 'Не определено'
 						},
 					},
 					{
 						Header: 'Полоса',
 						accessor: (d: any) => {
-							if (d.line) {
-								let lineArray = d.line.split('_')
-								let lineName = `l-${++lineArray[1]}`
-								return lineName
-							} else {
-								return d.line
-							}
+							return (
+								markupConfig?.zone.directs[d.direction - 1]?.lines[d.line - 1]?.name || 'Не определено'
+							)
 						},
 					},
 					{

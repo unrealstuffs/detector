@@ -110,6 +110,7 @@ export const EditMarkup = () => {
 													),
 												]}
 												stroke={colors.lineColor}
+												opacity={0.4}
 												strokeWidth={lineWidth}
 											/>
 										))}
@@ -120,31 +121,22 @@ export const EditMarkup = () => {
 											getValueByPercent(gate.gate[1].point.x, videoSize.width),
 											getValueByPercent(gate.gate[1].point.y, videoSize.height),
 										]}
-										stroke={colors.lineColor}
+										stroke={gate.index === 3 ? colors.conterColor : colors.lineColor}
+										opacity={gate.index === 1 || gate.index === 5 ? 0.4 : 1}
 										strokeWidth={lineWidth}
 										hitStrokeWidth={100}
 									/>
 									{gate.gate.map(point => (
 										<Fragment key={`${direct.index} ${line.index} ${gate.index} ${point.index}`}>
-											{gate.index === 5 && (
+											{gate.index === 3 && (
 												<Text
-													x={
-														getValueByPercent(
-															(gate.gate[0].point.x + gate.gate[1].point.x) / 2,
-															videoSize.width
-														) -
-														labelFontSize / 2
-													}
-													y={getValueByPercent(
-														(gate.gate[0].point.y + gate.gate[1].point.y) / 2 + 3,
-														videoSize.height
-													)}
-													text={line.name}
+													x={getValueByPercent(gate.gate[0].point.x + 2, videoSize.width)}
+													y={getValueByPercent(gate.gate[0].point.y, videoSize.height)}
+													text={`${line.name} id-${line.index}`}
 													fontSize={labelFontSize}
 													fill={colors.conterColor}
 												/>
 											)}
-
 											<Circle
 												x={getValueByPercent(point.point.x, videoSize.width)}
 												y={getValueByPercent(point.point.y, videoSize.height)}

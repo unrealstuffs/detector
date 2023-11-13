@@ -9,9 +9,8 @@ import { SearchIntensity } from 'features/Search/ui/SearchIntensity/SearchIntens
 import { fetchIntensity } from '../../model/api/fetchIntensity'
 
 export const DataIntensity = () => {
-	const { data, status, tableRows, blockFetching } = useTypedSelector(
-		state => state.intensity
-	)
+	const { data, status, tableRows, blockFetching } = useTypedSelector(state => state.intensity)
+	const { markupConfig } = useTypedSelector(state => state.markup)
 	const dispatch = useAppDispatch()
 
 	useEffect(() => {
@@ -28,9 +27,7 @@ export const DataIntensity = () => {
 
 	return (
 		<DataContainer
-			onChangeRowsCount={value =>
-				dispatch(intensityActions.setTableRows(value))
-			}
+			onChangeRowsCount={value => dispatch(intensityActions.setTableRows(value))}
 			searchForm={<SearchIntensity />}
 			title='Интенсивность дорожного движения'
 			tooltipId='intensity'
@@ -43,27 +40,21 @@ export const DataIntensity = () => {
 						Header: 'Время',
 						id: 'timestamp',
 						accessor: (d: any) => {
-							return dayjs(d.timestamp).format(
-								'DD-MM-YY HH:mm:ss'
-							)
+							return dayjs(d.timestamp).format('DD-MM-YY HH:mm:ss')
 						},
 					},
 					{
 						Header: 'Направление',
 						accessor: (d: any) => {
-							return 'Прямое'
+							return markupConfig?.zone.directs[d.direction - 1]?.name || 'Не определено'
 						},
 					},
 					{
 						Header: 'Полоса',
 						accessor: (d: any) => {
-							if (d.line) {
-								let lineArray = d.line.split('_')
-								let lineName = `l-${++lineArray[1]}`
-								return lineName
-							} else {
-								return d.line
-							}
+							return (
+								markupConfig?.zone.directs[d.direction - 1]?.lines[d.line - 1]?.name || 'Не определено'
+							)
 						},
 					},
 					{ Header: 'Интенсивность', accessor: 'intensity' },

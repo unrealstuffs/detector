@@ -9,10 +9,13 @@ import SearchFields from '../common/SearchFields/SearchFields'
 import { intensityActions } from 'widgets/Data/model/slices/intensitySlice'
 import { searchIntensity } from 'widgets/Data/model/api/searchIntensity'
 import AppSelect from 'shared/ui/AppSelect/AppSelect'
+import { getLineOptions } from 'features/Search/model/services/getLineOptions'
+import { getDirectionsOptions } from 'features/Search/model/services/getDirOptions'
 
 export const SearchIntensity = () => {
 	const datePickersRef = useRef<{ clear: () => void }>()
 	const { searchObject, status } = useTypedSelector(state => state.intensity)
+	const { markupConfig } = useTypedSelector(state => state.markup)
 
 	const dispatch = useAppDispatch()
 
@@ -27,10 +30,7 @@ export const SearchIntensity = () => {
 	}
 
 	const sendSearchHandler = () => {
-		if (
-			!searchObject.timestampRange.from ||
-			!searchObject.timestampRange.to
-		) {
+		if (!searchObject.timestampRange.from || !searchObject.timestampRange.to) {
 			return
 		}
 		dispatch(searchIntensity(searchObject))
@@ -45,23 +45,35 @@ export const SearchIntensity = () => {
 				defaultDateTo={searchObject.timestampRange.to}
 				resetSearchHandler={resetSearchHandler}
 				searchHandler={sendSearchHandler}
-				setTimestampFrom={date =>
-					dispatch(intensityActions.setTimestampRangeFrom(date))
-				}
-				setTimestampTo={date =>
-					dispatch(intensityActions.setTimestampRangeTo(date))
-				}
+				setTimestampFrom={date => dispatch(intensityActions.setTimestampRangeFrom(date))}
+				setTimestampTo={date => dispatch(intensityActions.setTimestampRangeTo(date))}
 			/>
 			<SearchFields>
+				<AppSelect
+					isMulti
+					placeholder='Все полосы'
+					options={getLineOptions(markupConfig)}
+					onChange={values => {
+						const lines = values.map(val => val.value)
+						dispatch(intensityActions.setLines(lines))
+					}}
+				/>
+				<AppSelect
+					isMulti
+					placeholder='Все направления'
+					options={getDirectionsOptions(markupConfig)}
+					onChange={values => {
+						const directions = values.map(val => val.value)
+						dispatch(intensityActions.setDirections(directions))
+					}}
+				/>
 				<HStack gap='8' align='stretch'>
 					<Input
 						size='s'
 						type='number'
 						placeholder='Интенсивность...'
 						value={searchObject.intensity.value}
-						onChange={value =>
-							dispatch(intensityActions.setIntensityValue(value))
-						}
+						onChange={value => dispatch(intensityActions.setIntensityValue(value))}
 					/>
 					<AppSelect
 						options={[
@@ -73,11 +85,7 @@ export const SearchIntensity = () => {
 						onChange={value => {
 							if (!value) return
 							const { value: statement } = value
-							dispatch(
-								intensityActions.setIntensityStatement(
-									statement
-								)
-							)
+							dispatch(intensityActions.setIntensityStatement(statement))
 						}}
 						styles={{
 							container: styles => ({ ...styles, width: '100%' }),

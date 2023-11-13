@@ -23,7 +23,7 @@ const initialState: MarkupSchema = {
 			directs: [
 				{
 					index: 1,
-					name: 'd-1',
+					name: 'прямое',
 					is_reverse: false,
 					description: '',
 					lines: [],
@@ -42,7 +42,7 @@ const markupSlice = createSlice({
 
 			state.markupConfig.zone.directs[0].lines.push({
 				index: linesLength + 1,
-				name: `l-${linesLength + 1}`,
+				name: `полоса-${linesLength + 1}`,
 				description: '',
 				gates: [
 					{
@@ -230,7 +230,7 @@ const markupSlice = createSlice({
 			const directsLength = state.markupConfig.zone.directs.length
 			state.markupConfig.zone.directs.push({
 				index: directsLength + 1,
-				name: `d-${directsLength + 1}`,
+				name: `направление ${directsLength + 1}`,
 				description: '',
 				is_reverse: false,
 				lines: [],

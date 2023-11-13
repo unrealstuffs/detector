@@ -14,7 +14,7 @@ import { sendMarkupConfig } from '../model/services/sendMarkupConfig'
 import toast from 'react-hot-toast'
 
 export const SendMarkupConfig = () => {
-	const { markupConfig } = useTypedSelector(state => state.markup)
+	const { markupConfig, status } = useTypedSelector(state => state.markup)
 	const dispatch = useAppDispatch()
 
 	const sendMarkupConfigHandler = async () => {
@@ -177,10 +177,10 @@ export const SendMarkupConfig = () => {
 	return (
 		<div>
 			<HStack className={cls.actions} gap='16'>
-				<Button size='m' onClick={sendMarkupConfigHandler}>
+				<Button size='m' onClick={sendMarkupConfigHandler} disabled={status === 'loading'}>
 					Сохранить
 				</Button>
-				<Button size='m' color='danger'>
+				<Button size='m' color='danger' onClick={() => dispatch(markupActions.deleteMarkup())}>
 					Удалить
 				</Button>
 			</HStack>
