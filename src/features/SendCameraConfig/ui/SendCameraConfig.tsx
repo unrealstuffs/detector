@@ -8,10 +8,6 @@ import cls from './SendCameraConfig.module.scss'
 import { classNames } from 'shared/lib/classNames'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 import Checkbox from 'shared/ui/Checkbox/Checkbox'
-import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
-import { VStack } from 'shared/ui/Stack/VStack/VStack'
-import { HStack } from 'shared/ui/Stack/HStack/HStack'
-import { Text } from 'shared/ui/Text/Text'
 
 export const SendCameraConfig = () => {
 	const { cameraConfig, status } = useTypedSelector(state => state.camera)
@@ -38,31 +34,15 @@ export const SendCameraConfig = () => {
 					onChange={checked => dispatch(cameraActions.setFilter(checked))}
 				/>
 				<div></div>
-				<VStack gap='8'>
-					<Text text='Параметры зума' bold size='s'></Text>
-					<HStack gap='8'>
-						<AiOutlineLeft
-							onClick={() => {
-								if (cameraConfig.zoom === 'STEP_M') {
-									dispatch(cameraActions.setZoom(null))
-								} else {
-									dispatch(cameraActions.setZoom('STEP_M'))
-								}
-							}}
-							className={classNames(cls.icon, { [cls.active]: cameraConfig.zoom === 'STEP_M' }, [])}
-						/>
-						<AiOutlineRight
-							onClick={() => {
-								if (cameraConfig.zoom === 'STEP_P') {
-									dispatch(cameraActions.setZoom(null))
-								} else {
-									dispatch(cameraActions.setZoom('STEP_P'))
-								}
-							}}
-							className={classNames(cls.icon, { [cls.active]: cameraConfig.zoom === 'STEP_P' }, [])}
-						/>
-					</HStack>
-				</VStack>
+				<NumInput
+					label='Параметры зума'
+					value={cameraConfig.zoom}
+					increment={100}
+					bigIncrement={1000}
+					max={20000}
+					min={0}
+					onChange={value => dispatch(cameraActions.setZoom(value))}
+				/>
 
 				<NumInput
 					label='Параметры сервопривода Х (°)'
@@ -74,31 +54,15 @@ export const SendCameraConfig = () => {
 					onChange={value => dispatch(cameraActions.setServoX(value))}
 				/>
 
-				<VStack gap='8'>
-					<Text text='Параметры фокуса' bold size='s'></Text>
-					<HStack gap='8'>
-						<AiOutlineLeft
-							onClick={() => {
-								if (cameraConfig.focus === 'STEP_M') {
-									dispatch(cameraActions.setFocus(null))
-								} else {
-									dispatch(cameraActions.setFocus('STEP_M'))
-								}
-							}}
-							className={classNames(cls.icon, { [cls.active]: cameraConfig.focus === 'STEP_M' }, [])}
-						/>
-						<AiOutlineRight
-							onClick={() => {
-								if (cameraConfig.focus === 'STEP_P') {
-									dispatch(cameraActions.setFocus(null))
-								} else {
-									dispatch(cameraActions.setFocus('STEP_P'))
-								}
-							}}
-							className={classNames(cls.icon, { [cls.active]: cameraConfig.focus === 'STEP_P' }, [])}
-						/>
-					</HStack>
-				</VStack>
+				<NumInput
+					label='Параметры фокуса'
+					value={cameraConfig.focus}
+					increment={100}
+					bigIncrement={1000}
+					max={20000}
+					min={0}
+					onChange={value => dispatch(cameraActions.setFocus(value))}
+				/>
 
 				<NumInput
 					label='Параметры сервопривода Y(°)'
@@ -110,6 +74,7 @@ export const SendCameraConfig = () => {
 					onChange={value => dispatch(cameraActions.setServoY(value))}
 				/>
 			</div>
+
 			<Button disabled={status === 'loading'} onClick={sendCameraConfigHandler} size='l'>
 				Сохранить
 			</Button>

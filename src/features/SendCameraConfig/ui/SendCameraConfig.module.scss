@@ -1,11 +1,3 @@
 .configBody {
 	@apply grid grid-cols-2 gap-y-8 gap-x-10 mb-6;
 }
-
-.icon {
-	@apply w-8 h-8 cursor-pointer text-white bg-light p-1 text-xl rounded-md;
-}
-
-.active {
-	@apply bg-accent text-white;
-}

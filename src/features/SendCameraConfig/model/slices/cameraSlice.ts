@@ -7,10 +7,10 @@ const initialState: CameraSchema = {
 	cameraConfig: {
 		dryCont: true,
 		filter: false,
-		zoom: null,
-		focus: null,
+		zoom: 0,
 		servoX: 85,
 		servoY: 85,
+		focus: 0,
 	},
 	status: 'init',
 }
