@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import { ThunkConfig } from 'app/store'
 import { MarkupConfig } from '../types/markupConfig'
 
-export const getMarkupConfig = createAsyncThunk<MarkupConfig, void, ThunkConfig<any>>(
+export const getMarkupConfig = createAsyncThunk<MarkupConfig, void, ThunkConfig<MarkupConfig>>(
 	'markup/getMarkupConfig',
 	async (_, { getState, rejectWithValue }) => {
 		const {
@@ -19,9 +19,10 @@ export const getMarkupConfig = createAsyncThunk<MarkupConfig, void, ThunkConfig<
 			const data = await response.json()
 
 			const tempArr = JSON.parse(data.data)
-			return tempArr.zone.directs
+			if (!tempArr.zone.directs) return rejectWithValue({} as MarkupConfig)
+			return tempArr
 		} catch {
-			return rejectWithValue('error')
+			return rejectWithValue({} as MarkupConfig)
 		}
 	}
 )
