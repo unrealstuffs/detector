@@ -10,12 +10,23 @@ import { markupActions } from '../model/slices/markupSlice'
 import { useMemo } from 'react'
 import { Text } from 'shared/ui/Text/Text'
 import AppSelect from 'shared/ui/AppSelect/AppSelect'
-import { VStack } from 'shared/ui/Stack/VStack/VStack'
+import { sendMarkupConfig } from '../model/services/sendMarkupConfig'
+import toast from 'react-hot-toast'
 
 export const SendMarkupConfig = () => {
 	const { markupConfig } = useTypedSelector(state => state.markup)
-	const { videoSize, scale } = useTypedSelector(state => state.video)
 	const dispatch = useAppDispatch()
+
+	const sendMarkupConfigHandler = async () => {
+		const result = await dispatch(sendMarkupConfig())
+		if (sendMarkupConfig.fulfilled.match(result)) {
+			toast.success('Отправлено!')
+		} else {
+			if (result.payload) {
+				toast.error(`Ошибка отправки данных: ${result.payload}`)
+			}
+		}
+	}
 
 	const markupConfigBlocks = useMemo(
 		() => [
@@ -25,68 +36,157 @@ export const SendMarkupConfig = () => {
 				buttonAction: () => {
 					dispatch(markupActions.addDirection())
 				},
-				configElement: markupConfig.directs.map(dir => (
-					<HStack key={dir.index} align='center' justify='start' gap='12' className={cls.block}>
-						<VStack align='stretch' gap='8'>
-							<span className={cls.polygonTitle}>{dir.name}</span>
-							<Checkbox label='Обратное движение' checked={dir.is_reverse} className={cls.checkbox} />
-						</VStack>
-						<AiOutlineClose />
-					</HStack>
+				configElement: markupConfig.zone.directs.map(dir => (
+					<div key={`${dir.index}`} className={cls.lineBlock}>
+						<HStack align='center' className={cls.lineTitle}>
+							<Text title='Направление' />
+							<Input
+								size='s'
+								value={dir.name}
+								className={cls.lineInput}
+								onChange={value => {
+									dispatch(
+										markupActions.setDirName({
+											dirIndex: dir.index - 1,
+											name: value,
+										})
+									)
+								}}
+							/>
+							<AiOutlineClose
+								className={cls.deleteIcon}
+								onClick={() => {
+									dispatch(markupActions.deleteDir({ dirIndex: dir.index }))
+								}}
+							/>
+						</HStack>
+						<Checkbox
+							label='Обратное движение'
+							checked={dir.is_reverse}
+							onChange={value => {
+								dispatch(
+									markupActions.setDirection({
+										dirIndex: dir.index,
+										isReverse: value,
+									})
+								)
+							}}
+						/>
+					</div>
 				)),
 			},
 			{
 				title: 'Полосы',
 				buttonTitle: 'Новая полоса',
 				buttonAction: () => {
-					dispatch(
-						markupActions.addLine({
-							width: videoSize.width,
-							height: videoSize.height,
-							scale,
-						})
-					)
+					dispatch(markupActions.addLine())
 				},
-				configElement: markupConfig.directs.map(dir =>
+				configElement: markupConfig.zone.directs.map(dir =>
 					dir.lines.map(line => (
-						<HStack key={line.index} align='center' justify='start' gap='12' className={cls.block}>
-							<span className={cls.polygonTitle}>{line.name}</span>
-							<Input size='s' type='number' min={0} max={99} value={line.length} className={cls.input} />
-							<AppSelect
-								// defaultValue={{ value: 0, label: 'd-1' }}
-								value={{ value: dir.index, label: dir.name }}
-								options={markupConfig.directs.map(item => ({ label: item.name, value: item.index }))}
-								onChange={value => {
-									if (!value) return
-									dispatch(
-										markupActions.bindLine({
-											dirIndex: dir.index,
-											lineIndex: line.index,
-											newDirIndex: value?.value,
-										})
-									)
-								}}
-							/>
-							<AiOutlineClose />
-						</HStack>
+						<div key={`${dir.index} ${line.index}`} className={cls.lineBlock}>
+							<HStack align='center' className={cls.lineTitle}>
+								<Text title='Полоса' />
+								<Input
+									size='s'
+									value={line.name}
+									className={cls.lineInput}
+									onChange={value => {
+										dispatch(
+											markupActions.setLineName({
+												dirIndex: dir.index - 1,
+												lineIndex: line.index - 1,
+												name: value,
+											})
+										)
+									}}
+								/>
+								<AiOutlineClose
+									className={cls.deleteIcon}
+									onClick={() => {
+										dispatch(
+											markupActions.deleteLine({ dirIndex: dir.index, lineIndex: line.index })
+										)
+									}}
+								/>
+							</HStack>
+							<HStack align='end' justify='start' gap='12'>
+								<Input
+									size='s'
+									type='number'
+									min={0}
+									max={99}
+									label={`От ${line.lengths[0].from_gate} до ${line.lengths[0].to_gate}`}
+									value={line.lengths[0].length}
+									className={cls.input}
+									onChange={value => {
+										dispatch(
+											markupActions.setLength({
+												dirIndex: dir.index - 1,
+												lineIndex: line.index - 1,
+												fromTo: 0,
+												length: +value,
+											})
+										)
+									}}
+								/>
+								<Input
+									size='s'
+									type='number'
+									min={0}
+									max={99}
+									label={`От ${line.lengths[1].from_gate} до ${line.lengths[1].to_gate}`}
+									value={line.lengths[1].length}
+									className={cls.input}
+									onChange={value => {
+										dispatch(
+											markupActions.setLength({
+												dirIndex: dir.index - 1,
+												lineIndex: line.index - 1,
+												fromTo: 1,
+												length: +value,
+											})
+										)
+									}}
+								/>
+								<AppSelect
+									value={{ value: dir.index, label: dir.name }}
+									options={markupConfig.zone.directs.map(item => ({
+										label: item.name,
+										value: item.index,
+									}))}
+									onChange={value => {
+										if (!value) return
+										dispatch(
+											markupActions.bindLine({
+												dirIndex: dir.index,
+												lineIndex: line.index,
+												newDirIndex: value?.value,
+											})
+										)
+									}}
+								/>
+							</HStack>
+						</div>
 					))
 				),
 			},
 		],
-		[dispatch, scale, videoSize, markupConfig]
+		[dispatch, markupConfig]
 	)
 
 	return (
 		<div>
 			<HStack className={cls.actions} gap='16'>
-				<Button size='m'>Сохранить</Button>
+				<Button size='m' onClick={sendMarkupConfigHandler}>
+					Сохранить
+				</Button>
 				<Button size='m' color='danger'>
 					Удалить
 				</Button>
 			</HStack>
 
 			{markupConfigBlocks.map(({ buttonAction, buttonTitle, configElement, title }) => (
-				<div key={title} className={cls.configBlock}>
+				<div key={title}>
 					<Text className={cls.header} title={title} size='s' bold />
 					<Button size='s' onClick={buttonAction} className={cls.button}>
 						{buttonTitle}

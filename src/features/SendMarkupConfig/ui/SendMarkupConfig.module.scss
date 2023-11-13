@@ -2,10 +2,6 @@
 	@apply mb-4;
 }
 
-.block {
-	@apply mb-6;
-}
-
 .header {
 	@apply pb-4 border-b border-dashed border-light mb-4;
 }
@@ -18,6 +14,18 @@
 	@apply w-auto;
 }
 
-.polygonTitle {
-	@apply inline-block bg-white border border-light rounded-lg py-1 px-4;
+.lineTitle {
+	@apply mb-4;
+}
+
+.lineInput {
+	@apply w-auto border-none text-xl decoration-dotted underline underline-offset-4 py-0 pl-2;
+}
+
+.deleteIcon {
+	@apply cursor-pointer;
+}
+
+.lineBlock {
+	@apply mb-8;
 }

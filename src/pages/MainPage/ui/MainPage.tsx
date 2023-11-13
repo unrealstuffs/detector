@@ -7,6 +7,7 @@ import { Sidebar } from 'widgets/Sidebar'
 import { VideoMarkup } from 'widgets/VideoMarkup'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 import { fetchVehicleTypes } from 'entities/TypesSelect/model/services/fetchVehicleTypes'
+import { getMarkupConfig } from 'features/SendMarkupConfig/model/services/getMarkupConfig'
 
 const MainPage = () => {
 	const { accessToken } = useTypedSelector(state => state.user)
@@ -15,18 +16,13 @@ const MainPage = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			await dispatch(getCameraConfig())
+			await dispatch(getMarkupConfig())
 			await dispatch(fetchVehicleTypes())
 		}
 		fetchData()
 	}, [accessToken, dispatch])
 
-	return (
-		<MainLayout
-			header={<Header />}
-			sidebar={<Sidebar />}
-			video={<VideoMarkup />}
-		/>
-	)
+	return <MainLayout header={<Header />} sidebar={<Sidebar />} video={<VideoMarkup />} />
 }
 
 export default MainPage

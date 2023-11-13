@@ -1,20 +1,35 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { MarkupConfig } from '../types/markupConfig'
+import { getMarkupConfig } from '../services/getMarkupConfig'
+import { sendMarkupConfig } from '../services/sendMarkupConfig'
+import { FetchStatus } from 'shared/types/FetchStatus'
 
 interface MarkupSchema {
 	markupConfig: MarkupConfig
+	status: FetchStatus
 }
 
 const initialState: MarkupSchema = {
+	status: 'init',
 	markupConfig: {
-		directs: [
-			{
-				index: 1,
-				name: 'd-1',
-				is_reverse: false,
-				lines: [],
-			},
-		],
+		version: 21,
+		uid: '00000000-0000-0000-0000-000000000000',
+		base_size: { width: 0, height: 0 },
+		zone: {
+			name: 'test',
+			index: 1,
+			type: 'edge',
+			description: '',
+			directs: [
+				{
+					index: 1,
+					name: 'd-1',
+					is_reverse: false,
+					description: '',
+					lines: [],
+				},
+			],
+		},
 	},
 }
 
@@ -22,83 +37,133 @@ const markupSlice = createSlice({
 	name: 'markup',
 	initialState,
 	reducers: {
-		addLine(
-			state,
-			action: PayloadAction<{
-				width: number
-				height: number
-				scale: number
-			}>
-		) {
-			const linesLength = state.markupConfig.directs[0].lines.length
-			const canvasMiddleX = action.payload.width / 2
-			const canvasMiddleY = action.payload.height / 2
-			const initialSize = action.payload.width / 7
+		addLine(state) {
+			const linesLength = state.markupConfig.zone.directs[0].lines.length
 
-			state.markupConfig.directs[0].lines.push({
+			state.markupConfig.zone.directs[0].lines.push({
 				index: linesLength + 1,
 				name: `l-${linesLength + 1}`,
+				description: '',
 				gates: [
 					{
 						index: 1,
+						type: '',
+						width_line: -1,
 						gate: [
-							{ index: 1, point: { x: canvasMiddleX - initialSize, y: canvasMiddleY - initialSize } },
-							{ index: 2, point: { x: canvasMiddleX + initialSize, y: canvasMiddleY - initialSize } },
+							{
+								index: 1,
+								point: { x: 40, y: 20 },
+							},
+							{
+								index: 2,
+								point: { x: 60, y: 20 },
+							},
 						],
 					},
 					{
 						index: 2,
+						type: '',
+						width_line: -1,
 						gate: [
 							{
 								index: 1,
-								point: { x: canvasMiddleX - initialSize, y: (canvasMiddleY * 2 - initialSize) / 2 },
+								point: { x: 40, y: 35 },
 							},
 							{
 								index: 2,
-								point: { x: canvasMiddleX + initialSize, y: (canvasMiddleY * 2 - initialSize) / 2 },
+								point: { x: 60, y: 35 },
 							},
 						],
 					},
 					{
 						index: 3,
+						type: '',
+						width_line: -1,
 						gate: [
 							{
 								index: 1,
-								point: { x: canvasMiddleX - initialSize, y: canvasMiddleY },
+								point: { x: 40, y: 50 },
 							},
 							{
 								index: 2,
-								point: { x: canvasMiddleX + initialSize, y: canvasMiddleY },
+								point: { x: 60, y: 50 },
 							},
 						],
 					},
 					{
 						index: 4,
+						type: '',
+						width_line: -1,
 						gate: [
 							{
 								index: 1,
-								point: { x: canvasMiddleX - initialSize, y: (canvasMiddleY * 2 + initialSize) / 2 },
+								point: { x: 40, y: 65 },
 							},
 							{
 								index: 2,
-								point: { x: canvasMiddleX + initialSize, y: (canvasMiddleY * 2 + initialSize) / 2 },
+								point: { x: 60, y: 65 },
 							},
 						],
 					},
 					{
 						index: 5,
+						type: '',
+						width_line: -1,
 						gate: [
-							{ index: 1, point: { x: canvasMiddleX - initialSize, y: canvasMiddleY + initialSize } },
-							{ index: 2, point: { x: canvasMiddleX + initialSize, y: canvasMiddleY + initialSize } },
+							{
+								index: 1,
+								point: { x: 40, y: 80 },
+							},
+							{
+								index: 2,
+								point: { x: 60, y: 80 },
+							},
 						],
 					},
 				],
-				length: 1,
+				lengths: [
+					{ index: 1, from_gate: 2, to_gate: 3, length: 1 },
+					{ index: 2, from_gate: 3, to_gate: 4, length: 1 },
+				],
 			})
 		},
+		setLength(
+			state,
+			action: PayloadAction<{ dirIndex: number; lineIndex: number; fromTo: number; length: number }>
+		) {
+			state.markupConfig.zone.directs[action.payload.dirIndex].lines[action.payload.lineIndex].lengths[
+				action.payload.fromTo
+			].length = action.payload.length
+		},
+		deleteLine(state, action: PayloadAction<{ dirIndex: number; lineIndex: number }>) {
+			state.markupConfig.zone.directs[action.payload.dirIndex - 1].lines.splice(action.payload.lineIndex - 1, 1)
+
+			state.markupConfig.zone.directs[action.payload.dirIndex - 1].lines.forEach((element, index) => {
+				element.index = index + 1
+			})
+		},
+		deleteDir(state, action: PayloadAction<{ dirIndex: number }>) {
+			if (state.markupConfig.zone.directs.length === 1) {
+				return
+			}
+			state.markupConfig.zone.directs.splice(action.payload.dirIndex - 1, 1)
+
+			state.markupConfig.zone.directs.forEach((element, index) => {
+				element.index = index + 1
+			})
+		},
+		setLineName(state, action: PayloadAction<{ dirIndex: number; lineIndex: number; name: string }>) {
+			state.markupConfig.zone.directs[action.payload.dirIndex].lines[action.payload.lineIndex].name =
+				action.payload.name
+		},
+		setDirName(state, action: PayloadAction<{ dirIndex: number; name: string }>) {
+			state.markupConfig.zone.directs[action.payload.dirIndex].name = action.payload.name
+		},
 		bindLine(state, action: PayloadAction<{ dirIndex: number; newDirIndex: number; lineIndex: number }>) {
-			const sourceArray = state.markupConfig.directs[action.payload.dirIndex - 1].lines
-			const targetArray = state.markupConfig.directs[action.payload.newDirIndex - 1].lines
+			const sourceDir = state.markupConfig.zone.directs[action.payload.dirIndex - 1]
+			const targetDir = state.markupConfig.zone.directs[action.payload.newDirIndex - 1]
+			const sourceArray = state.markupConfig.zone.directs[action.payload.dirIndex - 1].lines
+			const targetArray = state.markupConfig.zone.directs[action.payload.newDirIndex - 1].lines
 
 			const elementToMoveIndex = sourceArray.findIndex(element => element.index === action.payload.lineIndex)
 
@@ -109,6 +174,15 @@ const markupSlice = createSlice({
 
 				// Update the index of the moved element
 				elementToMove.index = targetArray.length + 1
+
+				if (
+					(sourceDir.is_reverse && !targetDir.is_reverse) ||
+					(!sourceDir.is_reverse && targetDir.is_reverse)
+				) {
+					elementToMove.gates.reverse().forEach((gate, index) => {
+						gate.index = index + 1
+					})
+				}
 
 				// Add the element to the target array
 				targetArray.push(elementToMove)
@@ -130,19 +204,61 @@ const markupSlice = createSlice({
 				pointIndex: number
 			}>
 		) {
-			state.markupConfig.directs[action.payload.dirIndex - 1].lines[action.payload.lineIndex - 1].gates[
+			state.markupConfig.zone.directs[action.payload.dirIndex - 1].lines[action.payload.lineIndex - 1].gates[
 				action.payload.gateIndex - 1
 			].gate[action.payload.pointIndex - 1].point = { x: action.payload.x, y: action.payload.y }
 		},
+		editGates(
+			state,
+			action: PayloadAction<{
+				x: number
+				y: number
+				dirIndex: number
+				lineIndex: number
+			}>
+		) {
+			state.markupConfig.zone.directs[action.payload.dirIndex - 1].lines[
+				action.payload.lineIndex - 1
+			].gates.forEach(gate => {
+				gate.gate.forEach(point => {
+					point.point.x += action.payload.x
+					point.point.y += action.payload.y
+				})
+			})
+		},
 		addDirection(state) {
-			const directsLength = state.markupConfig.directs.length
-			state.markupConfig.directs.push({
+			const directsLength = state.markupConfig.zone.directs.length
+			state.markupConfig.zone.directs.push({
 				index: directsLength + 1,
 				name: `d-${directsLength + 1}`,
+				description: '',
 				is_reverse: false,
 				lines: [],
 			})
 		},
+		setDirection(state, action: PayloadAction<{ dirIndex: number; isReverse: boolean }>) {
+			state.markupConfig.zone.directs[action.payload.dirIndex - 1].is_reverse = action.payload.isReverse
+		},
+		deleteMarkup(state) {
+			state.markupConfig = initialState.markupConfig
+		},
+	},
+	extraReducers: builder => {
+		builder.addCase(getMarkupConfig.fulfilled, (state, action) => {
+			state.markupConfig = action.payload
+		})
+		builder.addCase(getMarkupConfig.rejected, state => {
+			state.markupConfig = initialState.markupConfig
+		})
+		builder.addCase(sendMarkupConfig.pending, state => {
+			state.status = 'loading'
+		})
+		builder.addCase(sendMarkupConfig.fulfilled, state => {
+			state.status = 'success'
+		})
+		builder.addCase(sendMarkupConfig.rejected, state => {
+			state.status = 'error'
+		})
 	},
 })
 
