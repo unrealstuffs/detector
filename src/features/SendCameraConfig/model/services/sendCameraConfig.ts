@@ -24,15 +24,18 @@ export const sendCameraConfig = createAsyncThunk<any, void, ThunkConfig<any>>(
 		} = getState()
 
 		try {
+			const dynamicRequests = []
+
+			if (cameraConfig.zoom) {
+				dynamicRequests.push(fetchData({ ZOOM: cameraConfig.zoom }, `${accessToken}`))
+			}
+
+			if (cameraConfig.focus) {
+				dynamicRequests.push(fetchData({ FOCUS: cameraConfig.focus }, `${accessToken}`))
+			}
+
 			const responses: ServerResponse<any>[] = await Promise.all([
-<<<<<<< HEAD
-				fetchData({ ZOOM: cameraConfig.zoom }, `${accessToken}`),
-				fetchData({ FOCUS: cameraConfig.focus }, `${accessToken}`),
-				fetchData({ SERVO_X: cameraConfig.servoX }, `${accessToken}`),
-				fetchData({ SERVO_Y: cameraConfig.servoY }, `${accessToken}`),
-=======
 				...dynamicRequests,
->>>>>>> no-servo
 				fetchData({ IR_CUT: cameraConfig.filter === true ? 'on' : 'off' }, `${accessToken}`),
 			])
 
