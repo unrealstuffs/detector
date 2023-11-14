@@ -16,8 +16,8 @@ export const VideoMarkup = (props: VideoMarkupProps) => {
 	const isDev = process.env.NODE_ENV === 'development'
 	const devSrc = '/assets/videoplayback.mp4'
 	const randomGetParameter = Math.round(Math.random() * 1000)
-	// const prodSrc = `http://${window.location.host}/hls/mq/index.m3u8?reset=${randomGetParameter}`
-	const prodSrc = `http://${window.location.host}/pipeline-stream?reset=${randomGetParameter}`
+	const prodSrc = `http://${window.location.host}/hls/mq/index.m3u8?reset=${randomGetParameter}`
+	// const prodSrc = `http://${window.location.host}/pipeline-stream?reset=${randomGetParameter}`
 
 	return (
 		<div className={classNames(cls.VideoMarkup, {}, [className])}>

@@ -115,7 +115,7 @@ export const SendMarkupConfig = () => {
 									type='number'
 									min={0}
 									max={99}
-									label={`От ${line.lengths[0].from_gate} до ${line.lengths[0].to_gate}`}
+									label={`От g-${line.lengths[0].from_gate} до g-${line.lengths[0].to_gate} (м)`}
 									value={line.lengths[0].length}
 									className={cls.input}
 									onChange={value => {
@@ -134,7 +134,7 @@ export const SendMarkupConfig = () => {
 									type='number'
 									min={0}
 									max={99}
-									label={`От ${line.lengths[1].from_gate} до ${line.lengths[1].to_gate}`}
+									label={`От g-${line.lengths[1].from_gate} до g-${line.lengths[1].to_gate} (м)`}
 									value={line.lengths[1].length}
 									className={cls.input}
 									onChange={value => {

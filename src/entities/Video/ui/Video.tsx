@@ -5,6 +5,7 @@ import { classNames } from 'shared/lib/classNames'
 import cls from './Video.module.scss'
 import { useTypedSelector } from 'shared/hooks/useTypedSelector'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
+import ReactHlsPlayer from 'react-hls-player'
 
 interface VideoProps {
 	src: string
@@ -60,8 +61,6 @@ export const Video = (props: VideoProps) => {
 			video?.pause()
 		}
 		if (tab !== 'shot' && video?.paused) {
-			dispatch(videoActions.setStatus('loading'))
-			video.load()
 			video.play()
 		}
 	}, [tab, dispatch])
@@ -69,8 +68,6 @@ export const Video = (props: VideoProps) => {
 	return (
 		<div className={classNames(cls.Video, {}, [className])}>
 			{status === 'loading' && <Loader className={cls.loader} />}
-
-			<video ref={videoRef} src={src} autoPlay={true} muted controls={false} width='100%' height='auto' loop />
 
 			{/* <ReactHlsPlayer
 				playerRef={videoRef}
@@ -81,6 +78,7 @@ export const Video = (props: VideoProps) => {
 				width='100%'
 				height='auto'
 			/> */}
+			<video ref={videoRef} src={src} autoPlay={true} muted controls={false} width='100%' height='auto' />
 		</div>
 	)
 }

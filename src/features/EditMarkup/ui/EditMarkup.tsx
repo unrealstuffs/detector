@@ -130,11 +130,29 @@ export const EditMarkup = () => {
 										<Fragment key={`${direct.index} ${line.index} ${gate.index} ${point.index}`}>
 											{gate.index === 3 && (
 												<Text
-													x={getValueByPercent(gate.gate[0].point.x + 2, videoSize.width)}
-													y={getValueByPercent(gate.gate[0].point.y, videoSize.height)}
-													text={`${line.name} id-${line.index}`}
+													x={getValueByPercent(gate.gate[0].point.x, videoSize.width)}
+													y={getValueByPercent(gate.gate[0].point.y - 4, videoSize.height)}
+													text={`${line.name} id-${line.index} g-3`}
 													fontSize={labelFontSize}
 													fill={colors.conterColor}
+												/>
+											)}
+											{gate.index === 2 && (
+												<Text
+													x={getValueByPercent(gate.gate[0].point.x, videoSize.width)}
+													y={getValueByPercent(gate.gate[0].point.y - 4, videoSize.height)}
+													text='g-2'
+													fontSize={labelFontSize}
+													fill={colors.zoneColor}
+												/>
+											)}
+											{gate.index === 4 && (
+												<Text
+													x={getValueByPercent(gate.gate[0].point.x, videoSize.width)}
+													y={getValueByPercent(gate.gate[0].point.y - 4, videoSize.height)}
+													text='g-4'
+													fontSize={labelFontSize}
+													fill={colors.zoneColor}
 												/>
 											)}
 											<Circle
