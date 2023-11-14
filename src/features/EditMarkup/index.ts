@@ -1,1 +1,1 @@
-export { EditMarkup } from './ui/EditMarkup/EditMarkup'
+export { EditMarkup } from './ui/EditMarkup'

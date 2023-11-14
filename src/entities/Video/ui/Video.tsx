@@ -25,15 +25,32 @@ export const Video = (props: VideoProps) => {
 			dispatch(videoActions.setStatus('success'))
 			dispatch(
 				videoActions.setVideoSize({
-					width: video.videoWidth,
-					height: video.videoHeight,
+					width: video.offsetWidth,
+					height: video.offsetHeight,
 				})
 			)
-			dispatch(videoActions.setScale(video?.offsetWidth / video?.videoWidth))
 		})
 
 		return () => {
 			video?.removeEventListener('loadedmetadata', () => {})
+		}
+	}, [dispatch])
+
+	useEffect(() => {
+		const video = videoRef.current
+		if (!video) return
+
+		window.addEventListener('resize', () => {
+			dispatch(
+				videoActions.setVideoSize({
+					width: video.offsetWidth,
+					height: video.offsetHeight,
+				})
+			)
+		})
+
+		return () => {
+			window.removeEventListener('resize', () => {})
 		}
 	}, [dispatch])
 
@@ -52,6 +69,16 @@ export const Video = (props: VideoProps) => {
 		<div className={classNames(cls.Video, {}, [className])}>
 			{status === 'loading' && <Loader className={cls.loader} />}
 
+			{/* <ReactHlsPlayer
+				playerRef={videoRef}
+				src={src}
+				autoPlay={true}
+				muted
+				controls={false}
+				width='100%'
+				height='auto'
+			/> */}
+			<video ref={videoRef} src={src} autoPlay={true} muted controls={false} width='100%' height='auto' />
 			<video ref={videoRef} src={src} autoPlay width='100%' loop muted />
 		</div>
 	)

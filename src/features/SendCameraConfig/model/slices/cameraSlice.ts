@@ -2,15 +2,13 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { CameraSchema } from '../types/CameraSchema'
 import { getCameraConfig } from '../services/getCameraConfig'
 import { sendCameraConfig } from '../services/sendCameraConfig'
+import { sendRestartCamera } from '../services/sendRestartCamera'
 
 const initialState: CameraSchema = {
 	cameraConfig: {
-		dryCont: true,
 		filter: false,
-		zoom: 0,
-		servoX: 85,
-		servoY: 85,
-		focus: 0,
+		zoom: null,
+		focus: null,
 	},
 	status: 'init',
 }
@@ -19,20 +17,11 @@ const cameraSlice = createSlice({
 	name: 'camera',
 	initialState,
 	reducers: {
-		setDryCont: (state, action: PayloadAction<boolean>) => {
-			state.cameraConfig.dryCont = action.payload
-		},
 		setFilter: (state, action: PayloadAction<boolean>) => {
 			state.cameraConfig.filter = action.payload
 		},
 		setZoom: (state, action) => {
 			state.cameraConfig.zoom = action.payload
-		},
-		setServoX: (state, action) => {
-			state.cameraConfig.servoX = action.payload
-		},
-		setServoY: (state, action) => {
-			state.cameraConfig.servoY = action.payload
 		},
 		setFocus: (state, action) => {
 			state.cameraConfig.focus = action.payload
@@ -40,7 +29,7 @@ const cameraSlice = createSlice({
 	},
 	extraReducers: builder => {
 		builder.addCase(getCameraConfig.fulfilled, (state, action) => {
-			state.cameraConfig = action.payload
+			state.cameraConfig.filter = action.payload.filter
 		})
 		builder.addCase(sendCameraConfig.pending, state => {
 			state.status = 'loading'
@@ -49,6 +38,15 @@ const cameraSlice = createSlice({
 			state.status = 'success'
 		})
 		builder.addCase(sendCameraConfig.rejected, state => {
+			state.status = 'error'
+		})
+		builder.addCase(sendRestartCamera.pending, state => {
+			state.status = 'loading'
+		})
+		builder.addCase(sendRestartCamera.fulfilled, state => {
+			state.status = 'success'
+		})
+		builder.addCase(sendRestartCamera.rejected, state => {
 			state.status = 'error'
 		})
 	},

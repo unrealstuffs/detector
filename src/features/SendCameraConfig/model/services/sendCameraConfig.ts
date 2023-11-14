@@ -8,6 +8,7 @@ async function fetchData(body: { [key: string]: number | string }, accessToken: 
 		body: JSON.stringify(body),
 		headers: {
 			Authorization: accessToken,
+			'Content-Type': 'application/json',
 		},
 	})
 	const responseData: ServerResponse<any> = await response.json()
@@ -24,10 +25,14 @@ export const sendCameraConfig = createAsyncThunk<any, void, ThunkConfig<any>>(
 
 		try {
 			const responses: ServerResponse<any>[] = await Promise.all([
+<<<<<<< HEAD
 				fetchData({ ZOOM: cameraConfig.zoom }, `${accessToken}`),
 				fetchData({ FOCUS: cameraConfig.focus }, `${accessToken}`),
 				fetchData({ SERVO_X: cameraConfig.servoX }, `${accessToken}`),
 				fetchData({ SERVO_Y: cameraConfig.servoY }, `${accessToken}`),
+=======
+				...dynamicRequests,
+>>>>>>> no-servo
 				fetchData({ IR_CUT: cameraConfig.filter === true ? 'on' : 'off' }, `${accessToken}`),
 			])
 

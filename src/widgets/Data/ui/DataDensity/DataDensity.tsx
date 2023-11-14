@@ -9,10 +9,8 @@ import { SearchDensity } from 'features/Search'
 import { fetchDensity } from '../../model/api/fetchDensity'
 
 export const DataDensity = () => {
-	const { data, status, tableRows, blockFetching } = useTypedSelector(
-		state => state.density
-	)
-	const { configuration } = useTypedSelector(state => state.markup)
+	const { data, status, tableRows, blockFetching } = useTypedSelector(state => state.density)
+	const { markupConfig } = useTypedSelector(state => state.markup)
 	const dispatch = useAppDispatch()
 
 	useEffect(() => {
@@ -29,9 +27,7 @@ export const DataDensity = () => {
 
 	return (
 		<DataContainer
-			onChangeRowsCount={value =>
-				dispatch(densityActions.setTableRows(value))
-			}
+			onChangeRowsCount={value => dispatch(densityActions.setTableRows(value))}
 			searchForm={<SearchDensity />}
 			title='Плотность движения'
 			tooltipId='density'
@@ -43,34 +39,21 @@ export const DataDensity = () => {
 						Header: 'Время',
 						id: 'timestamp',
 						accessor: (d: any) => {
-							return dayjs(d.timestamp).format(
-								'DD-MM-YY HH:mm:ss'
-							)
+							return dayjs(d.timestamp).format('DD-MM-YY HH:mm:ss')
 						},
 					},
-
 					{
 						Header: 'Направление',
 						accessor: (d: any) => {
-							if (!configuration[d.direction]) {
-								return 'Не определено'
-							}
-							if (configuration[d.direction].reverseDirection) {
-								return 'Обратное'
-							}
-							return 'Прямое'
+							return markupConfig?.zone.directs[d.direction - 1]?.name || 'Не определено'
 						},
 					},
 					{
 						Header: 'Полоса',
 						accessor: (d: any) => {
-							if (d.line) {
-								let lineArray = d.line.split('_')
-								let lineName = `l-${++lineArray[1]}`
-								return lineName
-							} else {
-								return d.line
-							}
+							return (
+								markupConfig?.zone.directs[d.direction - 1]?.lines[d.line - 1]?.name || 'Не определено'
+							)
 						},
 					},
 					{ Header: 'Плотность движения', accessor: 'density' },

@@ -2,7 +2,6 @@ import { ReactNode } from 'react'
 import { Tabs } from '../slices/tabsSlice'
 import { SendCameraConfig } from 'features/SendCameraConfig'
 import { SendDbConfig } from 'features/SendDbConfig'
-import { SendMarkupConfig } from 'features/SendMarkupConfig'
 import {
 	DataAvgDelay,
 	DataAvgSpeed,
@@ -11,6 +10,7 @@ import {
 } from 'widgets/Data'
 import { DataComposition } from 'widgets/Data/ui/DataComposition/DataComposition'
 import { DataIntensity } from 'widgets/Data/ui/DataIntensity/DataIntensity'
+import { SendMarkupConfig } from 'features/SendMarkupConfig'
 
 interface SidebarPages {
 	tabName: Tabs
@@ -43,7 +43,10 @@ export const sidebarPages: SidebarPages[] = [
 		title: 'Настройки',
 		blocks: [
 			{ header: 'Настройки камеры', element: <SendCameraConfig /> },
-			{ header: 'Параметры репликации на удаленную базу данных', element: <SendDbConfig /> },
+			{
+				header: 'Параметры репликации на удаленную базу данных',
+				element: <SendDbConfig />,
+			},
 		],
 	},
 	{
@@ -51,7 +54,7 @@ export const sidebarPages: SidebarPages[] = [
 		title: 'Стоп-кадр',
 		blocks: [
 			{
-				header: 'Настройки зон детектирования',
+				header: 'Настройки разметки',
 				element: <SendMarkupConfig />,
 			},
 		],

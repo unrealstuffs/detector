@@ -126,13 +126,13 @@ export const SendDbConfig = (props: SendDbConfigProps) => {
 					</div>
 				</div>
 				<HStack gap='12' align='center'>
-					<Button disabled={status === 'loading'} size='l' type='submit'>
+					<Button disabled={status === 'loading'} size='m' type='submit'>
 						Сохранить
 					</Button>
 					<Button
 						color='danger'
 						disabled={status === 'loading'}
-						size='l'
+						size='m'
 						onClick={deleteDbReplicationHandler}
 					>
 						Удалить

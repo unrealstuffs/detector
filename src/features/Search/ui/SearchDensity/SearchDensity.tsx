@@ -10,12 +10,12 @@ import { searchDensity } from 'widgets/Data/model/api/searchDensity'
 import { densityActions } from 'widgets/Data/model/slices/densitySlice'
 import AppSelect from 'shared/ui/AppSelect/AppSelect'
 import { getLineOptions } from 'features/Search/model/services/getLineOptions'
-import { getDirectionsOptions } from 'features/Search/model/services/getDirectionsOptions'
+import { getDirectionsOptions } from 'features/Search/model/services/getDirOptions'
 
 export const SearchDensity = () => {
 	const datePickersRef = useRef<{ clear: () => void }>()
 	const { searchObject, status } = useTypedSelector(state => state.density)
-	const { configuration } = useTypedSelector(state => state.markup)
+	const { markupConfig } = useTypedSelector(state => state.markup)
 
 	const dispatch = useAppDispatch()
 
@@ -30,10 +30,7 @@ export const SearchDensity = () => {
 	}
 
 	const sendSearchHandler = () => {
-		if (
-			!searchObject.timestampRange.from ||
-			!searchObject.timestampRange.to
-		) {
+		if (!searchObject.timestampRange.from || !searchObject.timestampRange.to) {
 			return
 		}
 		dispatch(searchDensity(searchObject))
@@ -48,18 +45,14 @@ export const SearchDensity = () => {
 				defaultDateTo={searchObject.timestampRange.to}
 				resetSearchHandler={resetSearchHandler}
 				searchHandler={sendSearchHandler}
-				setTimestampFrom={date =>
-					dispatch(densityActions.setTimestampRangeFrom(date))
-				}
-				setTimestampTo={date =>
-					dispatch(densityActions.setTimestampRangeTo(date))
-				}
+				setTimestampFrom={date => dispatch(densityActions.setTimestampRangeFrom(date))}
+				setTimestampTo={date => dispatch(densityActions.setTimestampRangeTo(date))}
 			/>
 			<SearchFields>
 				<AppSelect
 					isMulti
 					placeholder='Все полосы'
-					options={getLineOptions(configuration)}
+					options={getLineOptions(markupConfig)}
 					onChange={values => {
 						const lines = values.map(val => val.value)
 						dispatch(densityActions.setLines(lines))
@@ -68,7 +61,7 @@ export const SearchDensity = () => {
 				<AppSelect
 					isMulti
 					placeholder='Все направления'
-					options={getDirectionsOptions(configuration)}
+					options={getDirectionsOptions(markupConfig)}
 					onChange={values => {
 						const directions = values.map(val => val.value)
 						dispatch(densityActions.setDirections(directions))
@@ -80,9 +73,7 @@ export const SearchDensity = () => {
 						type='number'
 						placeholder='Плотность...'
 						value={searchObject.density.value}
-						onChange={value =>
-							dispatch(densityActions.setDensityValue(value))
-						}
+						onChange={value => dispatch(densityActions.setDensityValue(value))}
 					/>
 					<AppSelect
 						options={[
@@ -94,9 +85,7 @@ export const SearchDensity = () => {
 						onChange={value => {
 							if (!value) return
 							const { value: statement } = value
-							dispatch(
-								densityActions.setDensityStatement(statement)
-							)
+							dispatch(densityActions.setDensityStatement(statement))
 						}}
 						styles={{
 							container: styles => ({ ...styles, width: '100%' }),

@@ -1,7 +1,6 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { tabsReducer } from 'widgets/Sidebar'
 import { userReducer } from 'entities/User'
-import { markupReducer } from 'features/SendMarkupConfig'
 import { cameraReducer } from 'features/SendCameraConfig'
 import { databaseReducer } from 'features/SendDbConfig'
 import { videoReducer } from 'entities/Video'
@@ -15,13 +14,14 @@ import {
 } from 'widgets/Data'
 import { detectorNameReducer } from 'entities/AppTitle'
 import { vehicleTypeReducer } from 'entities/TypesSelect'
+import { markupReducer } from 'features/SendMarkupConfig'
 
 const rootReducer = combineReducers({
 	user: userReducer,
 	detectorName: detectorNameReducer,
-	markup: markupReducer,
 	camera: cameraReducer,
 	database: databaseReducer,
+	markup: markupReducer,
 	tabs: tabsReducer,
 	video: videoReducer,
 	types: typesReducer,

@@ -10,12 +10,12 @@ import { HStack } from 'shared/ui/Stack/HStack/HStack'
 import { Input } from 'shared/ui/Input/Input'
 import AppSelect from 'shared/ui/AppSelect/AppSelect'
 import { getLineOptions } from 'features/Search/model/services/getLineOptions'
-import { getDirectionsOptions } from 'features/Search/model/services/getDirectionsOptions'
+import { getDirectionsOptions } from 'features/Search/model/services/getDirOptions'
 
 export const SearchAvgSpeed = () => {
 	const datePickersRef = useRef<{ clear: () => void }>()
 	const { searchObject, status } = useTypedSelector(state => state.avgSpeed)
-	const { configuration } = useTypedSelector(state => state.markup)
+	const { markupConfig } = useTypedSelector(state => state.markup)
 
 	const dispatch = useAppDispatch()
 
@@ -30,10 +30,7 @@ export const SearchAvgSpeed = () => {
 	}
 
 	const sendSearchHandler = () => {
-		if (
-			!searchObject.timestampRange.from ||
-			!searchObject.timestampRange.to
-		) {
+		if (!searchObject.timestampRange.from || !searchObject.timestampRange.to) {
 			return
 		}
 		dispatch(searchAvgSpeed(searchObject))
@@ -48,18 +45,14 @@ export const SearchAvgSpeed = () => {
 				defaultDateTo={searchObject.timestampRange.to}
 				resetSearchHandler={resetSearchHandler}
 				searchHandler={sendSearchHandler}
-				setTimestampFrom={date =>
-					dispatch(avgSpeedActions.setTimestampRangeFrom(date))
-				}
-				setTimestampTo={date =>
-					dispatch(avgSpeedActions.setTimestampRangeTo(date))
-				}
+				setTimestampFrom={date => dispatch(avgSpeedActions.setTimestampRangeFrom(date))}
+				setTimestampTo={date => dispatch(avgSpeedActions.setTimestampRangeTo(date))}
 			/>
 			<SearchFields>
 				<AppSelect
 					isMulti
 					placeholder='Все полосы'
-					options={getLineOptions(configuration)}
+					options={getLineOptions(markupConfig)}
 					onChange={values => {
 						const lines = values.map(val => val.value)
 						dispatch(avgSpeedActions.setLines(lines))
@@ -68,7 +61,7 @@ export const SearchAvgSpeed = () => {
 				<AppSelect
 					isMulti
 					placeholder='Все направления'
-					options={getDirectionsOptions(configuration)}
+					options={getDirectionsOptions(markupConfig)}
 					onChange={values => {
 						const directions = values.map(val => val.value)
 						dispatch(avgSpeedActions.setDirections(directions))
@@ -80,9 +73,7 @@ export const SearchAvgSpeed = () => {
 						type='number'
 						placeholder='Средняя скорость...'
 						value={searchObject.avgSpeed.value}
-						onChange={value =>
-							dispatch(avgSpeedActions.setAvgSpeedValue(value))
-						}
+						onChange={value => dispatch(avgSpeedActions.setAvgSpeedValue(value))}
 					/>
 					<AppSelect
 						options={[
@@ -94,9 +85,7 @@ export const SearchAvgSpeed = () => {
 						onChange={value => {
 							if (!value) return
 							const { value: statement } = value
-							dispatch(
-								avgSpeedActions.setAvgSpeedStatement(statement)
-							)
+							dispatch(avgSpeedActions.setAvgSpeedStatement(statement))
 						}}
 						styles={{
 							container: styles => ({ ...styles, width: '100%' }),

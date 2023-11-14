@@ -1,4 +1,5 @@
-import { MarkupConfig } from 'shared/types/MarkupConfig'
+import { MarkupConfig } from 'features/SendMarkupConfig/model/types/markupConfig'
+
 interface LineOptions {
 	value: string
 	label: string
@@ -8,17 +9,15 @@ interface LineOptions {
 export const getLineOptions = (config: MarkupConfig) => {
 	const options: LineOptions[] = []
 
-	Object.keys(config).forEach((z, zIndex) => {
-		Object.keys(config[z].s).forEach((l, lIndex) => {
+	config.zone.directs.forEach(dir => {
+		dir.lines.forEach(line => {
 			options.push({
-				value: l,
-				title: `d-${zIndex + 1} l-${lIndex + 1}`,
-				label: `l-${lIndex + 1}`,
+				value: line.index.toString(),
+				title: line.name,
+				label: line.name,
 			})
 		})
 	})
 
-	return options.filter((obj, index) => {
-		return index === options.findIndex(o => obj.value === o.value)
-	})
+	return options
 }

@@ -10,6 +10,9 @@
 	&.transparent {
 		@apply bg-transparent text-dark;
 	}
+	&.light {
+		@apply bg-secondary hover:bg-opacity-80;
+	}
 	&.s {
 		@apply text-sm px-2 py-1 rounded-md;
 	}

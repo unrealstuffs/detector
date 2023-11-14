@@ -11,15 +11,13 @@ import SearchFields from '../common/SearchFields/SearchFields'
 import IntervalConverter from './IntervalConverter'
 import AppSelect from 'shared/ui/AppSelect/AppSelect'
 import { getLineOptions } from 'features/Search/model/services/getLineOptions'
-import { getDirectionsOptions } from 'features/Search/model/services/getDirectionsOptions'
+import { getDirectionsOptions } from 'features/Search/model/services/getDirOptions'
 
 export const SearchComposition = () => {
 	const datePickersRef = useRef<{ clear: () => void }>()
-	const { searchObject, status } = useTypedSelector(
-		state => state.composition
-	)
-	const { configuration } = useTypedSelector(state => state.markup)
+	const { searchObject, status } = useTypedSelector(state => state.composition)
 	const { vehicleTypes } = useTypedSelector(state => state.vehicleTypes)
+	const { markupConfig } = useTypedSelector(state => state.markup)
 
 	const dispatch = useAppDispatch()
 
@@ -34,10 +32,7 @@ export const SearchComposition = () => {
 	}
 
 	const sendSearchHandler = () => {
-		if (
-			!searchObject.timestampRange.from ||
-			!searchObject.timestampRange.to
-		) {
+		if (!searchObject.timestampRange.from || !searchObject.timestampRange.to) {
 			return
 		}
 		dispatch(searchComposition(searchObject))
@@ -52,19 +47,15 @@ export const SearchComposition = () => {
 				defaultDateTo={searchObject.timestampRange.to}
 				resetSearchHandler={resetSearchHandler}
 				searchHandler={sendSearchHandler}
-				setTimestampFrom={date =>
-					dispatch(compositionActions.setTimestampRangeFrom(date))
-				}
-				setTimestampTo={date =>
-					dispatch(compositionActions.setTimestampRangeTo(date))
-				}
+				setTimestampFrom={date => dispatch(compositionActions.setTimestampRangeFrom(date))}
+				setTimestampTo={date => dispatch(compositionActions.setTimestampRangeTo(date))}
 			/>
 			<SearchFields>
 				<IntervalConverter />
 				<AppSelect
 					isMulti
 					placeholder='Все полосы'
-					options={getLineOptions(configuration)}
+					options={getLineOptions(markupConfig)}
 					onChange={values => {
 						const lines = values.map(val => val.value)
 						dispatch(compositionActions.setLines(lines))
@@ -73,7 +64,7 @@ export const SearchComposition = () => {
 				<AppSelect
 					isMulti
 					placeholder='Все направления'
-					options={getDirectionsOptions(configuration)}
+					options={getDirectionsOptions(markupConfig)}
 					onChange={values => {
 						const directions = values.map(val => val.value)
 						dispatch(compositionActions.setDirections(directions))
@@ -88,9 +79,7 @@ export const SearchComposition = () => {
 					}))}
 					onChange={values => {
 						const vehicleTypes = values.map(val => val.value)
-						dispatch(
-							compositionActions.setVehicleTypes(vehicleTypes)
-						)
+						dispatch(compositionActions.setVehicleTypes(vehicleTypes))
 					}}
 				/>
 				<HStack gap='8' align='stretch'>
@@ -99,9 +88,7 @@ export const SearchComposition = () => {
 						type='number'
 						placeholder='Количество...'
 						value={searchObject.quantity.value}
-						onChange={value =>
-							dispatch(compositionActions.setQuantityValue(value))
-						}
+						onChange={value => dispatch(compositionActions.setQuantityValue(value))}
 					/>
 					<AppSelect
 						options={[
@@ -113,11 +100,7 @@ export const SearchComposition = () => {
 						onChange={value => {
 							if (!value) return
 							const { value: statement } = value
-							dispatch(
-								compositionActions.setQuantityStatement(
-									statement
-								)
-							)
+							dispatch(compositionActions.setQuantityStatement(statement))
 						}}
 						styles={{
 							container: styles => ({ ...styles, width: '100%' }),
