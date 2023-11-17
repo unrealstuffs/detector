@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes, FC, ReactNode } from 'react'
 import cls from './Button.module.scss'
 import { classNames } from 'shared/lib/classNames'
 
-export type ButtonColor = 'primary' | 'danger' | 'transparent' | 'light'
+export type ButtonColor = 'primary' | 'danger' | 'transparent' | 'light' | 'outline'
 export type ButtonSize = 's' | 'm' | 'l'
 export type ButtonVariant = 'normal' | 'squared'
 

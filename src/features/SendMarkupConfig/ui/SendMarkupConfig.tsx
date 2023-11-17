@@ -2,7 +2,7 @@ import { HStack } from 'shared/ui/Stack/HStack/HStack'
 import cls from './SendMarkupConfig.module.scss'
 import Button from 'shared/ui/Button/Button'
 import { Input } from 'shared/ui/Input/Input'
-import { AiOutlineClose, AiOutlineGateway } from 'react-icons/ai'
+import { AiOutlineClose } from 'react-icons/ai'
 import Checkbox from 'shared/ui/Checkbox/Checkbox'
 import { useTypedSelector } from 'shared/hooks/useTypedSelector'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
@@ -12,6 +12,7 @@ import { Text } from 'shared/ui/Text/Text'
 import AppSelect from 'shared/ui/AppSelect/AppSelect'
 import { sendMarkupConfig } from '../model/services/sendMarkupConfig'
 import toast from 'react-hot-toast'
+import Mods from './Mods/Mods'
 
 export const SendMarkupConfig = () => {
 	const { markupConfig, status } = useTypedSelector(state => state.markup)
@@ -165,18 +166,6 @@ export const SendMarkupConfig = () => {
 										)
 									}}
 								/>
-								<Button
-									onClick={() =>
-										dispatch(
-											markupActions.alignGates({ dirIndex: dir.index, lineIndex: line.index })
-										)
-									}
-									variant='squared'
-									color='light'
-									className={cls.alignButton}
-								>
-									<AiOutlineGateway size={22} />
-								</Button>
 							</HStack>
 						</div>
 					))
@@ -188,13 +177,16 @@ export const SendMarkupConfig = () => {
 
 	return (
 		<div>
-			<HStack className={cls.actions} gap='16'>
-				<Button size='m' onClick={sendMarkupConfigHandler} disabled={status === 'loading'}>
-					Сохранить
-				</Button>
-				<Button size='m' color='danger' onClick={() => dispatch(markupActions.deleteMarkup())}>
-					Удалить
-				</Button>
+			<HStack align='end' justify='between' className={cls.buttons}>
+				<HStack gap='8'>
+					<Button size='m' onClick={sendMarkupConfigHandler} disabled={status === 'loading'}>
+						Сохранить
+					</Button>
+					<Button size='m' color='danger' onClick={() => dispatch(markupActions.deleteMarkup())}>
+						Удалить
+					</Button>
+				</HStack>
+				<Mods />
 			</HStack>
 
 			{markupConfigBlocks.map(({ buttonAction, buttonTitle, configElement, title }) => (

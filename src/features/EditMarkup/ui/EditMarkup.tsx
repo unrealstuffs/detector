@@ -1,4 +1,4 @@
-import { Fragment, useEffect } from 'react'
+import { Fragment } from 'react'
 import { markupActions } from 'features/SendMarkupConfig'
 import { KonvaEventObject } from 'konva/lib/Node'
 import { Circle, Group, Layer, Line, Stage, Text } from 'react-konva'
@@ -11,13 +11,12 @@ import { getPercentOfValue } from 'shared/lib/getPercentOfValue'
 
 export const EditMarkup = () => {
 	const { videoSize } = useTypedSelector(state => state.video)
-	const { markupConfig, shiftPressed } = useTypedSelector(state => state.markup)
+	const { markupConfig, shiftPressed, ctrlPressed } = useTypedSelector(state => state.markup)
 	const { tab } = useTypedSelector(state => state.tabs)
 
 	const dispatch = useAppDispatch()
 
 	const onDragMove = (e: KonvaEventObject<DragEvent>, dir: number, line: number, gate: number, point: number) => {
-		e.cancelBubble = true
 		const pos = e.target.getAbsolutePosition()
 		const box = e.target.getStage()
 		if (!box) return
@@ -49,6 +48,15 @@ export const EditMarkup = () => {
 				pointIndex: point,
 			})
 		)
+
+		if (ctrlPressed && (gate === 1 || gate === 5)) {
+			dispatch(
+				markupActions.alignGates({
+					dirIndex: dir,
+					lineIndex: line,
+				})
+			)
+		}
 	}
 	const onDragLineEnd = (e: KonvaEventObject<DragEvent>, dir: number, line: number) => {
 		const pos = e.target.position()
@@ -64,23 +72,6 @@ export const EditMarkup = () => {
 			})
 		)
 	}
-	useEffect(() => {
-		window.addEventListener('keydown', e => {
-			if (e.key === 'Shift' && !shiftPressed) {
-				dispatch(markupActions.setShiftPressed(true))
-			}
-		})
-		window.addEventListener('keyup', e => {
-			if (e.key === 'Shift' && shiftPressed) {
-				dispatch(markupActions.setShiftPressed(false))
-			}
-		})
-
-		return () => {
-			window.removeEventListener('keydown', () => {})
-			window.removeEventListener('keyup', () => {})
-		}
-	}, [shiftPressed, dispatch])
 
 	return (
 		<Stage
@@ -149,7 +140,7 @@ export const EditMarkup = () => {
 												<Text
 													x={getValueByPercent(gate.gate[0].point.x, videoSize.width)}
 													y={getValueByPercent(gate.gate[0].point.y - 4, videoSize.height)}
-													text={`${line.name} id-${line.index} g-3`}
+													text={`g-3 ${line.name} (${direct.name})`}
 													fontSize={labelFontSize}
 													fill={colors.conterColor}
 												/>
@@ -182,7 +173,12 @@ export const EditMarkup = () => {
 													onDragMove(e, direct.index, line.index, gate.index, point.index)
 												}
 												onDragEnd={e => (e.cancelBubble = true)}
-												opacity={shiftPressed ? 0.6 : 1}
+												opacity={
+													shiftPressed ||
+													(ctrlPressed && gate.index !== 1 && gate.index !== 5)
+														? 0.6
+														: 1
+												}
 											/>
 										</Fragment>
 									))}

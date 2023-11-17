@@ -1,17 +1,20 @@
 .Button {
-	@apply inline-block outline-none rounded-lg text-white cursor-pointer transition-colors;
+	@apply inline-block border outline-none rounded-lg text-white cursor-pointer transition-colors;
 
 	&.primary {
-		@apply bg-accent hover:bg-opacity-80;
+		@apply bg-accent border-accent hover:bg-opacity-80;
 	}
 	&.danger {
-		@apply bg-danger hover:bg-opacity-90;
+		@apply bg-danger border-danger hover:bg-opacity-90;
 	}
 	&.transparent {
 		@apply bg-transparent text-dark;
 	}
 	&.light {
-		@apply bg-secondary hover:bg-opacity-80;
+		@apply bg-secondary border-secondary hover:bg-opacity-80;
+	}
+	&.outline {
+		@apply bg-transparent border border-accent text-dark;
 	}
 	&.s {
 		@apply text-sm px-2 py-1 rounded-md;

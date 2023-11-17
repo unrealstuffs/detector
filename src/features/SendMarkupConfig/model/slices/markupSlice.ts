@@ -7,12 +7,14 @@ import { FetchStatus } from 'shared/types/FetchStatus'
 interface MarkupSchema {
 	markupConfig: MarkupConfig
 	shiftPressed: boolean
+	ctrlPressed: boolean
 	status: FetchStatus
 }
 
 const initialState: MarkupSchema = {
 	status: 'init',
 	shiftPressed: false,
+	ctrlPressed: false,
 	markupConfig: {
 		version: 21,
 		uid: '00000000-0000-0000-0000-000000000000',
@@ -338,7 +340,12 @@ const markupSlice = createSlice({
 			state.markupConfig = initialState.markupConfig
 		},
 		setShiftPressed(state, action) {
+			if (state.ctrlPressed) state.ctrlPressed = false
 			state.shiftPressed = action.payload
+		},
+		setCtrlPressed(state, action) {
+			if (state.shiftPressed) state.shiftPressed = false
+			state.ctrlPressed = action.payload
 		},
 	},
 	extraReducers: builder => {
