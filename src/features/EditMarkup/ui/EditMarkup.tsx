@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, useEffect } from 'react'
 import { markupActions } from 'features/SendMarkupConfig'
 import { KonvaEventObject } from 'konva/lib/Node'
 import { Circle, Group, Layer, Line, Stage, Text } from 'react-konva'
@@ -11,7 +11,7 @@ import { getPercentOfValue } from 'shared/lib/getPercentOfValue'
 
 export const EditMarkup = () => {
 	const { videoSize } = useTypedSelector(state => state.video)
-	const { markupConfig } = useTypedSelector(state => state.markup)
+	const { markupConfig, shiftPressed } = useTypedSelector(state => state.markup)
 	const { tab } = useTypedSelector(state => state.tabs)
 
 	const dispatch = useAppDispatch()
@@ -64,6 +64,23 @@ export const EditMarkup = () => {
 			})
 		)
 	}
+	useEffect(() => {
+		window.addEventListener('keydown', e => {
+			if (e.key === 'Shift' && !shiftPressed) {
+				dispatch(markupActions.setShiftPressed(true))
+			}
+		})
+		window.addEventListener('keyup', e => {
+			if (e.key === 'Shift' && shiftPressed) {
+				dispatch(markupActions.setShiftPressed(false))
+			}
+		})
+
+		return () => {
+			window.removeEventListener('keydown', () => {})
+			window.removeEventListener('keyup', () => {})
+		}
+	}, [shiftPressed, dispatch])
 
 	return (
 		<Stage
@@ -82,7 +99,7 @@ export const EditMarkup = () => {
 					direct.lines.map(line => (
 						<Group
 							key={`${direct.index} ${line.index}`}
-							draggable={tab === 'shot'}
+							draggable={tab === 'shot' && shiftPressed}
 							onDragEnd={e => onDragLineEnd(e, direct.index, line.index)}
 						>
 							{line.gates.map(gate => (
@@ -110,7 +127,7 @@ export const EditMarkup = () => {
 													),
 												]}
 												stroke={colors.lineColor}
-												opacity={0.4}
+												opacity={shiftPressed ? 1 : 0.4}
 												strokeWidth={lineWidth}
 											/>
 										))}
@@ -122,9 +139,9 @@ export const EditMarkup = () => {
 											getValueByPercent(gate.gate[1].point.y, videoSize.height),
 										]}
 										stroke={gate.index === 3 ? colors.conterColor : colors.lineColor}
-										opacity={gate.index === 1 || gate.index === 5 ? 0.4 : 1}
+										opacity={gate.index === 1 || gate.index === 5 ? (shiftPressed ? 1 : 0.4) : 1}
 										strokeWidth={lineWidth}
-										hitStrokeWidth={100}
+										hitStrokeWidth={shiftPressed ? 100 : 0}
 									/>
 									{gate.gate.map(point => (
 										<Fragment key={`${direct.index} ${line.index} ${gate.index} ${point.index}`}>
@@ -160,11 +177,12 @@ export const EditMarkup = () => {
 												y={getValueByPercent(point.point.y, videoSize.height)}
 												radius={pointSize}
 												fill={colors.pointColor}
-												draggable={tab === 'shot'}
+												draggable={tab === 'shot' && !shiftPressed}
 												onDragMove={e =>
 													onDragMove(e, direct.index, line.index, gate.index, point.index)
 												}
 												onDragEnd={e => (e.cancelBubble = true)}
+												opacity={shiftPressed ? 0.6 : 1}
 											/>
 										</Fragment>
 									))}

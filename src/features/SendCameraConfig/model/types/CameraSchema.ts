@@ -10,6 +10,8 @@ export interface CameraSettings {
 	filter: boolean
 	zoom: StepType
 	focus: StepType
+	servoX: number
+	servoY: number
 }
 
 export interface CameraSchema {

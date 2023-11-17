@@ -6,11 +6,13 @@ import { FetchStatus } from 'shared/types/FetchStatus'
 
 interface MarkupSchema {
 	markupConfig: MarkupConfig
+	shiftPressed: boolean
 	status: FetchStatus
 }
 
 const initialState: MarkupSchema = {
 	status: 'init',
+	shiftPressed: false,
 	markupConfig: {
 		version: 21,
 		uid: '00000000-0000-0000-0000-000000000000',
@@ -226,6 +228,99 @@ const markupSlice = createSlice({
 				})
 			})
 		},
+		alignGates(
+			state,
+			action: PayloadAction<{
+				dirIndex: number
+				lineIndex: number
+			}>
+		) {
+			let gatesArray =
+				state.markupConfig.zone.directs[action.payload.dirIndex - 1].lines[action.payload.lineIndex - 1].gates
+			const firstGate = gatesArray[0]
+			const lastGate = gatesArray[4]
+			const newMiddleGate = [
+				{
+					x: (lastGate.gate[0].point.x + firstGate.gate[0].point.x) / 2,
+					y: (lastGate.gate[0].point.y + firstGate.gate[0].point.y) / 2,
+				},
+				{
+					x: (lastGate.gate[1].point.x + firstGate.gate[1].point.x) / 2,
+					y: (lastGate.gate[1].point.y + firstGate.gate[1].point.y) / 2,
+				},
+			]
+
+			gatesArray = [
+				firstGate,
+				{
+					index: 2,
+					type: '',
+					width_line: -1,
+					gate: [
+						{
+							index: 1,
+							point: {
+								x: (newMiddleGate[0].x + firstGate.gate[0].point.x) / 2,
+								y: (newMiddleGate[0].y + firstGate.gate[0].point.y) / 2,
+							},
+						},
+						{
+							index: 2,
+							point: {
+								x: (newMiddleGate[1].x + firstGate.gate[1].point.x) / 2,
+								y: (newMiddleGate[1].y + firstGate.gate[1].point.y) / 2,
+							},
+						},
+					],
+				},
+				{
+					index: 3,
+					type: '',
+					width_line: -1,
+					gate: [
+						{
+							index: 1,
+							point: {
+								x: newMiddleGate[0].x,
+								y: newMiddleGate[0].y,
+							},
+						},
+						{
+							index: 2,
+							point: {
+								x: newMiddleGate[1].x,
+								y: newMiddleGate[1].y,
+							},
+						},
+					],
+				},
+				{
+					index: 4,
+					type: '',
+					width_line: -1,
+					gate: [
+						{
+							index: 1,
+							point: {
+								x: (lastGate.gate[0].point.x + newMiddleGate[0].x) / 2,
+								y: (lastGate.gate[0].point.y + newMiddleGate[0].y) / 2,
+							},
+						},
+						{
+							index: 2,
+							point: {
+								x: (lastGate.gate[1].point.x + newMiddleGate[1].x) / 2,
+								y: (lastGate.gate[1].point.y + newMiddleGate[1].y) / 2,
+							},
+						},
+					],
+				},
+				lastGate,
+			]
+
+			state.markupConfig.zone.directs[action.payload.dirIndex - 1].lines[action.payload.lineIndex - 1].gates =
+				gatesArray
+		},
 		addDirection(state) {
 			const directsLength = state.markupConfig.zone.directs.length
 			state.markupConfig.zone.directs.push({
@@ -241,6 +336,9 @@ const markupSlice = createSlice({
 		},
 		deleteMarkup(state) {
 			state.markupConfig = initialState.markupConfig
+		},
+		setShiftPressed(state, action) {
+			state.shiftPressed = action.payload
 		},
 	},
 	extraReducers: builder => {

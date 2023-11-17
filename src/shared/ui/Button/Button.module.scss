@@ -22,6 +22,9 @@
 	&.l {
 		@apply text-lg px-6 py-2;
 	}
+	&.squared {
+		@apply p-2;
+	}
 	&:disabled {
 		@apply bg-light cursor-not-allowed;
 	}

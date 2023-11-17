@@ -2,7 +2,7 @@ import { HStack } from 'shared/ui/Stack/HStack/HStack'
 import cls from './SendMarkupConfig.module.scss'
 import Button from 'shared/ui/Button/Button'
 import { Input } from 'shared/ui/Input/Input'
-import { AiOutlineClose } from 'react-icons/ai'
+import { AiOutlineClose, AiOutlineGateway } from 'react-icons/ai'
 import Checkbox from 'shared/ui/Checkbox/Checkbox'
 import { useTypedSelector } from 'shared/hooks/useTypedSelector'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
@@ -165,6 +165,18 @@ export const SendMarkupConfig = () => {
 										)
 									}}
 								/>
+								<Button
+									onClick={() =>
+										dispatch(
+											markupActions.alignGates({ dirIndex: dir.index, lineIndex: line.index })
+										)
+									}
+									variant='squared'
+									color='light'
+									className={cls.alignButton}
+								>
+									<AiOutlineGateway size={22} />
+								</Button>
 							</HStack>
 						</div>
 					))

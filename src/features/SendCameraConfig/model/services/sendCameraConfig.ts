@@ -37,6 +37,8 @@ export const sendCameraConfig = createAsyncThunk<any, void, ThunkConfig<any>>(
 			const responses: ServerResponse<any>[] = await Promise.all([
 				...dynamicRequests,
 				fetchData({ IR_CUT: cameraConfig.filter === true ? 'on' : 'off' }, `${accessToken}`),
+				fetchData({ SERVO_X: cameraConfig.servoX }, `${accessToken}`),
+				fetchData({ SERVO_Y: cameraConfig.servoY }, `${accessToken}`),
 			])
 
 			const errorResponse = responses.find(response => response.result === 'error')
