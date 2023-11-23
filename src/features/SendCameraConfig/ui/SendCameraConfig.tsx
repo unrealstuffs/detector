@@ -12,7 +12,6 @@ import { VStack } from 'shared/ui/Stack/VStack/VStack'
 import { HStack } from 'shared/ui/Stack/HStack/HStack'
 import { Text } from 'shared/ui/Text/Text'
 import { sendRestartCamera } from '../model/services/sendRestartCamera'
-import NumInput from 'shared/ui/NumInput/NumInput'
 
 export const SendCameraConfig = () => {
 	const { cameraConfig, status } = useTypedSelector(state => state.camera)
@@ -49,7 +48,6 @@ export const SendCameraConfig = () => {
 					checked={cameraConfig.filter}
 					onChange={checked => dispatch(cameraActions.setFilter(checked))}
 				/>
-				<div></div>
 				<VStack gap='8'>
 					<Text text='Параметры зума' bold size='s'></Text>
 					<HStack gap='8'>
@@ -76,16 +74,6 @@ export const SendCameraConfig = () => {
 					</HStack>
 				</VStack>
 
-				<NumInput
-					label='Параметры сервопривода Х (°)'
-					value={cameraConfig.servoX}
-					increment={1}
-					bigIncrement={5}
-					max={95}
-					min={85}
-					onChange={value => dispatch(cameraActions.setServoX(value))}
-				/>
-
 				<VStack gap='8'>
 					<Text text='Параметры фокуса' bold size='s'></Text>
 					<HStack gap='8'>
@@ -111,16 +99,6 @@ export const SendCameraConfig = () => {
 						/>
 					</HStack>
 				</VStack>
-
-				<NumInput
-					label='Параметры сервопривода Y(°)'
-					value={cameraConfig.servoY}
-					increment={1}
-					bigIncrement={5}
-					max={95}
-					min={85}
-					onChange={value => dispatch(cameraActions.setServoY(value))}
-				/>
 			</VStack>
 			<HStack gap='12'>
 				<Button disabled={status === 'loading'} onClick={sendCameraConfigHandler} size='m'>

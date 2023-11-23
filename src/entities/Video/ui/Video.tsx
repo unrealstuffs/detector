@@ -69,7 +69,6 @@ export const Video = (props: VideoProps) => {
 	return (
 		<div className={classNames(cls.Video, {}, [className])}>
 			{status === 'loading' && <Loader className={cls.loader} />}
-
 			<ReactHlsPlayer
 				playerRef={videoRef}
 				src={src}
@@ -78,6 +77,7 @@ export const Video = (props: VideoProps) => {
 				controls={false}
 				width='100%'
 				height='auto'
+				playsInline
 				loop
 			/>
 		</div>

@@ -9,8 +9,6 @@ const initialState: CameraSchema = {
 		filter: false,
 		zoom: null,
 		focus: null,
-		servoX: 85,
-		servoY: 85,
 	},
 	status: 'init',
 }
@@ -27,12 +25,6 @@ const cameraSlice = createSlice({
 		},
 		setFocus: (state, action) => {
 			state.cameraConfig.focus = action.payload
-		},
-		setServoX: (state, action) => {
-			state.cameraConfig.servoX = action.payload
-		},
-		setServoY: (state, action) => {
-			state.cameraConfig.servoY = action.payload
 		},
 	},
 	extraReducers: builder => {

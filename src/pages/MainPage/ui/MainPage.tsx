@@ -15,9 +15,9 @@ const MainPage = () => {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			await dispatch(getCameraConfig())
 			await dispatch(getMarkupConfig())
 			await dispatch(fetchVehicleTypes())
+			await dispatch(getCameraConfig())
 		}
 		fetchData()
 	}, [accessToken, dispatch])

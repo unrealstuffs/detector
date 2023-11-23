@@ -9,27 +9,3 @@
 .button {
 	@apply mb-4;
 }
-
-.input {
-	@apply w-auto;
-}
-
-.lineTitle {
-	@apply mb-4;
-}
-
-.lineInput {
-	@apply w-auto border-none text-xl decoration-dotted underline underline-offset-4 py-0 pl-2;
-}
-
-.deleteIcon {
-	@apply cursor-pointer;
-}
-
-.lineBlock {
-	@apply mb-8;
-}
-
-.alignButton {
-	@apply px-2;
-}
