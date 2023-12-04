@@ -8,20 +8,27 @@ import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 import ReactHlsPlayer from 'react-hls-player'
 
 interface VideoProps {
-	src: string
 	className?: string
 }
 
+const isDev = process.env.NODE_ENV === 'development'
+const devSrc = '10.0.0.94'
+const randomGetParameter = Math.round(Math.random() * 1000)
+
 export const Video = (props: VideoProps) => {
-	const { src, className } = props
+	const { className } = props
 	const videoRef = useRef<HTMLVideoElement>(null)
 	const { tab } = useTypedSelector(state => state.tabs)
-	const { status } = useTypedSelector(state => state.video)
+	const { status, quality } = useTypedSelector(state => state.video)
+
 	const dispatch = useAppDispatch()
 
 	useEffect(() => {
 		const video = videoRef.current
 
+		video?.addEventListener('loadstart', () => {
+			dispatch(videoActions.setStatus('loading'))
+		})
 		video?.addEventListener('loadedmetadata', () => {
 			dispatch(videoActions.setStatus('success'))
 			dispatch(
@@ -34,6 +41,7 @@ export const Video = (props: VideoProps) => {
 
 		return () => {
 			video?.removeEventListener('loadedmetadata', () => {})
+			video?.removeEventListener('loadstart', () => {})
 		}
 	}, [dispatch])
 
@@ -71,7 +79,9 @@ export const Video = (props: VideoProps) => {
 			{status === 'loading' && <Loader className={cls.loader} />}
 			<ReactHlsPlayer
 				playerRef={videoRef}
-				src={src}
+				src={`http://${
+					isDev ? devSrc : window.location.host
+				}/hls/${quality}/index.m3u8?reset=${randomGetParameter}`}
 				autoPlay={true}
 				muted
 				controls={false}
