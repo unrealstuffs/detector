@@ -126,8 +126,8 @@ const markupSlice = createSlice({
 					},
 				],
 				lengths: [
-					{ index: 1, from_gate: 2, to_gate: 3, length: 1 },
-					{ index: 2, from_gate: 3, to_gate: 4, length: 1 },
+					{ index: 1, from_gate: 2, to_gate: 3, length: 0 },
+					{ index: 2, from_gate: 3, to_gate: 4, length: 0 },
 				],
 			})
 		},

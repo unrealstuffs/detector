@@ -94,7 +94,7 @@ export const EditMarkup = () => {
 							onDragEnd={e => onDragLineEnd(e, direct.index, line.index)}
 						>
 							{line.gates.map(gate => (
-								<>
+								<Fragment key={`${direct.index} ${line.index} ${gate.index}`}>
 									{gate.index !== 5 &&
 										[0, 1].map(gateIndex => (
 											<Line
@@ -182,7 +182,7 @@ export const EditMarkup = () => {
 											/>
 										</Fragment>
 									))}
-								</>
+								</Fragment>
 							))}
 						</Group>
 					))

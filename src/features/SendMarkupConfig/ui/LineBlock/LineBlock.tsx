@@ -55,8 +55,9 @@ const LineBlock = (props: LineBlockProps) => {
 				<Input
 					size='s'
 					type='number'
-					min={0}
+					min={1}
 					max={99}
+					required
 					label={`От g-${lengths[0].from_gate} до g-${lengths[0].to_gate} (м)`}
 					value={lengths[0].length}
 					className={cls.input}
@@ -74,8 +75,9 @@ const LineBlock = (props: LineBlockProps) => {
 				<Input
 					size='s'
 					type='number'
-					min={0}
+					min={1}
 					max={99}
+					required
 					label={`От g-${lengths[1].from_gate} до g-${lengths[1].to_gate} (м)`}
 					value={lengths[1].length}
 					className={cls.input}

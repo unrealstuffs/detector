@@ -69,26 +69,25 @@ export const Video = (props: VideoProps) => {
 			video?.pause()
 		}
 		if (tab !== 'shot' && video?.paused) {
-			video.load()
+			video.currentTime = 0
 			video.play()
 		}
-	}, [tab, dispatch])
+	}, [tab, dispatch, quality])
 
 	return (
 		<div className={classNames(cls.Video, {}, [className])}>
 			{status === 'loading' && <Loader className={cls.loader} />}
 			<ReactHlsPlayer
+				className={cls.player}
 				playerRef={videoRef}
 				src={`http://${
 					isDev ? devSrc : window.location.host
 				}/hls/${quality}/index.m3u8?reset=${randomGetParameter}`}
-				autoPlay={true}
+				autoPlay
 				muted
 				controls={false}
 				width='100%'
-				height='auto'
-				playsInline
-				loop
+				height='100%'
 			/>
 		</div>
 	)

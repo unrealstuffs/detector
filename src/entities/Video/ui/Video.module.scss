@@ -1,3 +1,11 @@
+.Video {
+	@apply relative pt-[56.25%];
+}
+
 .loader {
 	@apply absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2;
+}
+
+.player {
+	@apply absolute top-0 left-0;
 }

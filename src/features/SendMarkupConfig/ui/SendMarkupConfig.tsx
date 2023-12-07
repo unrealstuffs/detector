@@ -4,7 +4,7 @@ import Button from 'shared/ui/Button/Button'
 import { useTypedSelector } from 'shared/hooks/useTypedSelector'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 import { markupActions } from '../model/slices/markupSlice'
-import { useMemo } from 'react'
+import { FormEvent, useMemo } from 'react'
 import { Text } from 'shared/ui/Text/Text'
 import { sendMarkupConfig } from '../model/services/sendMarkupConfig'
 import toast from 'react-hot-toast'
@@ -16,7 +16,8 @@ export const SendMarkupConfig = () => {
 	const { markupConfig, status } = useTypedSelector(state => state.markup)
 	const dispatch = useAppDispatch()
 
-	const sendMarkupConfigHandler = async () => {
+	const sendMarkupConfigHandler = async (e: FormEvent) => {
+		e.preventDefault()
 		const result = await dispatch(sendMarkupConfig())
 		if (sendMarkupConfig.fulfilled.match(result)) {
 			toast.success('Отправлено!')
@@ -63,10 +64,10 @@ export const SendMarkupConfig = () => {
 	)
 
 	return (
-		<div>
+		<form onSubmit={sendMarkupConfigHandler}>
 			<HStack align='end' justify='between' className={cls.buttons}>
 				<HStack gap='8'>
-					<Button size='m' onClick={sendMarkupConfigHandler} disabled={status === 'loading'}>
+					<Button size='m' type='submit' disabled={status === 'loading'}>
 						Сохранить
 					</Button>
 					<Button size='m' color='danger' onClick={() => dispatch(markupActions.deleteMarkup())}>
@@ -85,6 +86,6 @@ export const SendMarkupConfig = () => {
 					{configElement}
 				</div>
 			))}
-		</div>
+		</form>
 	)
 }
