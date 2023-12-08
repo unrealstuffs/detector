@@ -20,8 +20,8 @@ export const VideoMarkup = (props: VideoMarkupProps) => {
 
 	return (
 		<div className={classNames(cls.VideoMarkup, {}, [className])}>
-			<HStack align='center' justify='between'>
-				<Text title={`Детектор ID ${detectorName}`} size='l' bold className={cls.heading} />
+			<HStack align='center' justify='between' className={cls.heading}>
+				<Text title={`Детектор ID ${detectorName}`} size='l' bold />
 				<AppSelect
 					options={[
 						{ value: 'lq', label: 'Низкое качество' },

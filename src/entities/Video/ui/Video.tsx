@@ -18,6 +18,7 @@ const randomGetParameter = Math.round(Math.random() * 1000)
 export const Video = (props: VideoProps) => {
 	const { className } = props
 	const videoRef = useRef<HTMLVideoElement>(null)
+	const containerRef = useRef<HTMLDivElement>(null)
 	const { tab } = useTypedSelector(state => state.tabs)
 	const { status, quality } = useTypedSelector(state => state.video)
 
@@ -25,16 +26,34 @@ export const Video = (props: VideoProps) => {
 
 	useEffect(() => {
 		const video = videoRef.current
+		const container = containerRef.current
 
 		video?.addEventListener('loadstart', () => {
 			dispatch(videoActions.setStatus('loading'))
+
+			dispatch(
+				videoActions.setVideoSize({
+					width: container?.offsetWidth,
+					height: container?.offsetHeight,
+				})
+			)
 		})
 		video?.addEventListener('loadedmetadata', () => {
 			dispatch(videoActions.setStatus('success'))
+
 			dispatch(
 				videoActions.setVideoSize({
-					width: video.offsetWidth,
-					height: video.offsetHeight,
+					width: container?.offsetWidth,
+					height: container?.offsetHeight,
+				})
+			)
+		})
+
+		window.addEventListener('resize', () => {
+			dispatch(
+				videoActions.setVideoSize({
+					width: container?.offsetWidth,
+					height: container?.offsetHeight,
 				})
 			)
 		})
@@ -42,23 +61,6 @@ export const Video = (props: VideoProps) => {
 		return () => {
 			video?.removeEventListener('loadedmetadata', () => {})
 			video?.removeEventListener('loadstart', () => {})
-		}
-	}, [dispatch])
-
-	useEffect(() => {
-		const video = videoRef.current
-		if (!video) return
-
-		window.addEventListener('resize', () => {
-			dispatch(
-				videoActions.setVideoSize({
-					width: video.offsetWidth,
-					height: video.offsetHeight,
-				})
-			)
-		})
-
-		return () => {
 			window.removeEventListener('resize', () => {})
 		}
 	}, [dispatch])
@@ -75,7 +77,7 @@ export const Video = (props: VideoProps) => {
 	}, [tab, dispatch, quality])
 
 	return (
-		<div className={classNames(cls.Video, {}, [className])}>
+		<div ref={containerRef} className={classNames(cls.Video, {}, [className])}>
 			{status === 'loading' && <Loader className={cls.loader} />}
 			<ReactHlsPlayer
 				className={cls.player}
