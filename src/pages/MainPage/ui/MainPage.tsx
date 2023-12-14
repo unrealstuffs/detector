@@ -8,6 +8,7 @@ import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 import { fetchVehicleTypes } from 'entities/TypesSelect/model/services/fetchVehicleTypes'
 import { getMarkupConfig } from 'features/SendMarkupConfig/model/services/getMarkupConfig'
 import { getCameraConfig } from 'features/SendCameraConfig'
+import { getAppConfig } from 'entities/AppConfig'
 
 const MainPage = () => {
 	const { accessToken } = useTypedSelector(state => state.user)
@@ -15,6 +16,7 @@ const MainPage = () => {
 
 	useEffect(() => {
 		const fetchData = async () => {
+			await dispatch(getAppConfig())
 			await dispatch(getMarkupConfig())
 			await dispatch(fetchVehicleTypes())
 			await dispatch(getCameraConfig())

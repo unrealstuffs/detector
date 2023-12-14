@@ -12,9 +12,11 @@ import { VStack } from 'shared/ui/Stack/VStack/VStack'
 import { HStack } from 'shared/ui/Stack/HStack/HStack'
 import { Text } from 'shared/ui/Text/Text'
 import { sendRestartCamera } from '../model/services/sendRestartCamera'
+import NumInput from 'shared/ui/NumInput/NumInput'
 
 export const SendCameraConfig = () => {
 	const { cameraConfig, status } = useTypedSelector(state => state.camera)
+	const { servoSettings, focusAndZoomType } = useTypedSelector(state => state.appConfig)
 
 	const dispatch = useAppDispatch()
 
@@ -42,64 +44,117 @@ export const SendCameraConfig = () => {
 
 	return (
 		<div className={classNames(cls.config, {}, [cls.cameraConfig])}>
-			<VStack gap='32' className={cls.configBody}>
+			<div className={cls.configBody}>
 				<Checkbox
 					label='Инфракрасный фильтр'
 					checked={cameraConfig.filter}
 					onChange={checked => dispatch(cameraActions.setFilter(checked))}
 				/>
-				<VStack gap='8'>
-					<Text text='Параметры зума' bold size='s'></Text>
-					<HStack gap='8'>
-						<AiOutlineLeft
-							onClick={() => {
-								if (cameraConfig.zoom === 'STEP_M') {
-									dispatch(cameraActions.setZoom(null))
-								} else {
-									dispatch(cameraActions.setZoom('STEP_M'))
-								}
-							}}
-							className={classNames(cls.icon, { [cls.active]: cameraConfig.zoom === 'STEP_M' }, [])}
-						/>
-						<AiOutlineRight
-							onClick={() => {
-								if (cameraConfig.zoom === 'STEP_P') {
-									dispatch(cameraActions.setZoom(null))
-								} else {
-									dispatch(cameraActions.setZoom('STEP_P'))
-								}
-							}}
-							className={classNames(cls.icon, { [cls.active]: cameraConfig.zoom === 'STEP_P' }, [])}
-						/>
-					</HStack>
-				</VStack>
+				<div></div>
+				{focusAndZoomType === 'NUM' ? (
+					<NumInput
+						label='Параметры зума'
+						value={typeof cameraConfig.zoom === 'number' ? cameraConfig.zoom : 0}
+						increment={100}
+						bigIncrement={1000}
+						max={20000}
+						min={0}
+						onChange={value => dispatch(cameraActions.setZoom(value))}
+					/>
+				) : (
+					<VStack gap='8'>
+						<Text text='Параметры зума' bold size='s'></Text>
+						<HStack gap='8'>
+							<AiOutlineLeft
+								onClick={() => {
+									if (cameraConfig.zoom === 'STEP_M') {
+										dispatch(cameraActions.setZoom(null))
+									} else {
+										dispatch(cameraActions.setZoom('STEP_M'))
+									}
+								}}
+								className={classNames(cls.icon, { [cls.active]: cameraConfig.zoom === 'STEP_M' }, [])}
+							/>
+							<AiOutlineRight
+								onClick={() => {
+									if (cameraConfig.zoom === 'STEP_P') {
+										dispatch(cameraActions.setZoom(null))
+									} else {
+										dispatch(cameraActions.setZoom('STEP_P'))
+									}
+								}}
+								className={classNames(cls.icon, { [cls.active]: cameraConfig.zoom === 'STEP_P' }, [])}
+							/>
+						</HStack>
+					</VStack>
+				)}
 
-				<VStack gap='8'>
-					<Text text='Параметры фокуса' bold size='s'></Text>
-					<HStack gap='8'>
-						<AiOutlineLeft
-							onClick={() => {
-								if (cameraConfig.focus === 'STEP_M') {
-									dispatch(cameraActions.setFocus(null))
-								} else {
-									dispatch(cameraActions.setFocus('STEP_M'))
-								}
-							}}
-							className={classNames(cls.icon, { [cls.active]: cameraConfig.focus === 'STEP_M' }, [])}
-						/>
-						<AiOutlineRight
-							onClick={() => {
-								if (cameraConfig.focus === 'STEP_P') {
-									dispatch(cameraActions.setFocus(null))
-								} else {
-									dispatch(cameraActions.setFocus('STEP_P'))
-								}
-							}}
-							className={classNames(cls.icon, { [cls.active]: cameraConfig.focus === 'STEP_P' }, [])}
-						/>
-					</HStack>
-				</VStack>
-			</VStack>
+				{servoSettings ? (
+					<NumInput
+						label='Параметры сервопривода Х (°)'
+						value={cameraConfig.servoX}
+						increment={1}
+						bigIncrement={5}
+						max={95}
+						min={85}
+						onChange={value => dispatch(cameraActions.setServoX(value))}
+					/>
+				) : (
+					<div></div>
+				)}
+
+				{focusAndZoomType === 'NUM' ? (
+					<NumInput
+						label='Параметры фокуса'
+						value={typeof cameraConfig.focus === 'number' ? cameraConfig.focus : 0}
+						increment={100}
+						bigIncrement={1000}
+						max={20000}
+						min={0}
+						onChange={value => dispatch(cameraActions.setFocus(value))}
+					/>
+				) : (
+					<VStack gap='8'>
+						<Text text='Параметры фокуса' bold size='s'></Text>
+						<HStack gap='8'>
+							<AiOutlineLeft
+								onClick={() => {
+									if (cameraConfig.focus === 'STEP_M') {
+										dispatch(cameraActions.setFocus(null))
+									} else {
+										dispatch(cameraActions.setFocus('STEP_M'))
+									}
+								}}
+								className={classNames(cls.icon, { [cls.active]: cameraConfig.focus === 'STEP_M' }, [])}
+							/>
+							<AiOutlineRight
+								onClick={() => {
+									if (cameraConfig.focus === 'STEP_P') {
+										dispatch(cameraActions.setFocus(null))
+									} else {
+										dispatch(cameraActions.setFocus('STEP_P'))
+									}
+								}}
+								className={classNames(cls.icon, { [cls.active]: cameraConfig.focus === 'STEP_P' }, [])}
+							/>
+						</HStack>
+					</VStack>
+				)}
+
+				{servoSettings ? (
+					<NumInput
+						label='Параметры сервопривода Y(°)'
+						value={cameraConfig.servoY}
+						increment={1}
+						bigIncrement={5}
+						max={95}
+						min={85}
+						onChange={value => dispatch(cameraActions.setServoY(value))}
+					/>
+				) : (
+					<div></div>
+				)}
+			</div>
 			<HStack gap='12'>
 				<Button disabled={status === 'loading'} onClick={sendCameraConfigHandler} size='m'>
 					Сохранить

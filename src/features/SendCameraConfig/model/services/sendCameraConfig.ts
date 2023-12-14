@@ -21,6 +21,7 @@ export const sendCameraConfig = createAsyncThunk<any, void, ThunkConfig<any>>(
 		const {
 			camera: { cameraConfig },
 			user: { accessToken },
+			appConfig: { servoSettings },
 		} = getState()
 
 		try {
@@ -32,6 +33,11 @@ export const sendCameraConfig = createAsyncThunk<any, void, ThunkConfig<any>>(
 
 			if (cameraConfig.focus) {
 				dynamicRequests.push(fetchData({ FOCUS: cameraConfig.focus }, `${accessToken}`))
+			}
+
+			if (servoSettings) {
+				dynamicRequests.push(fetchData({ SERVO_X: cameraConfig.servoX }, `${accessToken}`))
+				dynamicRequests.push(fetchData({ SERVO_Y: cameraConfig.servoY }, `${accessToken}`))
 			}
 
 			const responses: ServerResponse<any>[] = await Promise.all([

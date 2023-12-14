@@ -15,8 +15,10 @@ import {
 import { detectorNameReducer } from 'entities/AppTitle'
 import { vehicleTypeReducer } from 'entities/TypesSelect'
 import { markupReducer } from 'features/SendMarkupConfig'
+import { appConfigReducer } from 'entities/AppConfig'
 
 const rootReducer = combineReducers({
+	appConfig: appConfigReducer,
 	user: userReducer,
 	detectorName: detectorNameReducer,
 	camera: cameraReducer,
