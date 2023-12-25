@@ -31,7 +31,14 @@ export const VideoMarkup = (props: VideoMarkupProps) => {
 	return (
 		<div className={classNames(cls.VideoMarkup, {}, [className])}>
 			<HStack align='center' justify='between' className={cls.heading}>
-				<Text title={`Детектор ID ${detectorName}`} size='l' bold />
+				<HStack align='end' gap='8'>
+					<Text title={`Детектор ID ${detectorName}`} size='l' bold />
+					<Text
+						className={cls.version}
+						size='m'
+						text={`v ${process.env.REACT_APP_VERSION}`}
+					/>
+				</HStack>
 				{videoQuality && (
 					<AppSelect
 						options={[
@@ -41,7 +48,11 @@ export const VideoMarkup = (props: VideoMarkupProps) => {
 						defaultValue={{ value: 'lq', label: 'Низкое качество' }}
 						onChange={quality => {
 							if (!quality) return
-							if (quality.value !== 'lq' && quality.value !== 'mq') return
+							if (
+								quality.value !== 'lq' &&
+								quality.value !== 'mq'
+							)
+								return
 							dispatch(videoActions.setQuality(quality.value))
 						}}
 					/>

@@ -2,7 +2,7 @@ import { memo } from 'react'
 import { classNames } from 'shared/lib/classNames'
 import cls from './Text.module.scss'
 
-export type TextVariant = 'primary' | 'danger'
+export type TextVariant = 'primary' | 'danger' | 'light'
 
 export type TextAlign = 'right' | 'left' | 'center'
 
@@ -49,7 +49,14 @@ export const Text = memo((props: TextProps) => {
 	const sizeClass = mapSizeToClass[size]
 
 	return (
-		<div className={classNames(cls.Text, { [cls.bold]: bold }, [className, cls[align], cls[variant], sizeClass])}>
+		<div
+			className={classNames(cls.Text, { [cls.bold]: bold }, [
+				className,
+				cls[align],
+				cls[variant],
+				sizeClass,
+			])}
+		>
 			{title && <HeaderTag className={cls.title}>{title}</HeaderTag>}
 			{text && (
 				<p contentEditable={contentEditable} className={cls.text}>
