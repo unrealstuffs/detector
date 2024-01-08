@@ -27,8 +27,15 @@ const initialState: MarkupSchema = {
 			directs: [
 				{
 					index: 1,
-					name: 'прямое',
+					name: 'входящее',
 					is_reverse: false,
+					description: '',
+					lines: [],
+				},
+				{
+					index: 2,
+					name: 'исходящее',
+					is_reverse: true,
 					description: '',
 					lines: [],
 				},
@@ -46,7 +53,7 @@ const markupSlice = createSlice({
 
 			state.markupConfig.zone.directs[0].lines.push({
 				index: linesLength + 1,
-				name: `полоса-${linesLength + 1}`,
+				name: `${linesLength + 1}`,
 				description: '',
 				gates: [
 					{
@@ -133,16 +140,28 @@ const markupSlice = createSlice({
 		},
 		setLength(
 			state,
-			action: PayloadAction<{ dirIndex: number; lineIndex: number; fromTo: number; length: number }>
+			action: PayloadAction<{
+				dirIndex: number
+				lineIndex: number
+				fromTo: number
+				length: number
+			}>
 		) {
-			state.markupConfig.zone.directs[action.payload.dirIndex].lines[action.payload.lineIndex].lengths[
-				action.payload.fromTo
-			].length = action.payload.length
+			state.markupConfig.zone.directs[action.payload.dirIndex].lines[
+				action.payload.lineIndex
+			].lengths[action.payload.fromTo].length = action.payload.length
 		},
-		deleteLine(state, action: PayloadAction<{ dirIndex: number; lineIndex: number }>) {
-			state.markupConfig.zone.directs[action.payload.dirIndex - 1].lines.splice(action.payload.lineIndex - 1, 1)
+		deleteLine(
+			state,
+			action: PayloadAction<{ dirIndex: number; lineIndex: number }>
+		) {
+			state.markupConfig.zone.directs[
+				action.payload.dirIndex - 1
+			].lines.splice(action.payload.lineIndex - 1, 1)
 
-			state.markupConfig.zone.directs[action.payload.dirIndex - 1].lines.forEach((element, index) => {
+			state.markupConfig.zone.directs[
+				action.payload.dirIndex - 1
+			].lines.forEach((element, index) => {
 				element.index = index + 1
 			})
 		},
@@ -150,31 +169,64 @@ const markupSlice = createSlice({
 			if (state.markupConfig.zone.directs.length === 1) {
 				return
 			}
-			state.markupConfig.zone.directs.splice(action.payload.dirIndex - 1, 1)
+			state.markupConfig.zone.directs.splice(
+				action.payload.dirIndex - 1,
+				1
+			)
 
 			state.markupConfig.zone.directs.forEach((element, index) => {
 				element.index = index + 1
 			})
 		},
-		setLineName(state, action: PayloadAction<{ dirIndex: number; lineIndex: number; name: string }>) {
-			state.markupConfig.zone.directs[action.payload.dirIndex].lines[action.payload.lineIndex].name =
+		setLineName(
+			state,
+			action: PayloadAction<{
+				dirIndex: number
+				lineIndex: number
+				name: string
+			}>
+		) {
+			state.markupConfig.zone.directs[action.payload.dirIndex].lines[
+				action.payload.lineIndex
+			].name = action.payload.name
+		},
+		setDirName(
+			state,
+			action: PayloadAction<{ dirIndex: number; name: string }>
+		) {
+			state.markupConfig.zone.directs[action.payload.dirIndex].name =
 				action.payload.name
 		},
-		setDirName(state, action: PayloadAction<{ dirIndex: number; name: string }>) {
-			state.markupConfig.zone.directs[action.payload.dirIndex].name = action.payload.name
-		},
-		bindLine(state, action: PayloadAction<{ dirIndex: number; newDirIndex: number; lineIndex: number }>) {
-			const sourceDir = state.markupConfig.zone.directs[action.payload.dirIndex - 1]
-			const targetDir = state.markupConfig.zone.directs[action.payload.newDirIndex - 1]
-			const sourceArray = state.markupConfig.zone.directs[action.payload.dirIndex - 1].lines
-			const targetArray = state.markupConfig.zone.directs[action.payload.newDirIndex - 1].lines
+		bindLine(
+			state,
+			action: PayloadAction<{
+				dirIndex: number
+				newDirIndex: number
+				lineIndex: number
+			}>
+		) {
+			const sourceDir =
+				state.markupConfig.zone.directs[action.payload.dirIndex - 1]
+			const targetDir =
+				state.markupConfig.zone.directs[action.payload.newDirIndex - 1]
+			const sourceArray =
+				state.markupConfig.zone.directs[action.payload.dirIndex - 1]
+					.lines
+			const targetArray =
+				state.markupConfig.zone.directs[action.payload.newDirIndex - 1]
+					.lines
 
-			const elementToMoveIndex = sourceArray.findIndex(element => element.index === action.payload.lineIndex)
+			const elementToMoveIndex = sourceArray.findIndex(
+				element => element.index === action.payload.lineIndex
+			)
 
 			// Check if the element exists in the source array
 			if (elementToMoveIndex !== -1) {
 				// Remove the element from the source array
-				const [elementToMove] = sourceArray.splice(elementToMoveIndex, 1)
+				const [elementToMove] = sourceArray.splice(
+					elementToMoveIndex,
+					1
+				)
 
 				// Update the index of the moved element
 				elementToMove.index = targetArray.length + 1
@@ -208,9 +260,11 @@ const markupSlice = createSlice({
 				pointIndex: number
 			}>
 		) {
-			state.markupConfig.zone.directs[action.payload.dirIndex - 1].lines[action.payload.lineIndex - 1].gates[
-				action.payload.gateIndex - 1
-			].gate[action.payload.pointIndex - 1].point = { x: action.payload.x, y: action.payload.y }
+			state.markupConfig.zone.directs[action.payload.dirIndex - 1].lines[
+				action.payload.lineIndex - 1
+			].gates[action.payload.gateIndex - 1].gate[
+				action.payload.pointIndex - 1
+			].point = { x: action.payload.x, y: action.payload.y }
 		},
 		editGates(
 			state,
@@ -238,17 +292,26 @@ const markupSlice = createSlice({
 			}>
 		) {
 			let gatesArray =
-				state.markupConfig.zone.directs[action.payload.dirIndex - 1].lines[action.payload.lineIndex - 1].gates
+				state.markupConfig.zone.directs[action.payload.dirIndex - 1]
+					.lines[action.payload.lineIndex - 1].gates
 			const firstGate = gatesArray[0]
 			const lastGate = gatesArray[4]
 			const newMiddleGate = [
 				{
-					x: (lastGate.gate[0].point.x + firstGate.gate[0].point.x) / 2,
-					y: (lastGate.gate[0].point.y + firstGate.gate[0].point.y) / 2,
+					x:
+						(lastGate.gate[0].point.x + firstGate.gate[0].point.x) /
+						2,
+					y:
+						(lastGate.gate[0].point.y + firstGate.gate[0].point.y) /
+						2,
 				},
 				{
-					x: (lastGate.gate[1].point.x + firstGate.gate[1].point.x) / 2,
-					y: (lastGate.gate[1].point.y + firstGate.gate[1].point.y) / 2,
+					x:
+						(lastGate.gate[1].point.x + firstGate.gate[1].point.x) /
+						2,
+					y:
+						(lastGate.gate[1].point.y + firstGate.gate[1].point.y) /
+						2,
 				},
 			]
 
@@ -262,15 +325,27 @@ const markupSlice = createSlice({
 						{
 							index: 1,
 							point: {
-								x: (newMiddleGate[0].x + firstGate.gate[0].point.x) / 2,
-								y: (newMiddleGate[0].y + firstGate.gate[0].point.y) / 2,
+								x:
+									(newMiddleGate[0].x +
+										firstGate.gate[0].point.x) /
+									2,
+								y:
+									(newMiddleGate[0].y +
+										firstGate.gate[0].point.y) /
+									2,
 							},
 						},
 						{
 							index: 2,
 							point: {
-								x: (newMiddleGate[1].x + firstGate.gate[1].point.x) / 2,
-								y: (newMiddleGate[1].y + firstGate.gate[1].point.y) / 2,
+								x:
+									(newMiddleGate[1].x +
+										firstGate.gate[1].point.x) /
+									2,
+								y:
+									(newMiddleGate[1].y +
+										firstGate.gate[1].point.y) /
+									2,
 							},
 						},
 					],
@@ -304,15 +379,27 @@ const markupSlice = createSlice({
 						{
 							index: 1,
 							point: {
-								x: (lastGate.gate[0].point.x + newMiddleGate[0].x) / 2,
-								y: (lastGate.gate[0].point.y + newMiddleGate[0].y) / 2,
+								x:
+									(lastGate.gate[0].point.x +
+										newMiddleGate[0].x) /
+									2,
+								y:
+									(lastGate.gate[0].point.y +
+										newMiddleGate[0].y) /
+									2,
 							},
 						},
 						{
 							index: 2,
 							point: {
-								x: (lastGate.gate[1].point.x + newMiddleGate[1].x) / 2,
-								y: (lastGate.gate[1].point.y + newMiddleGate[1].y) / 2,
+								x:
+									(lastGate.gate[1].point.x +
+										newMiddleGate[1].x) /
+									2,
+								y:
+									(lastGate.gate[1].point.y +
+										newMiddleGate[1].y) /
+									2,
 							},
 						},
 					],
@@ -320,21 +407,27 @@ const markupSlice = createSlice({
 				lastGate,
 			]
 
-			state.markupConfig.zone.directs[action.payload.dirIndex - 1].lines[action.payload.lineIndex - 1].gates =
-				gatesArray
+			state.markupConfig.zone.directs[action.payload.dirIndex - 1].lines[
+				action.payload.lineIndex - 1
+			].gates = gatesArray
 		},
 		addDirection(state) {
 			const directsLength = state.markupConfig.zone.directs.length
 			state.markupConfig.zone.directs.push({
 				index: directsLength + 1,
-				name: `направление ${directsLength + 1}`,
+				name: `${directsLength + 1}`,
 				description: '',
 				is_reverse: false,
 				lines: [],
 			})
 		},
-		setDirection(state, action: PayloadAction<{ dirIndex: number; isReverse: boolean }>) {
-			state.markupConfig.zone.directs[action.payload.dirIndex - 1].is_reverse = action.payload.isReverse
+		setDirection(
+			state,
+			action: PayloadAction<{ dirIndex: number; isReverse: boolean }>
+		) {
+			state.markupConfig.zone.directs[
+				action.payload.dirIndex - 1
+			].is_reverse = action.payload.isReverse
 		},
 		deleteMarkup(state) {
 			state.markupConfig = initialState.markupConfig

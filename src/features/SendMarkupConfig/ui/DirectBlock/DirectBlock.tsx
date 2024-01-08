@@ -43,7 +43,7 @@ const DirectBlock = (props: DirectBlockProps) => {
 				/>
 			</HStack>
 			<Checkbox
-				label='Обратное движение'
+				label='Исходящее движение'
 				checked={isReverse}
 				onChange={value => {
 					dispatch(

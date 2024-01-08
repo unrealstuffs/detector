@@ -47,7 +47,12 @@ const LineBlock = (props: LineBlockProps) => {
 				<AiOutlineClose
 					className={cls.deleteIcon}
 					onClick={() => {
-						dispatch(markupActions.deleteLine({ dirIndex: dirIndex, lineIndex: lineIndex }))
+						dispatch(
+							markupActions.deleteLine({
+								dirIndex: dirIndex,
+								lineIndex: lineIndex,
+							})
+						)
 					}}
 				/>
 			</HStack>
@@ -93,6 +98,7 @@ const LineBlock = (props: LineBlockProps) => {
 					}}
 				/>
 				<AppSelect
+					menuPlacement='top'
 					value={{ value: dirIndex, label: dirName }}
 					options={markupConfig.zone.directs.map(item => ({
 						label: item.name,

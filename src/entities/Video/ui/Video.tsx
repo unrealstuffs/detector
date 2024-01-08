@@ -5,7 +5,8 @@ import { classNames } from 'shared/lib/classNames'
 import cls from './Video.module.scss'
 import { useTypedSelector } from 'shared/hooks/useTypedSelector'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
-import ReactHlsPlayer from 'react-hls-player'
+import ReactHlsPlayer from '@gumlet/react-hls-player'
+import { Text } from 'shared/ui/Text/Text'
 
 interface VideoProps {
 	className?: string
@@ -13,7 +14,6 @@ interface VideoProps {
 
 const isDev = process.env.NODE_ENV === 'development'
 const devSrc = '10.0.0.94'
-const randomGetParameter = Math.round(Math.random() * 1000)
 
 export const Video = (props: VideoProps) => {
 	const { className } = props
@@ -38,7 +38,7 @@ export const Video = (props: VideoProps) => {
 				})
 			)
 		})
-		video?.addEventListener('loadedmetadata', () => {
+		video?.addEventListener('canplay', () => {
 			dispatch(videoActions.setStatus('success'))
 
 			dispatch(
@@ -59,7 +59,7 @@ export const Video = (props: VideoProps) => {
 		})
 
 		return () => {
-			video?.removeEventListener('loadedmetadata', () => {})
+			video?.removeEventListener('canplay', () => {})
 			video?.removeEventListener('loadstart', () => {})
 			window.removeEventListener('resize', () => {})
 		}
@@ -77,14 +77,20 @@ export const Video = (props: VideoProps) => {
 	}, [tab, dispatch, quality])
 
 	return (
-		<div ref={containerRef} className={classNames(cls.Video, {}, [className])}>
+		<div
+			ref={containerRef}
+			className={classNames(cls.Video, {}, [className])}
+		>
 			{status === 'loading' && <Loader className={cls.loader} />}
+			{status === 'error' && (
+				<Text text='Ошибка загрузки видео' className={cls.error} />
+			)}
 			<ReactHlsPlayer
 				className={cls.player}
 				playerRef={videoRef}
 				src={`http://${
 					isDev ? devSrc : window.location.host
-				}/hls/${quality}/index.m3u8?reset=${randomGetParameter}`}
+				}/hls/${quality}/index.m3u8`}
 				autoPlay
 				muted
 				controls={false}
