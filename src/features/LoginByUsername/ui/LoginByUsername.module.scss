@@ -1,0 +1,19 @@
+.loginForm {
+	@apply w-1/3 bg-white shadow-theme rounded-lg p-16;
+
+	.heading {
+		@apply mb-8 leading-none;
+	}
+
+	.input {
+		@apply mb-6;
+	}
+
+	.loginActions {
+		@apply text-center;
+	}
+}
+
+.errorMessage {
+	@apply mb-4;
+}

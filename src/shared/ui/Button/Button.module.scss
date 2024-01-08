@@ -1,0 +1,34 @@
+.Button {
+	@apply inline-block border outline-none rounded-lg text-white cursor-pointer transition-colors;
+
+	&.primary {
+		@apply bg-accent border-accent hover:bg-opacity-80;
+	}
+	&.danger {
+		@apply bg-danger border-danger hover:bg-opacity-90;
+	}
+	&.transparent {
+		@apply bg-transparent text-dark;
+	}
+	&.light {
+		@apply bg-secondary border-secondary hover:bg-opacity-80;
+	}
+	&.outline {
+		@apply bg-transparent border border-accent text-dark;
+	}
+	&.s {
+		@apply text-sm px-2 py-1 rounded-md;
+	}
+	&.m {
+		@apply text-base px-4 py-2 rounded-md;
+	}
+	&.l {
+		@apply text-lg px-6 py-2;
+	}
+	&.squared {
+		@apply p-2;
+	}
+	&:disabled {
+		@apply bg-light cursor-not-allowed;
+	}
+}

@@ -1,0 +1,11 @@
+.header {
+	@apply p-4 bg-[#F8F9FC] drop-shadow-xl;
+
+	.logo {
+		@apply w-10;
+	}
+}
+
+.logout {
+	@apply text-danger outline-none text-3xl opacity-70 hover:opacity-100 transition-opacity;
+}

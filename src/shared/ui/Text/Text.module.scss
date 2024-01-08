@@ -1,0 +1,60 @@
+.title,
+.text {
+	@apply text-dark;
+}
+
+.left {
+	@apply text-left;
+}
+
+.right {
+	@apply text-right;
+}
+
+.center {
+	@apply text-center;
+}
+
+.danger {
+	.title,
+	.text {
+		@apply text-danger;
+	}
+}
+
+.size_s {
+	.title {
+		@apply text-lg;
+	}
+
+	.text {
+		@apply text-xs;
+	}
+}
+
+.size_m {
+	.title {
+		@apply text-xl;
+	}
+
+	.text {
+		@apply text-base;
+	}
+}
+
+.size_l {
+	.title {
+		@apply text-3xl;
+	}
+
+	.text {
+		@apply text-xl;
+	}
+}
+
+.bold {
+	.title,
+	.text {
+		@apply font-bold;
+	}
+}

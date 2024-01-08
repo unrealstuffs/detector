@@ -1,0 +1,15 @@
+.MainLayout {
+	@apply grid grid-cols-app grid-rows-app gap-x-4;
+}
+
+.header {
+	@apply col-span-5;
+}
+
+.sidebar {
+	@apply col-span-2;
+}
+
+.video {
+	@apply col-span-3 ml-4;
+}
