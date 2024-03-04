@@ -1,6 +1,6 @@
 {
 	"name": "detector",
-	"version": "1.2.3",
+	"version": "1.2.4",
 	"private": true,
 	"dependencies": {
 		"@gumlet/react-hls-player": "^1.0.1",
