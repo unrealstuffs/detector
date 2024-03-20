@@ -81,13 +81,13 @@ export const EditLoginAndPassword = (props: SendDbConfigProps) => {
 					<Input
 						label='Текущий пароль'
 						required
-						type='text'
+						type='password'
 						value={password}
 						onChange={value => dispatch(userActions.setPassword(value))}
 					/>
 					<Input
 						label='Новый пароль'
-						type='text'
+						type='password'
 						value={newPassword}
 						onChange={value => dispatch(userActions.setNewPassword(value))}
 					/>

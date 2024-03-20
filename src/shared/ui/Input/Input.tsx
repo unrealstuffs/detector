@@ -4,6 +4,7 @@ import { classNames, Mods } from 'shared/lib/classNames'
 import { Text } from '../Text/Text'
 import { VStack } from '../Stack/VStack/VStack'
 import { HStack } from '../Stack/HStack/HStack'
+import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai'
 
 type HTMLInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'readOnly' | 'size'>
 
@@ -40,6 +41,7 @@ export const Input = memo((props: InputProps) => {
 	} = props
 	const ref = useRef<HTMLInputElement>(null)
 	const [isFocused, setIsFocused] = useState(false)
+	const [showPassword, setShowPassword] = useState(false)
 
 	useEffect(() => {
 		if (autofocus) {
@@ -65,7 +67,7 @@ export const Input = memo((props: InputProps) => {
 		[cls.error]: isError,
 	}
 
-	const input = (
+	let input = (
 		<input
 			ref={ref}
 			type={type}
@@ -80,6 +82,31 @@ export const Input = memo((props: InputProps) => {
 			{...otherProps}
 		/>
 	)
+
+	if (type === 'password') {
+		input = (
+			<div className={cls.container}>
+				<input
+					ref={ref}
+					type={showPassword ? 'text' : 'password'}
+					value={value}
+					onChange={onChangeHandler}
+					className={classNames(cls.Input, mods, [className, cls[size]])}
+					onFocus={onFocus}
+					onBlur={onBlur}
+					readOnly={readonly}
+					placeholder={placeholder}
+					required={required}
+					{...otherProps}
+				/>
+				{showPassword ? (
+					<AiOutlineEye className={cls.passwordEye} onClick={() => setShowPassword(!showPassword)} />
+				) : (
+					<AiOutlineEyeInvisible className={cls.passwordEye} onClick={() => setShowPassword(!showPassword)} />
+				)}
+			</div>
+		)
+	}
 
 	if (label) {
 		return (

@@ -38,22 +38,25 @@ export const LoginByUsername = (props: LoginByUsernameProps) => {
 		<div className={classNames(cls.loginForm, {}, [className])}>
 			<Text title='Вход' bold size='l' className={cls.heading} />
 			<form onSubmit={loginByUsernameHandler}>
-				<Input
-					autoFocus
-					label='Логин'
-					value={login}
-					required
-					className={cls.input}
-					onChange={value => dispatch(userActions.setLogin(value))}
-				/>
-				<Input
-					label='Пароль'
-					type='password'
-					value={password}
-					required
-					className={cls.input}
-					onChange={value => dispatch(userActions.setPassword(value))}
-				/>
+				<div className={cls.inputContainer}>
+					<Input
+						autoFocus
+						label='Логин'
+						value={login}
+						required
+						onChange={value => dispatch(userActions.setLogin(value))}
+					/>
+				</div>
+				<div className={cls.inputContainer}>
+					<Input
+						label='Пароль'
+						type='password'
+						value={password}
+						required
+						className={cls.input}
+						onChange={value => dispatch(userActions.setPassword(value))}
+					/>
+				</div>
 
 				<div className={cls.loginActions}>
 					<Button size='l' disabled={status === 'loading'} type='submit'>

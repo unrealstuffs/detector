@@ -29,3 +29,11 @@
 .required {
 	@apply text-danger leading-none text-lg;
 }
+
+.passwordEye {
+	@apply absolute right-2 top-1/2 -translate-y-1/2 text-xl text-dark cursor-pointer;
+}
+
+.container {
+	@apply w-full relative;
+}
