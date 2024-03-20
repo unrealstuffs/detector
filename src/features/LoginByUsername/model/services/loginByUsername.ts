@@ -16,7 +16,6 @@ export const loginByUsername = createAsyncThunk<any, LoginProps, ThunkConfig<any
 		const isDev = process.env.NODE_ENV === 'development'
 		if (isDev) {
 			return {
-				user: login,
 				accessToken:
 					'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6ImR0bSJ9.yFubHXiWPxNy-NwozAgjprns4YQ250kucjtwZhO7EXE',
 			}
@@ -27,9 +26,6 @@ export const loginByUsername = createAsyncThunk<any, LoginProps, ThunkConfig<any
 				body: JSON.stringify({ login, password }),
 			})
 			const {
-				data: {
-					user: { name },
-				},
 				result,
 				meta: { message },
 			} = await response.json()
@@ -39,7 +35,6 @@ export const loginByUsername = createAsyncThunk<any, LoginProps, ThunkConfig<any
 			}
 
 			return {
-				user: name || '',
 				accessToken: response.headers.get('Authorization') || '',
 			}
 		} catch (error) {
