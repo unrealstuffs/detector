@@ -2,15 +2,11 @@ import { ReactNode } from 'react'
 import { Tabs } from '../slices/tabsSlice'
 import { SendCameraConfig } from 'features/SendCameraConfig'
 import { SendDbConfig } from 'features/SendDbConfig'
-import {
-	DataAvgDelay,
-	DataAvgSpeed,
-	DataDensity,
-	DataTypes,
-} from 'widgets/Data'
+import { DataAvgDelay, DataAvgSpeed, DataDensity, DataTypes } from 'widgets/Data'
 import { DataComposition } from 'widgets/Data/ui/DataComposition/DataComposition'
 import { DataIntensity } from 'widgets/Data/ui/DataIntensity/DataIntensity'
 import { SendMarkupConfig } from 'features/SendMarkupConfig'
+import { EditLoginAndPassword } from 'features/EditLoginAndPassword/ui/EditLoginAndPassword'
 
 interface SidebarPages {
 	tabName: Tabs
@@ -46,6 +42,10 @@ export const sidebarPages: SidebarPages[] = [
 			{
 				header: 'Параметры репликации на удаленную базу данных',
 				element: <SendDbConfig />,
+			},
+			{
+				header: 'Настройки интерфейса управления',
+				element: <EditLoginAndPassword />,
 			},
 		],
 	},

@@ -3,6 +3,7 @@ import cls from './Input.module.scss'
 import { classNames, Mods } from 'shared/lib/classNames'
 import { Text } from '../Text/Text'
 import { VStack } from '../Stack/VStack/VStack'
+import { HStack } from '../Stack/HStack/HStack'
 
 type HTMLInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'readOnly' | 'size'>
 
@@ -18,6 +19,7 @@ interface InputProps extends HTMLInputProps {
 	size?: InputSize
 	isError?: boolean
 	fullWidth?: boolean
+	required?: boolean
 }
 
 export const Input = memo((props: InputProps) => {
@@ -33,6 +35,7 @@ export const Input = memo((props: InputProps) => {
 		size = 'm',
 		isError,
 		fullWidth = false,
+		required = false,
 		...otherProps
 	} = props
 	const ref = useRef<HTMLInputElement>(null)
@@ -73,6 +76,7 @@ export const Input = memo((props: InputProps) => {
 			onBlur={onBlur}
 			readOnly={readonly}
 			placeholder={placeholder}
+			required={required}
 			{...otherProps}
 		/>
 	)
@@ -80,7 +84,10 @@ export const Input = memo((props: InputProps) => {
 	if (label) {
 		return (
 			<VStack max={fullWidth} gap='8'>
-				<Text text={label} bold size='s' />
+				<HStack gap='4'>
+					<Text text={label} bold size='s' />
+					{required && <span className={cls.required}>*</span>}
+				</HStack>
 				{input}
 			</VStack>
 		)

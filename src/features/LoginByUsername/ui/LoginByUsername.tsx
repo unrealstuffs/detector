@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react'
+import { FormEvent } from 'react'
 import cls from './LoginByUsername.module.scss'
 import Button from 'shared/ui/Button/Button'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
@@ -9,6 +9,7 @@ import { Input } from 'shared/ui/Input/Input'
 import { classNames } from 'shared/lib/classNames'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
+import { userActions } from 'entities/User'
 
 interface LoginByUsernameProps {
 	className?: string
@@ -16,15 +17,11 @@ interface LoginByUsernameProps {
 
 export const LoginByUsername = (props: LoginByUsernameProps) => {
 	const { className } = props
-	const [login, setLogin] = useState('')
-	const [password, setPassword] = useState('')
-	const { status } = useTypedSelector(state => state.user)
+	const { status, login, password } = useTypedSelector(state => state.user)
 	const dispatch = useAppDispatch()
 	const navigate = useNavigate()
 
-	const loginByUsernameHandler = async (
-		event: FormEvent<HTMLFormElement>
-	) => {
+	const loginByUsernameHandler = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 
 		const result = await dispatch(loginByUsername({ login, password }))
@@ -47,7 +44,7 @@ export const LoginByUsername = (props: LoginByUsernameProps) => {
 					value={login}
 					required
 					className={cls.input}
-					onChange={value => setLogin(value)}
+					onChange={value => dispatch(userActions.setLogin(value))}
 				/>
 				<Input
 					label='Пароль'
@@ -55,15 +52,11 @@ export const LoginByUsername = (props: LoginByUsernameProps) => {
 					value={password}
 					required
 					className={cls.input}
-					onChange={value => setPassword(value)}
+					onChange={value => dispatch(userActions.setPassword(value))}
 				/>
 
 				<div className={cls.loginActions}>
-					<Button
-						size='l'
-						disabled={status === 'loading'}
-						type='submit'
-					>
+					<Button size='l' disabled={status === 'loading'} type='submit'>
 						Войти
 					</Button>
 				</div>

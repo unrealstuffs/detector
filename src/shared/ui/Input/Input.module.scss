@@ -1,27 +1,31 @@
 .s {
-    @apply px-3 py-1;
+	@apply px-3 py-1;
 }
 
 .m {
-    @apply px-3 py-2;
+	@apply px-3 py-2;
 }
 
 .Input {
-    @apply border border-light outline-none w-full text-dark bg-white rounded-md;
+	@apply border border-light outline-none w-full text-dark bg-white rounded-md;
 
-    &::placeholder {
-        @apply text-light;
-    }
+	&::placeholder {
+		@apply text-light;
+	}
 }
 
 .focused {
-    @apply border-accent;
+	@apply border-accent;
 }
 
 .readonly {
-    @apply opacity-70;
+	@apply opacity-70;
 }
 
 .error {
-    @apply border-danger;
+	@apply border-danger;
+}
+
+.required {
+	@apply text-danger leading-none text-lg;
 }

@@ -1,4 +1,5 @@
 export interface User {
-	user: any
 	accessToken: string | null
+	login: string
+	password: string
 }
