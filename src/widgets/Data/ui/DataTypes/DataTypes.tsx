@@ -10,6 +10,7 @@ import { fetchTypes } from '../../model/api/fetchTypes'
 
 export const DataTypes = () => {
 	const { data, status, tableRows, blockFetching } = useTypedSelector(state => state.types)
+
 	const { markupConfig } = useTypedSelector(state => state.markup)
 	const dispatch = useAppDispatch()
 

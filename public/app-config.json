@@ -1,6 +1,7 @@
 {
-	"restartCamera": true,
-	"videoQuality": true,
-	"focusAndZoomType": "STEP",
-	"servoSettings": true
+	"restartCamera": false,
+	"videoQuality": false,
+	"focusAndZoomType": "NUM",
+	"servoSettings": true,
+	"showMarkAndColor": false
 }

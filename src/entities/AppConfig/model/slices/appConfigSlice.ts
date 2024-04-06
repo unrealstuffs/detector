@@ -6,6 +6,7 @@ export interface AppConfigState {
 	videoQuality: boolean
 	servoSettings: boolean
 	focusAndZoomType: 'STEP' | 'NUM'
+	showMarkAndColor: boolean
 }
 
 const initialState: AppConfigState = {
@@ -13,6 +14,7 @@ const initialState: AppConfigState = {
 	videoQuality: false,
 	servoSettings: false,
 	focusAndZoomType: 'NUM',
+	showMarkAndColor: true,
 }
 
 const appConfigSlice = createSlice({
@@ -20,20 +22,19 @@ const appConfigSlice = createSlice({
 	initialState,
 	reducers: {},
 	extraReducers: builder => {
-		builder.addCase(
-			getAppConfig.fulfilled,
-			(state, action: PayloadAction<AppConfigState>) => {
-				state.focusAndZoomType = action.payload.focusAndZoomType
-				state.servoSettings = action.payload.servoSettings
-				state.videoQuality = action.payload.videoQuality
-				state.restartCamera = action.payload.restartCamera
-			}
-		)
+		builder.addCase(getAppConfig.fulfilled, (state, action: PayloadAction<AppConfigState>) => {
+			state.focusAndZoomType = action.payload.focusAndZoomType
+			state.servoSettings = action.payload.servoSettings
+			state.videoQuality = action.payload.videoQuality
+			state.restartCamera = action.payload.restartCamera
+			state.showMarkAndColor = action.payload.showMarkAndColor
+		})
 		builder.addCase(getAppConfig.rejected, state => {
 			state.focusAndZoomType = initialState.focusAndZoomType
 			state.servoSettings = initialState.servoSettings
 			state.videoQuality = initialState.videoQuality
 			state.restartCamera = initialState.restartCamera
+			state.showMarkAndColor = initialState.showMarkAndColor
 		})
 	},
 })

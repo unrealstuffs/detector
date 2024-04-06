@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.2] - 2024-03-25
+
+### Added
+
+-   Add show/hide mark and color fields in app-config.
+
 ## [1.3.1]
 
 ### Changed
