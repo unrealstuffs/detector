@@ -1,6 +1,6 @@
 {
 	"restartCamera": true,
 	"videoQuality": true,
-	"focusAndZoomType": "STEP",
+	"focusAndZoomByStep": true,
 	"servoSettings": true
 }

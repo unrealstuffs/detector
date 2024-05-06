@@ -6,7 +6,6 @@ import cls from './Video.module.scss'
 import { useTypedSelector } from 'shared/hooks/useTypedSelector'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 import ReactHlsPlayer from '@gumlet/react-hls-player'
-import { Text } from 'shared/ui/Text/Text'
 
 interface VideoProps {
 	className?: string
@@ -28,25 +27,15 @@ export const Video = (props: VideoProps) => {
 		const video = videoRef.current
 		const container = containerRef.current
 
-		video?.addEventListener('loadstart', () => {
-			dispatch(videoActions.setStatus('loading'))
+		dispatch(
+			videoActions.setVideoSize({
+				width: container?.offsetWidth,
+				height: container?.offsetHeight,
+			})
+		)
 
-			dispatch(
-				videoActions.setVideoSize({
-					width: container?.offsetWidth,
-					height: container?.offsetHeight,
-				})
-			)
-		})
-		video?.addEventListener('canplay', () => {
+		video?.addEventListener('loadedmetadata', () => {
 			dispatch(videoActions.setStatus('success'))
-
-			dispatch(
-				videoActions.setVideoSize({
-					width: container?.offsetWidth,
-					height: container?.offsetHeight,
-				})
-			)
 		})
 
 		window.addEventListener('resize', () => {
@@ -59,8 +48,7 @@ export const Video = (props: VideoProps) => {
 		})
 
 		return () => {
-			video?.removeEventListener('canplay', () => {})
-			video?.removeEventListener('loadstart', () => {})
+			video?.removeEventListener('loadedmetadata', () => {})
 			window.removeEventListener('resize', () => {})
 		}
 	}, [dispatch])
@@ -77,20 +65,12 @@ export const Video = (props: VideoProps) => {
 	}, [tab, dispatch, quality])
 
 	return (
-		<div
-			ref={containerRef}
-			className={classNames(cls.Video, {}, [className])}
-		>
+		<div ref={containerRef} className={classNames(cls.Video, {}, [className])}>
 			{status === 'loading' && <Loader className={cls.loader} />}
-			{status === 'error' && (
-				<Text text='Ошибка загрузки видео' className={cls.error} />
-			)}
 			<ReactHlsPlayer
 				className={cls.player}
 				playerRef={videoRef}
-				src={`http://${
-					isDev ? devSrc : window.location.host
-				}/hls/${quality}/index.m3u8`}
+				src={`http://${isDev ? devSrc : window.location.host}/hls/${quality}/index.m3u8`}
 				autoPlay
 				muted
 				controls={false}

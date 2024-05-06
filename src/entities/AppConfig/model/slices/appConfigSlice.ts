@@ -5,14 +5,14 @@ export interface AppConfigState {
 	restartCamera: boolean
 	videoQuality: boolean
 	servoSettings: boolean
-	focusAndZoomType: 'STEP' | 'NUM'
+	focusAndZoomByStep: boolean
 }
 
 const initialState: AppConfigState = {
 	restartCamera: false,
 	videoQuality: false,
 	servoSettings: false,
-	focusAndZoomType: 'NUM',
+	focusAndZoomByStep: true,
 }
 
 const appConfigSlice = createSlice({
@@ -20,17 +20,14 @@ const appConfigSlice = createSlice({
 	initialState,
 	reducers: {},
 	extraReducers: builder => {
-		builder.addCase(
-			getAppConfig.fulfilled,
-			(state, action: PayloadAction<AppConfigState>) => {
-				state.focusAndZoomType = action.payload.focusAndZoomType
-				state.servoSettings = action.payload.servoSettings
-				state.videoQuality = action.payload.videoQuality
-				state.restartCamera = action.payload.restartCamera
-			}
-		)
+		builder.addCase(getAppConfig.fulfilled, (state, action: PayloadAction<AppConfigState>) => {
+			state.focusAndZoomByStep = action.payload.focusAndZoomByStep
+			state.servoSettings = action.payload.servoSettings
+			state.videoQuality = action.payload.videoQuality
+			state.restartCamera = action.payload.restartCamera
+		})
 		builder.addCase(getAppConfig.rejected, state => {
-			state.focusAndZoomType = initialState.focusAndZoomType
+			state.focusAndZoomByStep = initialState.focusAndZoomByStep
 			state.servoSettings = initialState.servoSettings
 			state.videoQuality = initialState.videoQuality
 			state.restartCamera = initialState.restartCamera
