@@ -4,12 +4,12 @@ import { compositionActions } from 'widgets/Data'
 import { Input } from 'shared/ui/Input/Input'
 import AppSelect from 'shared/ui/AppSelect/AppSelect'
 
-type UnitsType = 'seconds' | 'minutes' | 'hours' | 'days'
+type UnitsType = 'minutes' | 'hours' | 'days'
 
 const IntervalConverter = () => {
-	const [value, setValue] = useState<string>('')
-	const [unit, setUnit] = useState<UnitsType>('seconds')
-	const [convertedValue, setConvertedValue] = useState<number>(0)
+	const [value, setValue] = useState<string>('15')
+	const [unit, setUnit] = useState<UnitsType>('minutes')
+	const [convertedValue, setConvertedValue] = useState<number>(15 * 60)
 	const dispatch = useAppDispatch()
 
 	useEffect(() => {
@@ -25,11 +25,8 @@ const IntervalConverter = () => {
 			case 'hours':
 				seconds = value * 60 * 60
 				break
-			case 'minutes':
-				seconds = value * 60
-				break
 			default:
-				seconds = value
+				seconds = value * 60
 				break
 		}
 
@@ -50,17 +47,10 @@ const IntervalConverter = () => {
 
 	return (
 		<>
-			<Input
-				size='s'
-				type='number'
-				placeholder='Интервал...'
-				value={value}
-				onChange={handleInputChange}
-			/>
+			<Input size='s' type='number' placeholder='Интервал...' value={value} onChange={handleInputChange} />
 			<AppSelect
-				defaultValue={{ label: 'Секунд', value: unit }}
+				defaultValue={{ label: 'Минут', value: 'minutes' }}
 				options={[
-					{ label: 'Секунд', value: 'seconds' },
 					{ label: 'Минут', value: 'minutes' },
 					{ label: 'Часов', value: 'hours' },
 					{ label: 'Дней', value: 'days' },

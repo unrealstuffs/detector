@@ -26,6 +26,7 @@ const videoSlice = createSlice({
 			state.videoSize = action.payload
 		},
 		setQuality(state, action: PayloadAction<VideoQuality>) {
+			state.status = 'loading'
 			state.quality = action.payload
 		},
 		setStatus(state, action: PayloadAction<FetchStatus>) {

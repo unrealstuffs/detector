@@ -14,45 +14,43 @@ interface TableProps {
 
 export const Table = (props: TableProps) => {
 	const { columns, data, rowsCount, status, className } = props
-	const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-		useTable(
-			{
-				columns,
-				data,
+	const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
+		{
+			columns,
+			data,
+			initialState: {
+				sortBy: [
+					{
+						id: 'timestamp',
+						desc: false,
+					},
+					{
+						id: 'timestampRange',
+						desc: false,
+					},
+				],
 			},
-			useSortBy
-		)
+		},
+		useSortBy
+	)
 
 	const pageRows = rows.slice(0, rowsCount)
 
 	return (
 		<div className={cls.Container}>
-			<table
-				{...getTableProps()}
-				className={classNames(cls.table, {}, [className])}
-			>
+			<table {...getTableProps()} className={classNames(cls.table, {}, [className])}>
 				<thead>
 					{headerGroups.map(headerGroup => (
 						<tr {...headerGroup.getHeaderGroupProps()}>
 							{headerGroup.headers.map(column => (
-								<th
-									{...column.getHeaderProps(
-										column.getSortByToggleProps()
-									)}
-								>
+								<th {...column.getHeaderProps(column.getSortByToggleProps())}>
 									{column.render('Header')}
 									<span>
 										{column.isSorted ? (
 											column.isSortedDesc ? (
-												<AiOutlineCaretDown
-													size={10}
-													className={cls.icon}
-												/>
+												<AiOutlineCaretDown size={10} className={cls.icon} />
 											) : (
-												<AiOutlineCaretUp
-													size={10}
-													className={cls.icon}
-												/>
+												<AiOutlineCaretUp size={10} className={cls.icon} />
 											)
 										) : (
 											''
@@ -72,15 +70,9 @@ export const Table = (props: TableProps) => {
 									return (
 										<td
 											{...cell.getCellProps()}
-											className={
-												cell.value
-													? 'text-dark'
-													: 'text-light'
-											}
+											className={cell.value ? 'text-dark' : 'text-light'}
 										>
-											{cell.value
-												? cell.render('Cell')
-												: 'Не опознано'}
+											{cell.value ? cell.render('Cell') : 'Не опознано'}
 										</td>
 									)
 								})}
@@ -89,10 +81,7 @@ export const Table = (props: TableProps) => {
 					})}
 					{status !== 'success' && !pageRows.length && (
 						<tr>
-							<td
-								colSpan={columns.length}
-								style={{ textAlign: 'center' }}
-							>
+							<td colSpan={columns.length} style={{ textAlign: 'center' }}>
 								{status === 'init' && 'Нет данных'}
 								{status === 'error' && 'Ошибка сервера'}
 								{status === 'loading' && 'Загрузка'}

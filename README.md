@@ -48,7 +48,7 @@ Detector is a React application that serves as an interface for controlling a ve
     {
     	"restartCamera": true,
     	"videoQuality": true,
-    	"focusAndZoomType": "STEP",
+    	"focusAndZoomByStep": true,
     	"servoSettings": true
     }
     ```

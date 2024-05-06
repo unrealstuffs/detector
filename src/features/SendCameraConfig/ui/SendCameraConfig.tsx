@@ -16,9 +16,7 @@ import NumInput from 'shared/ui/NumInput/NumInput'
 
 export const SendCameraConfig = () => {
 	const { cameraConfig, status } = useTypedSelector(state => state.camera)
-	const { servoSettings, focusAndZoomType, restartCamera } = useTypedSelector(
-		state => state.appConfig
-	)
+	const { servoSettings, focusAndZoomByStep, restartCamera } = useTypedSelector(state => state.appConfig)
 
 	const dispatch = useAppDispatch()
 
@@ -50,26 +48,18 @@ export const SendCameraConfig = () => {
 				<Checkbox
 					label='Инфракрасный фильтр'
 					checked={cameraConfig.filter}
-					onChange={checked =>
-						dispatch(cameraActions.setFilter(checked))
-					}
+					onChange={checked => dispatch(cameraActions.setFilter(checked))}
 				/>
 				<div></div>
-				{focusAndZoomType === 'NUM' ? (
+				{!focusAndZoomByStep ? (
 					<NumInput
 						label='Параметры зума'
-						value={
-							typeof cameraConfig.zoom === 'number'
-								? cameraConfig.zoom
-								: 0
-						}
+						value={typeof cameraConfig.zoom === 'number' ? cameraConfig.zoom : 0}
 						increment={100}
 						bigIncrement={1000}
 						max={20000}
 						min={0}
-						onChange={value =>
-							dispatch(cameraActions.setZoom(value))
-						}
+						onChange={value => dispatch(cameraActions.setZoom(value))}
 					/>
 				) : (
 					<VStack gap='8'>
@@ -80,16 +70,13 @@ export const SendCameraConfig = () => {
 									if (cameraConfig.zoom === 'STEP_M') {
 										dispatch(cameraActions.setZoom(null))
 									} else {
-										dispatch(
-											cameraActions.setZoom('STEP_M')
-										)
+										dispatch(cameraActions.setZoom('STEP_M'))
 									}
 								}}
 								className={classNames(
 									cls.icon,
 									{
-										[cls.active]:
-											cameraConfig.zoom === 'STEP_M',
+										[cls.active]: cameraConfig.zoom === 'STEP_M',
 									},
 									[]
 								)}
@@ -99,16 +86,13 @@ export const SendCameraConfig = () => {
 									if (cameraConfig.zoom === 'STEP_P') {
 										dispatch(cameraActions.setZoom(null))
 									} else {
-										dispatch(
-											cameraActions.setZoom('STEP_P')
-										)
+										dispatch(cameraActions.setZoom('STEP_P'))
 									}
 								}}
 								className={classNames(
 									cls.icon,
 									{
-										[cls.active]:
-											cameraConfig.zoom === 'STEP_P',
+										[cls.active]: cameraConfig.zoom === 'STEP_P',
 									},
 									[]
 								)}
@@ -125,29 +109,21 @@ export const SendCameraConfig = () => {
 						bigIncrement={5}
 						max={95}
 						min={85}
-						onChange={value =>
-							dispatch(cameraActions.setServoX(value))
-						}
+						onChange={value => dispatch(cameraActions.setServoX(value))}
 					/>
 				) : (
 					<div></div>
 				)}
 
-				{focusAndZoomType === 'NUM' ? (
+				{!focusAndZoomByStep ? (
 					<NumInput
 						label='Параметры фокуса'
-						value={
-							typeof cameraConfig.focus === 'number'
-								? cameraConfig.focus
-								: 0
-						}
+						value={typeof cameraConfig.focus === 'number' ? cameraConfig.focus : 0}
 						increment={100}
 						bigIncrement={1000}
 						max={20000}
 						min={0}
-						onChange={value =>
-							dispatch(cameraActions.setFocus(value))
-						}
+						onChange={value => dispatch(cameraActions.setFocus(value))}
 					/>
 				) : (
 					<VStack gap='8'>
@@ -158,16 +134,13 @@ export const SendCameraConfig = () => {
 									if (cameraConfig.focus === 'STEP_M') {
 										dispatch(cameraActions.setFocus(null))
 									} else {
-										dispatch(
-											cameraActions.setFocus('STEP_M')
-										)
+										dispatch(cameraActions.setFocus('STEP_M'))
 									}
 								}}
 								className={classNames(
 									cls.icon,
 									{
-										[cls.active]:
-											cameraConfig.focus === 'STEP_M',
+										[cls.active]: cameraConfig.focus === 'STEP_M',
 									},
 									[]
 								)}
@@ -177,16 +150,13 @@ export const SendCameraConfig = () => {
 									if (cameraConfig.focus === 'STEP_P') {
 										dispatch(cameraActions.setFocus(null))
 									} else {
-										dispatch(
-											cameraActions.setFocus('STEP_P')
-										)
+										dispatch(cameraActions.setFocus('STEP_P'))
 									}
 								}}
 								className={classNames(
 									cls.icon,
 									{
-										[cls.active]:
-											cameraConfig.focus === 'STEP_P',
+										[cls.active]: cameraConfig.focus === 'STEP_P',
 									},
 									[]
 								)}
@@ -203,29 +173,18 @@ export const SendCameraConfig = () => {
 						bigIncrement={5}
 						max={95}
 						min={85}
-						onChange={value =>
-							dispatch(cameraActions.setServoY(value))
-						}
+						onChange={value => dispatch(cameraActions.setServoY(value))}
 					/>
 				) : (
 					<div></div>
 				)}
 			</div>
 			<HStack gap='12'>
-				<Button
-					disabled={status === 'loading'}
-					onClick={sendCameraConfigHandler}
-					size='m'
-				>
+				<Button disabled={status === 'loading'} onClick={sendCameraConfigHandler} size='m'>
 					Сохранить
 				</Button>
 				{restartCamera && (
-					<Button
-						disabled={status === 'loading'}
-						color='light'
-						onClick={sendRestartCameraHandler}
-						size='m'
-					>
+					<Button disabled={status === 'loading'} color='light' onClick={sendRestartCameraHandler} size='m'>
 						Перезагрузить камеру
 					</Button>
 				)}

@@ -1,18 +1,14 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { searchComposition } from '../api/searchComposition'
 import { fetchComposition } from '../api/fetchComposition'
-import {
-	Composition,
-	CompositionSchema,
-	CompositionSearch,
-} from '../types/Composition'
+import { Composition, CompositionSchema, CompositionSearch } from '../types/Composition'
 import { checkArrayLimit } from '../services/checkArrayLimit'
 
 const initialSearchObject: CompositionSearch = {
 	vehicleTypes: [],
 	directions: [],
 	lines: [],
-	interval: 0,
+	interval: 60 * 15,
 	quantity: { value: '', statement: 'more' },
 	timestampRange: {
 		from: '',
@@ -62,10 +58,7 @@ const compositionSlice = createSlice({
 		setQuantityValue: (state, action: PayloadAction<string>) => {
 			state.searchObject.quantity.value = action.payload
 		},
-		setTimestampRangeFrom: (
-			state,
-			action: PayloadAction<string | Date>
-		) => {
+		setTimestampRangeFrom: (state, action: PayloadAction<string | Date>) => {
 			state.searchObject.timestampRange.from = action.payload
 		},
 		setTimestampRangeTo: (state, action: PayloadAction<string | Date>) => {
@@ -76,24 +69,18 @@ const compositionSlice = createSlice({
 		},
 	},
 	extraReducers: builder => {
-		builder.addCase(
-			fetchComposition.fulfilled,
-			(state, action: PayloadAction<Composition[]>) => {
-				state.data.unshift(...checkArrayLimit(action.payload))
-			}
-		)
+		builder.addCase(fetchComposition.fulfilled, (state, action: PayloadAction<Composition[]>) => {
+			state.data.unshift(...checkArrayLimit(action.payload))
+		})
 		builder.addCase(searchComposition.pending, state => {
 			state.data = []
 			state.blockFetching = true
 			state.status = 'loading'
 		})
-		builder.addCase(
-			searchComposition.fulfilled,
-			(state, action: PayloadAction<Composition[]>) => {
-				state.status = action.payload.length ? 'success' : 'nodata'
-				state.data = checkArrayLimit(action.payload)
-			}
-		)
+		builder.addCase(searchComposition.fulfilled, (state, action: PayloadAction<Composition[]>) => {
+			state.status = action.payload.length ? 'success' : 'nodata'
+			state.data = checkArrayLimit(action.payload)
+		})
 		builder.addCase(searchComposition.rejected, state => {
 			state.status = 'error'
 		})
