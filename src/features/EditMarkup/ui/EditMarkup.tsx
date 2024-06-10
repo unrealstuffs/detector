@@ -118,7 +118,7 @@ export const EditMarkup = () => {
 													),
 												]}
 												stroke={colors.lineColor}
-												opacity={shiftPressed ? 1 : 0.4}
+												opacity={shiftPressed ? 1 : 0.6}
 												strokeWidth={lineWidth}
 											/>
 										))}
@@ -130,7 +130,7 @@ export const EditMarkup = () => {
 											getValueByPercent(gate.gate[1].point.y, videoSize.height),
 										]}
 										stroke={gate.index === 3 ? colors.conterColor : colors.lineColor}
-										opacity={gate.index === 1 || gate.index === 5 ? (shiftPressed ? 1 : 0.4) : 1}
+										opacity={gate.index === 1 || gate.index === 5 ? (shiftPressed ? 1 : 0.6) : 1}
 										strokeWidth={lineWidth}
 										hitStrokeWidth={shiftPressed ? 100 : 0}
 									/>

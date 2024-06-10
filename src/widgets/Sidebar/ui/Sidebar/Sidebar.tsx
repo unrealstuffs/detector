@@ -6,8 +6,9 @@ import SidebarTab from '../SidebarTab/SidebarTab'
 import SidebarBlock from '../SidebarBlock/SidebarBlock'
 import { classNames } from 'shared/lib/classNames'
 import SidebarPage from '../SidebarPage/SidebarPage'
-import { sidebarPages } from '../../model/consts/sidebarPages'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
+import useSidebarPages from '../../model/hooks/useSidebarPages'
+// import { sidebarPages } from '../../model/consts/sidebarPages'
 
 interface SidebarProps {
 	className?: string
@@ -16,6 +17,7 @@ interface SidebarProps {
 export const Sidebar = (props: SidebarProps) => {
 	const { className } = props
 	const { tab } = useTypedSelector(state => state.tabs)
+	const sidebarPages = useSidebarPages()
 	const dispatch = useAppDispatch()
 
 	return (
@@ -33,11 +35,16 @@ export const Sidebar = (props: SidebarProps) => {
 			</HStack>
 			{sidebarPages.map(({ blocks, tabName }) => (
 				<SidebarPage key={tabName} show={tab === tabName}>
-					{blocks.map(({ element, header }) => (
-						<SidebarBlock key={header} header={header}>
-							{element}
-						</SidebarBlock>
-					))}
+					{blocks.map(({ element, header, hide }) => {
+						if (hide) {
+							return null
+						}
+						return (
+							<SidebarBlock key={header} header={header}>
+								{element}
+							</SidebarBlock>
+						)
+					})}
 				</SidebarPage>
 			))}
 		</div>

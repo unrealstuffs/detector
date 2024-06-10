@@ -2,5 +2,6 @@
 	"restartCamera": true,
 	"videoQuality": true,
 	"focusAndZoomByStep": true,
-	"servoSettings": true
+	"servoSettings": true,
+	"showChangeLoginAndPassword": false
 }

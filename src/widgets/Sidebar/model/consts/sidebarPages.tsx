@@ -14,6 +14,7 @@ interface SidebarPages {
 	blocks: {
 		header: string
 		element: ReactNode
+		hide?: boolean
 	}[]
 }
 

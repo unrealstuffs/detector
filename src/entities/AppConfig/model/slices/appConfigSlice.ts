@@ -6,6 +6,7 @@ export interface AppConfigState {
 	videoQuality: boolean
 	servoSettings: boolean
 	focusAndZoomByStep: boolean
+	showChangeLoginAndPassword: boolean
 }
 
 const initialState: AppConfigState = {
@@ -13,6 +14,7 @@ const initialState: AppConfigState = {
 	videoQuality: false,
 	servoSettings: false,
 	focusAndZoomByStep: true,
+	showChangeLoginAndPassword: false,
 }
 
 const appConfigSlice = createSlice({
@@ -25,12 +27,14 @@ const appConfigSlice = createSlice({
 			state.servoSettings = action.payload.servoSettings
 			state.videoQuality = action.payload.videoQuality
 			state.restartCamera = action.payload.restartCamera
+			state.showChangeLoginAndPassword = action.payload.showChangeLoginAndPassword
 		})
 		builder.addCase(getAppConfig.rejected, state => {
 			state.focusAndZoomByStep = initialState.focusAndZoomByStep
 			state.servoSettings = initialState.servoSettings
 			state.videoQuality = initialState.videoQuality
 			state.restartCamera = initialState.restartCamera
+			state.showChangeLoginAndPassword = initialState.showChangeLoginAndPassword
 		})
 	},
 })

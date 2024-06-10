@@ -12,6 +12,7 @@ interface SidebarBlockProps {
 
 const SidebarBlock = (props: SidebarBlockProps) => {
 	const { children, className, header } = props
+
 	return (
 		<div className={classNames(cls.SidebarBlock, {}, [className])}>
 			<Text title={header} bold size='m' className={cls.heading} />
