@@ -1,13 +1,15 @@
 import { FetchStatus } from 'shared/types/FetchStatus'
 
-type StepType = 'STEP_P' | 'STEP_M' | null | number
+type StepType = 'STEP_P' | 'STEP_M' | null | number | 'NEXT' | 'PREV'
 
 export interface CameraFetch {
 	filter: boolean
 	servoX: number
 	servoY: number
-	zoom: StepType
-	focus: StepType
+	zoomPreset: {
+		max_preset: number
+		current: number
+	}
 }
 
 export interface CameraSettings {
@@ -16,6 +18,10 @@ export interface CameraSettings {
 	focus: StepType
 	servoX: number
 	servoY: number
+	zoomPreset: {
+		max_preset: number
+		current: number
+	}
 }
 
 export interface CameraSchema {
