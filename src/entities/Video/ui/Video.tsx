@@ -67,10 +67,15 @@ export const Video = (props: VideoProps) => {
 	return (
 		<div ref={containerRef} className={classNames(cls.Video, {}, [className])}>
 			{status === 'loading' && <Loader className={cls.loader} />}
+
 			<ReactHlsPlayer
 				className={cls.player}
 				playerRef={videoRef}
-				src={`http://${isDev ? devSrc : window.location.host}/hls/${quality}/index.m3u8`}
+				src={
+					status !== 'nodata'
+						? `http://${isDev ? devSrc : window.location.host}/hls/${quality}/index.m3u8`
+						: ''
+				}
 				autoPlay
 				muted
 				controls={false}

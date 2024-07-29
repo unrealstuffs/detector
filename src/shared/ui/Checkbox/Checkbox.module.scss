@@ -1,0 +1,26 @@
+.reverse {
+	@apply flex-row-reverse;
+}
+
+.Checkbox {
+	@apply cursor-pointer flex items-center gap-2;
+}
+
+.track {
+	@apply w-10 h-6 bg-light rounded-xl flex items-center transition-colors duration-300;
+}
+
+.thumb {
+	@apply inline-block bg-white w-4 h-4 rounded-full translate-x-1 transition-transform duration-300;
+}
+
+.input {
+	@apply appearance-none absolute cursor-pointer;
+
+	&:checked + .track {
+		@apply bg-accent;
+		.thumb {
+			@apply translate-x-5;
+		}
+	}
+}

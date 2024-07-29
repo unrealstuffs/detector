@@ -9,7 +9,12 @@ import { labelFontSize, lineWidth, pointSize } from '../model/consts/sizes'
 import { getValueByPercent } from 'shared/lib/getValueByPercent'
 import { getPercentOfValue } from 'shared/lib/getPercentOfValue'
 
-export const EditMarkup = () => {
+interface EditMarkupProps {
+	muted: boolean
+}
+
+export const EditMarkup = (props: EditMarkupProps) => {
+	const { muted } = props
 	const { videoSize } = useTypedSelector(state => state.video)
 	const { markupConfig, shiftPressed, ctrlPressed } = useTypedSelector(state => state.markup)
 	const { tab } = useTypedSelector(state => state.tabs)
@@ -82,6 +87,7 @@ export const EditMarkup = () => {
 				left: 0,
 				top: 0,
 				width: '100%',
+				opacity: muted ? 0.5 : 1,
 			}}
 			onContextMenu={e => e.evt.preventDefault()}
 		>

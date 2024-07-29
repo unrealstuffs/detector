@@ -3,7 +3,6 @@ import { MarkupConfig } from '../types/markupConfig'
 import { getMarkupConfig } from '../services/getMarkupConfig'
 import { sendMarkupConfig } from '../services/sendMarkupConfig'
 import { FetchStatus } from 'shared/types/FetchStatus'
-import { testMarkup } from './testMarkup'
 
 interface MarkupSchema {
 	markupConfig: MarkupConfig
@@ -16,34 +15,34 @@ const initialState: MarkupSchema = {
 	status: 'init',
 	shiftPressed: false,
 	ctrlPressed: false,
-	markupConfig: testMarkup,
-	// markupConfig: {
-	// 	version: 21,
-	// 	uid: '00000000-0000-0000-0000-000000000000',
-	// 	base_size: { width: 0, height: 0 },
-	// 	zone: {
-	// 		name: 'test',
-	// 		index: 1,
-	// 		type: 'edge',
-	// 		description: '',
-	// 		directs: [
-	// 			{
-	// 				index: 1,
-	// 				name: 'входящее',
-	// 				is_reverse: false,
-	// 				description: '',
-	// 				lines: [],
-	// 			},
-	// 			{
-	// 				index: 2,
-	// 				name: 'исходящее',
-	// 				is_reverse: true,
-	// 				description: '',
-	// 				lines: [],
-	// 			},
-	// 		],
-	// 	},
-	// },
+	// markupConfig: testMarkup,
+	markupConfig: {
+		version: 21,
+		uid: '00000000-0000-0000-0000-000000000000',
+		base_size: { width: 0, height: 0 },
+		zone: {
+			name: 'test',
+			index: 1,
+			type: 'edge',
+			description: '',
+			directs: [
+				{
+					index: 1,
+					name: 'входящее',
+					is_reverse: false,
+					description: '',
+					lines: [],
+				},
+				{
+					index: 2,
+					name: 'исходящее',
+					is_reverse: true,
+					description: '',
+					lines: [],
+				},
+			],
+		},
+	},
 }
 
 const markupSlice = createSlice({

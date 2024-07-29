@@ -10,12 +10,14 @@ interface VideoSchema {
 	}
 	quality: VideoQuality
 	status: FetchStatus
+	autoStop: boolean
 }
 
 const initialState: VideoSchema = {
 	videoSize: { width: 0, height: 0 },
 	quality: 'lq',
 	status: 'loading',
+	autoStop: true,
 }
 
 const videoSlice = createSlice({
@@ -31,6 +33,9 @@ const videoSlice = createSlice({
 		},
 		setStatus(state, action: PayloadAction<FetchStatus>) {
 			state.status = action.payload
+		},
+		setAutoStop(state, action: PayloadAction<boolean>) {
+			state.autoStop = action.payload
 		},
 	},
 })
