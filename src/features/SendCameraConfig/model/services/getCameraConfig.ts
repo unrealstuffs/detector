@@ -10,22 +10,7 @@ export const getCameraConfig = createAsyncThunk<CameraFetch, void, ThunkConfig<a
 		} = getState()
 
 		try {
-			const [zoom, focus, filter, servoX, servoY] = await Promise.all([
-				fetch(`${process.env.REACT_APP_INTERACTION_CAMERA_URL}`, {
-					method: 'PUT',
-					body: JSON.stringify({ read: 'ZOOM' }),
-					headers: {
-						Authorization: `${accessToken}`,
-					},
-				}),
-				fetch(`${process.env.REACT_APP_INTERACTION_CAMERA_URL}`, {
-					method: 'PUT',
-					body: JSON.stringify({ read: 'FOCUS' }),
-					headers: {
-						Authorization: `${accessToken}`,
-					},
-				}),
-
+			const [filter, servoX, servoY, zoomPreset] = await Promise.all([
 				fetch(`${process.env.REACT_APP_INTERACTION_CAMERA_URL}`, {
 					method: 'PUT',
 					body: JSON.stringify({ read: 'IR_CUT' }),
@@ -47,20 +32,24 @@ export const getCameraConfig = createAsyncThunk<CameraFetch, void, ThunkConfig<a
 						Authorization: `${accessToken}`,
 					},
 				}),
+				fetch(`${process.env.REACT_APP_GET_ZOOM_PRESET}`, {
+					method: 'GET',
+					headers: {
+						Authorization: `${accessToken}`,
+					},
+				}),
 			])
 
-			const dataZoom = await zoom.json()
-			const dataFocus = await focus.json()
 			const dataFilter = await filter.json()
 			const dataServoX = await servoX.json()
 			const dataServoY = await servoY.json()
+			const dataZoomPreset = await zoomPreset.json()
 
 			return {
-				zoom: dataZoom.data.ZOOM || 0,
-				focus: dataFocus.data.FOCUS || 0,
 				filter: dataFilter.data.IR_CUT === 'on' ? true : false,
 				servoX: dataServoX.data.SERVO_X || 90,
 				servoY: dataServoY.data.SERVO_Y || 90,
+				zoomPreset: JSON.parse(dataZoomPreset.data),
 			}
 		} catch {
 			return rejectWithValue('Unknown Error')

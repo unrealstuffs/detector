@@ -124,7 +124,6 @@ export const EditMarkup = (props: EditMarkupProps) => {
 													),
 												]}
 												stroke={colors.lineColor}
-												opacity={shiftPressed ? 1 : 0.6}
 												strokeWidth={lineWidth}
 											/>
 										))}
@@ -136,20 +135,37 @@ export const EditMarkup = (props: EditMarkupProps) => {
 											getValueByPercent(gate.gate[1].point.y, videoSize.height),
 										]}
 										stroke={gate.index === 3 ? colors.conterColor : colors.lineColor}
-										opacity={gate.index === 1 || gate.index === 5 ? (shiftPressed ? 1 : 0.6) : 1}
 										strokeWidth={lineWidth}
 										hitStrokeWidth={shiftPressed ? 100 : 0}
 									/>
 									{gate.gate.map(point => (
 										<Fragment key={`${direct.index} ${line.index} ${gate.index} ${point.index}`}>
 											{gate.index === 3 && (
-												<Text
-													x={getValueByPercent(gate.gate[0].point.x, videoSize.width)}
-													y={getValueByPercent(gate.gate[0].point.y - 4, videoSize.height)}
-													text={`g-3 ${line.name} (${direct.name})`}
-													fontSize={labelFontSize}
-													fill={colors.conterColor}
-												/>
+												<>
+													<Text
+														x={getValueByPercent(gate.gate[0].point.x, videoSize.width)}
+														y={getValueByPercent(
+															gate.gate[0].point.y - 4,
+															videoSize.height
+														)}
+														text='g-3'
+														fontSize={labelFontSize}
+														fill={colors.conterColor}
+													/>
+													<Text
+														x={getValueByPercent(
+															(gate.gate[0].point.x + gate.gate[1].point.x) / 2,
+															videoSize.width
+														)}
+														y={getValueByPercent(
+															(gate.gate[0].point.y + gate.gate[1].point.y) / 2 - 4,
+															videoSize.height
+														)}
+														text={`пол. ${line.name} | ${direct.name}`}
+														fontSize={labelFontSize}
+														fill={colors.conterColor}
+													/>
+												</>
 											)}
 											{gate.index === 2 && (
 												<Text

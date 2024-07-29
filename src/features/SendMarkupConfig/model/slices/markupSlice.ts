@@ -50,9 +50,12 @@ const markupSlice = createSlice({
 	initialState,
 	reducers: {
 		addLine(state) {
+			if (!state.markupConfig.zone.directs.length) {
+				return
+			}
 			const linesLength = state.markupConfig.zone.directs[0].lines.length
 
-			state.markupConfig.zone.directs[0].lines.push({
+			const newLine = {
 				index: linesLength + 1,
 				name: `${linesLength + 1}`,
 				description: '',
@@ -137,7 +140,15 @@ const markupSlice = createSlice({
 					{ index: 1, from_gate: 2, to_gate: 3, length: 0 },
 					{ index: 2, from_gate: 3, to_gate: 4, length: 0 },
 				],
-			})
+			}
+
+			state.markupConfig.zone.directs[0].lines.push(newLine)
+
+			if (state.markupConfig.zone.directs[0].is_reverse) {
+				state.markupConfig.zone.directs[0].lines[linesLength].gates.reverse().forEach((gate, index) => {
+					gate.index = index + 1
+				})
+			}
 		},
 		setLength(
 			state,
@@ -160,9 +171,9 @@ const markupSlice = createSlice({
 			})
 		},
 		deleteDir(state, action: PayloadAction<{ dirIndex: number }>) {
-			if (state.markupConfig.zone.directs.length === 1) {
-				return
-			}
+			// if (state.markupConfig.zone.directs.length === 1) {
+			// 	return
+			// }
 			state.markupConfig.zone.directs.splice(action.payload.dirIndex - 1, 1)
 
 			state.markupConfig.zone.directs.forEach((element, index) => {
@@ -362,6 +373,12 @@ const markupSlice = createSlice({
 		},
 		setDirection(state, action: PayloadAction<{ dirIndex: number; isReverse: boolean }>) {
 			state.markupConfig.zone.directs[action.payload.dirIndex - 1].is_reverse = action.payload.isReverse
+
+			state.markupConfig.zone.directs[action.payload.dirIndex - 1].lines.forEach(line => {
+				line.gates.reverse().forEach((gate, index) => {
+					gate.index = index + 1
+				})
+			})
 		},
 		deleteMarkup(state) {
 			state.markupConfig = initialState.markupConfig
