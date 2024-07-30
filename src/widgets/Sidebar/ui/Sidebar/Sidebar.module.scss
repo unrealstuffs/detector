@@ -3,5 +3,5 @@
 }
 
 .tabList {
-	@apply border-light;
+	@apply border-slate-200 dark:border-slate-600 bg-slate-200 dark:bg-slate-700;
 }

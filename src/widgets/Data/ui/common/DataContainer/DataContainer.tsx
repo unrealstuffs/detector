@@ -20,26 +20,14 @@ interface DataContainerProps {
 }
 
 const DataContainer = (props: DataContainerProps) => {
-	const {
-		children,
-		searchForm,
-		title,
-		tooltipId,
-		tooltipText,
-		className,
-		onChangeRowsCount,
-	} = props
+	const { children, searchForm, title, tooltipId, tooltipText, className, onChangeRowsCount } = props
 	const [showForm, setShowForm] = useState(false)
 
 	return (
 		<div className={classNames(cls.DataContainer, {}, [className])}>
 			<HStack align='center' gap='8' className={cls.header}>
 				<Text title={title} size='s' bold />
-				<AiOutlineQuestionCircle
-					className={cls.icon}
-					size={23}
-					id={tooltipId}
-				/>
+				<AiOutlineQuestionCircle className={cls.icon} size={23} id={tooltipId} />
 				<Tooltip
 					anchorSelect={`#${tooltipId}`}
 					place='bottom'
@@ -47,12 +35,7 @@ const DataContainer = (props: DataContainerProps) => {
 					style={{ maxWidth: 400, zIndex: 999 }}
 				/>
 			</HStack>
-			<HStack
-				align='center'
-				justify='between'
-				gap='8'
-				className={cls.tools}
-			>
+			<HStack align='center' justify='between' gap='8' className={cls.tools}>
 				<AppSelect
 					options={rowsCountOptions}
 					theme={theme => ({
@@ -72,11 +55,7 @@ const DataContainer = (props: DataContainerProps) => {
 				/>
 				<AiOutlineSearch
 					size={20}
-					className={classNames(
-						cls.searchIcon,
-						{ [cls.active]: showForm },
-						[]
-					)}
+					className={classNames(cls.searchIcon, { [cls.active]: showForm }, [cls.icon])}
 					onClick={() => setShowForm(!showForm)}
 					style={{ cursor: 'pointer' }}
 				/>

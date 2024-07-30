@@ -3,11 +3,11 @@
 }
 
 .icon {
-	@apply w-8 h-8 cursor-pointer text-white bg-light p-1 text-xl rounded-md;
+	@apply w-8 h-8 cursor-pointer text-slate-800 dark:text-slate-100 bg-slate-200 dark:bg-slate-500 p-1 text-xl rounded-md;
 }
 
 .active {
-	@apply bg-accent text-white;
+	@apply bg-accent-light dark:bg-accent-dark text-slate-100;
 }
 
 .zoomConrols {

@@ -44,7 +44,7 @@ const Mods = () => {
 				onClick={() => dispatch(markupActions.setShiftPressed(!shiftPressed))}
 				title='Перемещение полосы (L.Shift)'
 			>
-				<AiOutlineDrag size={18} />
+				<AiOutlineDrag className={cls.icon} size={18} />
 			</Button>
 			<Button
 				color={ctrlPressed ? 'primary' : 'outline'}
@@ -53,7 +53,7 @@ const Mods = () => {
 				onClick={() => dispatch(markupActions.setCtrlPressed(!ctrlPressed))}
 				title='Выравнивание точек (L.Ctrl)'
 			>
-				<AiOutlineGateway size={18} />
+				<AiOutlineGateway className={cls.icon} size={18} />
 			</Button>
 		</HStack>
 	)

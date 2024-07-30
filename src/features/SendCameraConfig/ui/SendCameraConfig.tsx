@@ -205,7 +205,12 @@ export const SendCameraConfig = () => {
 					Сохранить
 				</Button>
 				{restartCamera && (
-					<Button disabled={status === 'loading'} color='light' onClick={sendRestartCameraHandler} size='m'>
+					<Button
+						disabled={status === 'loading'}
+						color='transparent'
+						onClick={sendRestartCameraHandler}
+						size='m'
+					>
 						Перезагрузить камеру
 					</Button>
 				)}

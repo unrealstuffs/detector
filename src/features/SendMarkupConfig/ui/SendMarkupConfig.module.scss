@@ -3,7 +3,7 @@
 }
 
 .header {
-	@apply pb-4 border-b border-dashed border-light mb-4;
+	@apply pb-4 border-b border-dashed border-slate-200 dark:border-slate-500 mb-4;
 }
 
 .button {

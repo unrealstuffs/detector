@@ -1,20 +1,20 @@
 .Button {
-	@apply inline-block border outline-none rounded-lg text-white cursor-pointer transition-colors;
+	@apply inline-block border outline-none rounded-lg text-slate-100 dark:text-slate-800 cursor-pointer transition-colors font-medium;
 
 	&.primary {
-		@apply bg-accent border-accent hover:bg-opacity-80;
+		@apply bg-accent-light dark:bg-accent-dark border-accent-light dark:border-accent-dark hover:bg-opacity-80;
 	}
 	&.danger {
 		@apply bg-danger border-danger hover:bg-opacity-90;
 	}
 	&.transparent {
-		@apply bg-transparent text-dark;
+		@apply bg-transparent border-none text-accent-light dark:text-accent-dark;
 	}
-	&.light {
-		@apply bg-secondary border-secondary hover:bg-opacity-80;
-	}
+	// &.light {
+	// 	@apply bg-secondary border-secondary hover:bg-opacity-80;
+	// }
 	&.outline {
-		@apply bg-transparent border border-accent text-dark;
+		@apply bg-transparent border border-accent-light dark:border-accent-dark text-slate-100;
 	}
 	&.s {
 		@apply text-sm px-2 py-1 rounded-md;
@@ -29,6 +29,6 @@
 		@apply p-2;
 	}
 	&:disabled {
-		@apply bg-light cursor-not-allowed;
+		@apply bg-slate-200 cursor-not-allowed;
 	}
 }

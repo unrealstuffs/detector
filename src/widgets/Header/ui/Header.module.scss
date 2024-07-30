@@ -1,5 +1,5 @@
 .header {
-	@apply p-4 bg-[#F8F9FC] shadow-md;
+	@apply py-4 px-8 bg-slate-200 shadow-md dark:bg-slate-700;
 
 	.logo {
 		@apply w-8;

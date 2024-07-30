@@ -4,11 +4,22 @@ module.exports = {
 	theme: {
 		extend: {
 			colors: {
-				accent: '#5BC4D1',
-				secondary: '#7CC8D1',
-				dark: '#3E445B',
-				light: '#D1D8EC',
+				accent: {
+					light: '#5BC4D1',
+					dark: '#abdee5',
+				},
 				danger: '#FF6F91',
+				theme: {
+					900: '#0f172a',
+					800: '#3E445B',
+					700: '#51566c',
+					600: '#656a7d',
+					500: '#7a7d8e',
+					400: '#8f92a0',
+					300: '#a4a7b3',
+					200: '#D1D8EC',
+					100: '#f1f5f9',
+				},
 			},
 			boxShadow: {
 				theme: '0px 24px 32px rgba(19, 23, 35, 0.03), 0px 16px 24px rgba(19, 23, 35, 0.02), 0px 4px 8px rgba(19, 23, 35, 0.02), 0px 0px 1px rgba(19, 23, 35, 0.04)',
@@ -38,4 +49,5 @@ module.exports = {
 		},
 	},
 	plugins: [],
+	darkMode: ['selector', "[data-theme*='dark']"],
 }

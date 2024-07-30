@@ -8,7 +8,6 @@ import { classNames } from 'shared/lib/classNames'
 import SidebarPage from '../SidebarPage/SidebarPage'
 import { useAppDispatch } from 'shared/hooks/useAppDispatch'
 import useSidebarPages from '../../model/hooks/useSidebarPages'
-// import { sidebarPages } from '../../model/consts/sidebarPages'
 
 interface SidebarProps {
 	className?: string

@@ -3,7 +3,7 @@
 }
 
 .input {
-	@apply w-full border border-light rounded-md p-2 outline-none;
+	@apply w-full border border-slate-200 dark:border-slate-500 rounded-md p-2 outline-none;
 }
 
 .resetIcon {

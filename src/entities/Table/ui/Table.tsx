@@ -70,7 +70,11 @@ export const Table = (props: TableProps) => {
 									return (
 										<td
 											{...cell.getCellProps()}
-											className={cell.value ? 'text-dark' : 'text-light'}
+											className={
+												cell.value
+													? 'text-slate-100 dark:text-slate-800'
+													: 'text-slate-200 dark:text-slate-600'
+											}
 										>
 											{cell.value ? cell.render('Cell') : 'Не опознано'}
 										</td>
@@ -81,7 +85,7 @@ export const Table = (props: TableProps) => {
 					})}
 					{status !== 'success' && !pageRows.length && (
 						<tr>
-							<td colSpan={columns.length} style={{ textAlign: 'center' }}>
+							<td className={cls.placeholder} colSpan={columns.length} style={{ textAlign: 'center' }}>
 								{status === 'init' && 'Нет данных'}
 								{status === 'error' && 'Ошибка сервера'}
 								{status === 'loading' && 'Загрузка'}
