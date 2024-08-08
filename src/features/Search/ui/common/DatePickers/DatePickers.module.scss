@@ -1,11 +1,11 @@
 .DatePickers {
-	@apply mb-2;
+    @apply mb-2;
 }
 
 .input {
-	@apply w-full border border-slate-200 dark:border-slate-500 rounded-md p-2 outline-none;
+    @apply w-full border border-slate-100 dark:border-slate-700 text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-700 rounded-md p-2 outline-none;
 }
 
 .resetIcon {
-	@apply text-xl;
+    @apply text-xl;
 }

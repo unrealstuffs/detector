@@ -1,19 +1,19 @@
 .loginForm {
-	@apply w-1/3 bg-slate-200 dark:bg-slate-800 shadow-theme rounded-lg p-16;
+    @apply w-1/3 lg:w-2/3 sm:w-full bg-slate-100 dark:bg-slate-800 shadow-theme rounded-lg p-16;
 
-	.heading {
-		@apply mb-8 leading-none;
-	}
+    .heading {
+        @apply mb-8 leading-none;
+    }
 
-	.inputContainer {
-		@apply mb-6;
-	}
+    .inputContainer {
+        @apply mb-6;
+    }
 
-	.loginActions {
-		@apply text-center;
-	}
+    .loginActions {
+        @apply text-center;
+    }
 }
 
 .errorMessage {
-	@apply mb-4;
+    @apply mb-4;
 }

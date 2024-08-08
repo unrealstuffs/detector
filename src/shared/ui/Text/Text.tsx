@@ -1,68 +1,63 @@
-import { memo } from 'react'
-import { classNames } from 'shared/lib/classNames'
-import cls from './Text.module.scss'
+import { memo } from "react"
+import { classNames } from "shared/lib/classNames"
+import cls from "./Text.module.scss"
 
-export type TextVariant = 'primary' | 'danger' | 'light'
+export type TextVariant = "primary" | "danger" | "light"
 
-export type TextAlign = 'right' | 'left' | 'center'
+export type TextAlign = "right" | "left" | "center"
 
-export type TextSize = 's' | 'm' | 'l'
+export type TextSize = "s" | "m" | "l"
 
 interface TextProps {
-	className?: string
-	title?: string
-	text?: string
-	align?: TextAlign
-	size?: TextSize
-	bold?: boolean
-	variant?: TextVariant
-	contentEditable?: boolean
+    className?: string
+    title?: string
+    text?: string
+    align?: TextAlign
+    size?: TextSize
+    bold?: boolean
+    variant?: TextVariant
+    contentEditable?: boolean
 }
 
-type HeaderTagType = 'h1' | 'h2' | 'h3'
+type HeaderTagType = "h1" | "h2" | "h3"
 
 const mapSizeToClass: Record<TextSize, string> = {
-	s: cls.size_s,
-	m: cls.size_m,
-	l: cls.size_l,
+    s: cls.size_s,
+    m: cls.size_m,
+    l: cls.size_l,
 }
 
 const mapSizeToHeaderTag: Record<TextSize, HeaderTagType> = {
-	s: 'h3',
-	m: 'h2',
-	l: 'h1',
+    s: "h3",
+    m: "h2",
+    l: "h1",
 }
 
 export const Text = memo((props: TextProps) => {
-	const {
-		className,
-		text,
-		title,
-		align = 'left',
-		size = 'm',
-		bold,
-		variant = 'primary',
-		contentEditable = false,
-	} = props
+    const {
+        className,
+        text,
+        title,
+        align = "left",
+        size = "m",
+        bold,
+        variant = "primary",
+    } = props
 
-	const HeaderTag = mapSizeToHeaderTag[size]
-	const sizeClass = mapSizeToClass[size]
+    const HeaderTag = mapSizeToHeaderTag[size]
+    const sizeClass = mapSizeToClass[size]
 
-	return (
-		<div
-			className={classNames(cls.Text, { [cls.bold]: bold }, [
-				className,
-				cls[align],
-				cls[variant],
-				sizeClass,
-			])}
-		>
-			{title && <HeaderTag className={cls.title}>{title}</HeaderTag>}
-			{text && (
-				<p contentEditable={contentEditable} className={cls.text}>
-					{text}
-				</p>
-			)}
-		</div>
-	)
+    return (
+        <div
+            className={classNames(cls.Text, { [cls.bold]: bold }, [
+                className,
+                cls[align],
+                cls[variant],
+                sizeClass,
+            ])}
+        >
+            {title && <HeaderTag className={cls.title}>{title}</HeaderTag>}
+            {text && <p className={cls.text}>{text}</p>}
+        </div>
+    )
 })

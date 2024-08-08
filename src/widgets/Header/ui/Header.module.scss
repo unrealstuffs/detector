@@ -1,11 +1,11 @@
 .header {
-	@apply py-4 px-8 bg-slate-200 shadow-md dark:bg-slate-700;
+    @apply py-4 px-8 bg-white shadow-md dark:bg-slate-800;
 
-	.logo {
-		@apply w-8;
-	}
+    .logo {
+        @apply w-8;
+    }
 }
 
 .logout {
-	@apply text-danger outline-none text-3xl opacity-70 hover:opacity-100 transition-opacity;
+    @apply text-danger outline-none text-3xl opacity-70 hover:opacity-100 transition-opacity;
 }

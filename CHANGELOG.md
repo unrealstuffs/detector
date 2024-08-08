@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.1]
+
+### Added
+
+-   Add range inputs for servo settings
+
+## [1.4.0]
+
+### Added
+
+-   Add dark/light theme switcher
+-   Add media queries for layout responsive
+
+## [1.3.3]
+
+### Added
+
+-   Add zoom presets
+
+## [1.3.2]
+
+### Changed
+
+-   Change type config to boolean fields
+
+### Fixed
+
+-   Fix video loading
+
 ## [1.3.1]
 
 ### Changed

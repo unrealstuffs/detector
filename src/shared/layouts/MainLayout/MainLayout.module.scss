@@ -1,20 +1,27 @@
 .MainLayout {
-	@apply grid gap-x-3 gap-y-5 content-center w-full h-full;
+    @apply grid gap-x-3 gap-y-5 content-center w-full h-full;
 
-	grid-template-columns: 60% 40%;
+    grid-template-columns: 60% 40%;
 
-	grid-template-areas:
-		'header header'
-		'video sidebar';
+    grid-template-areas:
+        "header header"
+        "video sidebar";
+
+    @media screen and (max-width: 1024px) {
+        grid-template-areas:
+            "header header"
+            "video video"
+            "sidebar sidebar";
+    }
 }
 
 .video {
-	@apply pl-3;
-	grid-area: video;
+    @apply pl-3 lg:pl-0;
+    grid-area: video;
 }
 .sidebar {
-	grid-area: sidebar;
+    grid-area: sidebar;
 }
 .header {
-	grid-area: header;
+    grid-area: header;
 }

@@ -3,25 +3,40 @@
 @tailwind utilities;
 
 @mixin font($fname, $fstyle, $fweight, $furl) {
-	@font-face {
-		font-family: $fname;
-		font-style: $fstyle;
-		font-weight: $fweight;
-		src: url($furl) format('woff2');
-	}
+    @font-face {
+        font-family: $fname;
+        font-style: $fstyle;
+        font-weight: $fweight;
+        src: url($furl) format("woff2");
+    }
 }
 
-@include font('vela-app', normal, 400, '../../../public/assets/fonts/VelaSans-Regular.woff2');
-@include font('vela-app', normal, 500, '../../../public/assets/fonts/VelaSans-Medium.woff2');
-@include font('vela-app', normal, 700, '../../../public/assets/fonts/VelaSans-Bold.woff2');
+@include font(
+    "vela-app",
+    normal,
+    400,
+    "../../../public/assets/fonts/VelaSans-Regular.woff2"
+);
+@include font(
+    "vela-app",
+    normal,
+    500,
+    "../../../public/assets/fonts/VelaSans-Medium.woff2"
+);
+@include font(
+    "vela-app",
+    normal,
+    700,
+    "../../../public/assets/fonts/VelaSans-Bold.woff2"
+);
 
 * {
-	@apply box-border;
+    @apply box-border;
 }
 
 body {
-	font-family: vela-app, 'Roboto', sans-serif;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	@apply m-0 overflow-hidden dark:bg-slate-900;
+    font-family: vela-app, "Roboto", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    @apply m-0 overflow-x-hidden dark:bg-slate-900;
 }

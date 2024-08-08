@@ -1,15 +1,15 @@
 .configBody {
-	@apply grid grid-cols-2 gap-y-8 gap-x-10 mb-6;
+    @apply grid grid-cols-2 gap-y-8 gap-x-10 mb-6;
 }
 
 .icon {
-	@apply w-8 h-8 cursor-pointer text-slate-800 dark:text-slate-100 bg-slate-200 dark:bg-slate-500 p-1 text-xl rounded-md;
+    @apply w-8 h-8 cursor-pointer text-white dark:text-slate-100 bg-slate-300 dark:bg-slate-700 p-1 text-xl rounded-md;
 }
 
 .active {
-	@apply bg-accent-light dark:bg-accent-dark text-slate-100;
+    @apply bg-accent-light dark:bg-accent-dark text-slate-100;
 }
 
 .zoomConrols {
-	@apply mb-3;
+    @apply mb-3;
 }

@@ -1,0 +1,20 @@
+.select {
+    .control {
+        @apply cursor-pointer bg-white dark:bg-slate-700 border-slate-200 hover:border-slate-300 dark:border-slate-700 hover:dark:border-slate-600;
+    }
+    .menu {
+        @apply bg-white dark:bg-slate-700;
+    }
+    .value {
+        @apply text-slate-800 dark:text-white;
+    }
+    .option {
+        @apply cursor-pointer text-slate-800 dark:text-white bg-white hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600;
+    }
+    .selected {
+        @apply text-white bg-accent-light hover:bg-accent-light;
+    }
+    .placeholder {
+        @apply text-slate-800 dark:text-slate-400;
+    }
+}

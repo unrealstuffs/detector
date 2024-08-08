@@ -1,19 +1,19 @@
 .lineBlock {
-	@apply mb-8;
+    @apply mb-8;
 }
 
 .lineTitle {
-	@apply mb-4;
+    @apply mb-4;
 }
 
 .lineInput {
-	@apply w-auto border-none text-xl decoration-dotted underline underline-offset-4 py-0 pl-2 bg-slate-200 dark:bg-slate-700;
+    @apply w-auto border-none text-xl decoration-dotted underline underline-offset-4 py-0 pl-2 bg-white dark:bg-slate-800;
 }
 
 .deleteIcon {
-	@apply cursor-pointer text-slate-800 dark:text-slate-200;
+    @apply cursor-pointer text-slate-800 dark:text-slate-200;
 }
 
 .alignButton {
-	@apply px-2;
+    @apply px-2;
 }

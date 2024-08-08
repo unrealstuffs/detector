@@ -1,34 +1,38 @@
 .Button {
-	@apply inline-block border outline-none rounded-lg text-slate-100 dark:text-slate-800 cursor-pointer transition-colors font-medium;
+    @apply inline-block border outline-none rounded-lg text-slate-100 dark:text-slate-800 cursor-pointer transition-colors font-medium;
 
-	&.primary {
-		@apply bg-accent-light dark:bg-accent-dark border-accent-light dark:border-accent-dark hover:bg-opacity-80;
-	}
-	&.danger {
-		@apply bg-danger border-danger hover:bg-opacity-90;
-	}
-	&.transparent {
-		@apply bg-transparent border-none text-accent-light dark:text-accent-dark;
-	}
-	// &.light {
-	// 	@apply bg-secondary border-secondary hover:bg-opacity-80;
-	// }
-	&.outline {
-		@apply bg-transparent border border-accent-light dark:border-accent-dark text-slate-100;
-	}
-	&.s {
-		@apply text-sm px-2 py-1 rounded-md;
-	}
-	&.m {
-		@apply text-base px-4 py-2 rounded-md;
-	}
-	&.l {
-		@apply text-lg px-6 py-2;
-	}
-	&.squared {
-		@apply p-2;
-	}
-	&:disabled {
-		@apply bg-slate-200 cursor-not-allowed;
-	}
+    &.primary {
+        @apply bg-accent-light dark:bg-accent-dark border-accent-light dark:border-accent-dark hover:bg-opacity-80;
+    }
+    &.danger {
+        @apply bg-danger border-danger hover:bg-opacity-90;
+    }
+    &.transparent {
+        @apply bg-transparent border-none text-accent-light dark:text-accent-dark;
+
+        &::disabled {
+            @apply opacity-70 bg-transparent;
+        }
+    }
+    // &.light {
+    // 	@apply bg-secondary border-secondary hover:bg-opacity-80;
+    // }
+    &.outline {
+        @apply bg-transparent border border-accent-light dark:border-accent-dark text-slate-100;
+    }
+    &.s {
+        @apply text-sm px-2 py-1 rounded-md;
+    }
+    &.m {
+        @apply text-base px-4 py-2 rounded-md;
+    }
+    &.l {
+        @apply text-lg px-6 py-2;
+    }
+    &.squared {
+        @apply p-2;
+    }
+    &:disabled {
+        @apply bg-slate-200 dark:bg-slate-700 cursor-not-allowed;
+    }
 }

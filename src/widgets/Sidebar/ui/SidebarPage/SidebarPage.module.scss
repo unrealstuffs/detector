@@ -1,23 +1,23 @@
 .SidebarPage {
-	@apply h-[calc(100vh-64px-42px)] py-6 px-4 bg-white dark:bg-slate-700 hidden overflow-y-auto;
+    @apply h-[calc(100vh-64px-42px-50px)] py-6 px-4 bg-white dark:bg-slate-800 hidden overflow-y-auto;
 
-	&::-webkit-scrollbar {
-		@apply w-1.5;
-	}
+    &::-webkit-scrollbar {
+        @apply w-1.5;
+    }
 
-	&::-webkit-scrollbar-track {
-		@apply rounded-full dark:bg-slate-600;
-	}
+    &::-webkit-scrollbar-track {
+        @apply rounded-full dark:bg-slate-600;
+    }
 
-	&::-webkit-scrollbar-thumb {
-		@apply bg-accent-light dark:bg-accent-dark bg-opacity-70 rounded-full;
-	}
+    &::-webkit-scrollbar-thumb {
+        @apply bg-accent-light dark:bg-accent-dark bg-opacity-70 rounded-full;
+    }
 
-	&::-webkit-scrollbar-thumb:hover {
-		@apply bg-accent-light dark:bg-accent-dark;
-	}
+    &::-webkit-scrollbar-thumb:hover {
+        @apply bg-accent-light dark:bg-accent-dark;
+    }
 
-	&.show {
-		@apply block;
-	}
+    &.show {
+        @apply block;
+    }
 }

@@ -1,60 +1,66 @@
 .title,
 .text {
-	@apply text-slate-800 dark:text-slate-100;
+    @apply text-slate-800 dark:text-white;
 }
 
 .left {
-	@apply text-left;
+    @apply text-left;
 }
 
 .right {
-	@apply text-right;
+    @apply text-right;
 }
 
 .center {
-	@apply text-center;
+    @apply text-center;
 }
 
 .danger {
-	.title,
-	.text {
-		@apply text-danger;
-	}
+    .title,
+    .text {
+        @apply text-danger;
+    }
+}
+
+.light {
+    .title,
+    .text {
+        @apply text-slate-500;
+    }
 }
 
 .size_s {
-	.title {
-		@apply text-lg;
-	}
+    .title {
+        @apply text-lg;
+    }
 
-	.text {
-		@apply text-xs;
-	}
+    .text {
+        @apply text-xs;
+    }
 }
 
 .size_m {
-	.title {
-		@apply text-xl;
-	}
+    .title {
+        @apply text-xl;
+    }
 
-	.text {
-		@apply text-base;
-	}
+    .text {
+        @apply text-base;
+    }
 }
 
 .size_l {
-	.title {
-		@apply text-3xl;
-	}
+    .title {
+        @apply text-3xl;
+    }
 
-	.text {
-		@apply text-xl;
-	}
+    .text {
+        @apply text-base;
+    }
 }
 
 .bold {
-	.title,
-	.text {
-		@apply font-bold;
-	}
+    .title {
+        @apply font-bold;
+    }
 }

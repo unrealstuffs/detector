@@ -1,23 +1,23 @@
 .dbFields {
-	@apply grid grid-cols-4 mb-6 gap-3;
+    @apply grid grid-cols-4 mb-6 gap-3;
 }
 
 .dbName {
-	@apply col-span-4;
+    @apply col-span-4;
 }
 
 .dbAddress {
-	@apply col-span-3;
+    @apply col-span-3 sm:col-span-2;
 }
 
 .dbPort {
-	@apply col-span-1;
+    @apply col-span-1 sm:col-span-2;
 }
 
 .dbUser {
-	@apply col-span-2;
+    @apply col-span-2;
 }
 
 .dbPassword {
-	@apply col-span-2;
+    @apply col-span-2;
 }
